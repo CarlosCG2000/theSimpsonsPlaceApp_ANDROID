@@ -11,33 +11,34 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+/** Theme.kt, asigna los colores a los atributos adecuados del colorScheme. */
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = BackgroundColor, // Color principal
+    secondary = BackgroundComponentColor, // Color para elementos secundarios
+    background = BackgroundColor, // Color de fondo de la app
+    surface = BackgroundComponentColor, // Color de fondo de los componentes
+    onPrimary = TextColor, // Color del texto sobre el color primario
+    onSecondary = TextComponentColor, // Color del texto sobre el color secundario
+    onBackground = TextComponentColor, // Color del texto sobre el fondo
+    onSurface = TextComponentColor // Color del texto sobre los componentes
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = BackgroundColorLight, // Color principal más claro
+    secondary = BackgroundComponentColorLight, // Color para elementos secundarios más claro
+    background = BackgroundColorLight, // Color de fondo de la app más claro
+    surface = BackgroundComponentColorLight, // Color de fondo de los componentes más claro
+    onPrimary = TextColorLight, // Color del texto sobre el color primario más claro
+    onSecondary = TextComponentColorLight, // Color del texto sobre el color secundario más claro
+    onBackground = TextComponentColorLight, // Color del texto sobre el fondo más claro
+    onSurface = TextComponentColorLight // Color del texto sobre los componentes más claro
 )
 
 @Composable
 fun TheSimpsonPlaceTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean =  false, // ❌ Desactiva los colores dinámicos, usará exclusivamente los colores de DarkColorScheme y LightColorScheme.
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
