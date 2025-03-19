@@ -51,5 +51,5 @@ fun EpisodeDetailScreen(id: Int, navigationArrowBack:() -> Unit) {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun EpisodeDetailScreenPreview() {
-        EpisodeDetailScreen(1, {})
+        EpisodeDetailScreen(1){}
 }
