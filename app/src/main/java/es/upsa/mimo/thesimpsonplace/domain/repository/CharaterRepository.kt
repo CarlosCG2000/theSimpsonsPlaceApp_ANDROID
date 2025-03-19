@@ -11,3 +11,5 @@ interface CharaterRepository {
     fun insertCharacterDb(character: Character): Unit // Insertar personaje en la base de datos
     fun updateCharacterDb(id: Int): Unit // Actualizar personaje en la base de datos
 }
+
+

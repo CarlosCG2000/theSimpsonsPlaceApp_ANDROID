@@ -51,6 +51,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.kotlinx.serialization.json) // Serialization
+    implementation(libs.androidx.constraintlayout.compose)  // Constraint Layout
+    implementation(libs.androidx.lifecycle.viewmodel.compose) // View Model
+    implementation(libs.androidx.navigation.compose) // Navigation compose
+    implementation(libs.coil.compose) // Coil Compose (cargar imagenes web)
+    implementation(libs.androidx.material.icons.extended) // Material Icons Extension (para tener mas iconos)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

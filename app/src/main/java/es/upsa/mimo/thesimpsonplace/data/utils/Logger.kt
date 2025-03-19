@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.util
+package es.upsa.mimo.thesimpsonplace.data.utils
 
 import android.util.Log
 
