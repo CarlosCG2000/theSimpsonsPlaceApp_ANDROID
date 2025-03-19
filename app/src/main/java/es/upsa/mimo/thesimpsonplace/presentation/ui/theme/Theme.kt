@@ -1,6 +1,5 @@
-package es.upsa.mimo.thesimpsonplace.ui.theme
+package es.upsa.mimo.thesimpsonplace.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

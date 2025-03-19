@@ -48,7 +48,104 @@ Creo la aplicación `TheSimpsonPlace` con una vista `Empty Activity` de `Jetpack
 
 2. Los `textos, dimensiones, colores y estilos` deben residir en su `fichero de recursos` correspondiente. Usar al menos un estilo en los `layouts XML`. ❌
 
-3. 
+3. `Esqueleto` del proyecto. ❓
+- Carpeta `data`: service, datasource, mapper....
+- Carpeta `domain`: repository, usecases...
+- Carpeta `presentation`: viewModels, views...
+
+@@@@ DUDAS - SOLUCIÓN @@@@
+```md
+Tengo mis dudas al intentar formar mi aplicación:
+En cuanto al esqueleto de mi aplicación: tengo 3 carpetas principales `data`, `domain` y `presentation`.
+
+* Carpeta `Data`: de momento contiene:
+
+- La subcarpeta `entities` a `CharacterDao.kt` (datos de com recibo una entidad del json de characters), `ImagenDto.kt` (datos de como recibo una entidad del json de imagenes), `Gender.kt` (enumerado con función para pasar de string a ese enumerado).
+
+- La subcarpeta `mapper` donde tengo `CharacterMapper.kt` con una extensión para pasar de `CharacterDto` a `Character` que es como trabajare en el domain.
+
+- La subcarpeta `sources` la cual no se si esto es adecuado pero he hecho es dividir en dos carpetas:
+
++ Una subcarpeta `local` donde mi idea es obtener `los personajes del json` donde tengo un `CharacterDao.kt` con la `interface` y tiene `una función` de obtener todos personajes (**voy a necesitar `otra función` para filtrar por nombres de personajes pero no se si es adecuado incluirla aqui o mas adelante**).
+`CharacterDaoJsonProd.kt` y `CharacterDaoJsonTest.kt` son dos de las implemanciones de la interface para obtener la funcion de los personajes.
+
++ Una carpeta `db` con lo mismo pero con la interface `CharacterDBDao.kt` y las funciones que tiene para los `characters` pero de en la `BD` y su correspondiente implementación. **¿Esta bien separarlos en dos `daos` diferentes? Uno con la lógica deo obbtención de datos y el otro con la de la BD o hay una mejor estructura?**
+
++ La carpeta `domain` que de momento contiene:
+
+- La subcarpeta `entities` con `Character.kt` que es el la entidad de personaje final con la que quiero trabajar tanto para la base de datos como la extraccion principal de los datos.
+
+La subcarpeta `repository` donde solo tengo una `interface` con el `CharacterRepository` con todas las funciones tanto del `dao` del `json` como para la del `dao` de la `base de datos` y he añadido `la nueva función para filtrar por nombre` los personajes que se obtienen del json (no se la puse en el dao del json) **¿Esta bien ponerla aqui o mejor era antes en el dao o después mas adelante ya en el view model?** Luego tengo la implentación de ese dao `CharacterRepositoryImpl.kt` donde paso por paremetro las interfaces de los dos daos anteriores e implemento el `CharacterRepository`, aqui me surge otra vez **la duda al implementarse la función de `filterCharacters` de filtrar los personajes tendria que realizar toda la función de obtener todos los personajes y luego filtrarlo algo que no se si es buen en rendimiento por ello no se si debería estar.**
+
++ La carpeta `presentation`: de momento solo esta creada dicha carpeta.
+
+@@@@ SOLUCIÓN GHAT GPT @@@@
+
+Tu estructura `Data - Domain - Presentation` está bien planteada y sigue las mejores prácticas de `Clean Architecture` en `Kotlin` con `Jetpack Compose`.
+
+📌 1. Estructura en la capa `data`
+
+Actualmente tienes:
+• entities/ → CharacterDto, ImageDto, Gender ✅ Bien.
+• mappers/ → CharacterMappers ✅ Bien.
+• sources/local/ → CharacterDao, CharacterDaoImpl 🛑
+• sources/db/ → CharacterDBDao, CharacterDBDaoImpl 🛑
+
+🔹 ¿Está bien separar `DAO` del `JSON` y `DAO` de la `BD`?
+✅ Sí, está bien porque:
+1.	El JSON no es una BD real, solo es una fuente de datos estática.
+2.	`Separar responsabilidades` evita que `ambas fuentes` se mezclen en una misma clase.
+3.	Si en el futuro usas Retrofit en vez de JSON local, el Dao del JSON ya no sería necesario.
+
+🚀 Mejora: **Puedes renombrar `CharacterDao.kt` → `CharacterJsonSource.kt` y `CharacterDBDao.kt` → `CharacterDatabaseSource.kt` para que quede más claro.**
+
+📌 2. Estructura en la capa `domain`
+
+Actualmente tienes:
+• entities/ → Character ✅ Bien.
+• repository/
+    • CharacterRepository (interfaz) 🛑
+    • CharacterRepositoryImpl (implementación) 🛑
+
+🔹 ¿Dónde debe ir `filterCharacters(nombre)`?
+🔸 Si es un `simple filtro` sobre la lista obtenida, puede estar en `RepositoryImpl.kt`.
+🔸 Si en `el futuro la API` permite filtrar, debería ir en `CharacterJsonSource.kt` para no cargar la app de datos innecesarios.
+
+🚀 Mejora recomendada: **Si el `JSON nunca cambiará` → déjalo en `RepositoryImpl.kt`. Pero si el `JSON es una API` o puede llegar a serlo en el futuro puede `permitir filtrar` → Ponlo en `CharacterJsonSource.kt`.**
+
+❗ Rendimiento
+Si la lista de personajes es grande, filtrar después de cargar no es óptimo. En ese caso, es mejor:
+1.	Cargar solo los que coincidan → Implementa `filterCharacters(name: String)` en `CharacterJsonSource.kt`.
+2.	Guardar personajes en `BD local` y aplicar `filtros allí`.
+
+📌 3. Estructura en `presentation`
+
+No mencionaste presentation, pero aquí deberías tener:
+• viewmodel/ → CharacterViewModel (Usa CharacterRepository) ✅
+• ui/screens/ → CharacterScreen (Recibe datos del ViewModel) ✅
+• components/ → Si tienes partes reutilizables de UI. ✅
+
+🎯 Conclusión
+
+✅ Tu arquitectura está bien, solo hay que ajustar algunas responsabilidades.
+✅ Sí, es correcto separar el DAO del JSON y el de la BD.
+✅ Filtrar personajes en el RepositoryImpl está bien, pero si el JSON puede filtrar, mejor en CharacterJsonSource.
+✅ Si tienes una BD, filtrar allí es mejor por rendimiento.
+
+🚀 Recomendaciones finales:
+🔹 Renombrar CharacterDao → CharacterJsonSource y CharacterDBDao → CharacterDatabaseSource.
+🔹 Si el JSON es estático, filtrar en RepositoryImpl.
+🔹 Si es API, filtrar en CharacterJsonSource.
+🔹 Si usas BD local, filtrar en la base de datos.
+```
+
+4. Intalación de dependencias.
+- Usa la librería `kotlinx.serialization` para manejar `JSON`. (`@Serializable`). Utilizado por ejemplo a la hora de transformar la entidad `CharacterDto` recibida del json por otro nombres.
+
+
+
+
+Fichero `CharacterDto.kt`:
 
 
 ### 1. Fichero `Color.kt`
@@ -128,3 +225,8 @@ fun TheSimpsonPlaceTheme(
 Ahora mi app tiene un `modo claro` con `tonos más suaves`, diferenciándose del `modo oscuro` sin perder `identidad visual`.
 
 
+
+### 3. Fichero `Logger.kt`
+
+
+ME QUEDAN LOS CASOS DE USO, LA PRESENTACIÓN, EL LOGGER Y LA INTALACIÓN DE DEPENDENCIAS.

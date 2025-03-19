@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.ui.theme
+package es.upsa.mimo.thesimpsonplace.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
