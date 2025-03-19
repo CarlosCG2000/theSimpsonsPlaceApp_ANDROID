@@ -6,7 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.FetchCharacterByIdDbUseCase
 
 class FetchCharacterByIdDbUseCaseImpl(val repository: CharaterRepository): FetchCharacterByIdDbUseCase {
     override fun execute(id: Int): Character {
-        return repository.fetchCharacterByIdDb(id = id)
+        return repository.getCharacterByIdDb(id = id)
     }
 
 

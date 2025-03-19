@@ -7,5 +7,6 @@ data class Character(
     val id: Int, // Contiene el id como Int
     val nombre: String,
     val genero: Gender, // Contiene el género como Gender
-    val imagen: String? = null // Se obtiene en otro JSON
+    val imagen: String? = null, // Se obtiene en otro JSON
+    var esFavorito: Boolean = false
 )

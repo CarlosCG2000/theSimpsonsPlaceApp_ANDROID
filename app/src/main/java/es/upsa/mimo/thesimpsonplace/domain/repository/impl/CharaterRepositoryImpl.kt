@@ -10,30 +10,43 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
 class CharaterRepositoryImpl(val dao: CharacterDao, val databaseDao: CharacterDatabaseDao): CharaterRepository {
 
     override fun getAllCharacters(): List<Character> {
+        // 🚀 1️⃣ Cargar datos del JSON/API
         val allCharactersDto: List<CharacterDto> = dao.getAllCharacters() // según tenga definido la extracción en el dao 'CharacterDao'
         val allCharacters: List<Character> = allCharactersDto.map { it.toCharacter() } // realizamos el mapea a la entidad 'Character'
-        return allCharacters
+        //return allCharacters
+
+        // 🚀 2️⃣ Cargar datos de la BD
+        val allCharactersDB: List<Character> = databaseDao.getAllCharactersDb()
+
+        // 🚀 3️⃣️ Resultado final de los datos
+        return allCharacters.map { character ->
+            val characterDb = allCharactersDB[character.id]
+
+            if (characterDb != null) {
+                character.copy(
+                    esFavorito = true
+                )
+            } else {
+                character.copy()
+            }
+        }
     }
 
-    override fun getFilterNameCharacters(name: String): List<Character> {
-        val filterCharacterDto: List<CharacterDto> = dao.getFilterNameCharacters(name = name)
+    override fun getCharactersByName(name: String): List<Character> {
+        val filterCharacterDto: List<CharacterDto> = dao.getCharactersByName(name = name)
         val filterCharacter: List<Character> = filterCharacterDto.map { it.toCharacter() }
         return filterCharacter
     }
 
-    override fun fetchAllCharactersDb(): List<Character> {
-        return databaseDao.fetchAllCharactersDb()
-    }
-
-    override fun fetchCharacterByIdDb(id: Int): Character {
-        return databaseDao.fetchCharacterByIdDb(id = id)
+    override fun getAllCharactersDb(): List<Character> {
+        return databaseDao.getAllCharactersDb()
     }
 
     override fun insertCharacterDb(character: Character) {
         return databaseDao.insertCharacterDb(character = character)
     }
 
-    override fun updateCharacterDb(id: Int) {
-        return databaseDao.updateCharacterDb(id = id)
+    override fun deleteCharacterDb(id: Int) {
+        return databaseDao.deleteCharacterDb(id = id)
     }
 }

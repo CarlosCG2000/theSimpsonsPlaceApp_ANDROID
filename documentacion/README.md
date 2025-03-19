@@ -41,7 +41,7 @@ Requisitos `OBLIGATORIOS` de la aplicación:
 
 19. Subir la aplicación a `Google Play` (aunque sea en fase alpha o beta e invitar a los profesores) ❓
 
-## INICIO
+## INICIO PROYECTO
 Creo la aplicación `TheSimpsonPlace` con una vista `Empty Activity` de `Jetpack Compose`.
 
 1. Creación de una `paleta de colores propia de la aplicación`, de modo que visualmente se pueda identificar la app a un estilo visual reconocible. Ficheros `Color.kt` y `Theme.kt`. ✅
@@ -53,13 +53,24 @@ Creo la aplicación `TheSimpsonPlace` con una vista `Empty Activity` de `Jetpack
 - Carpeta `domain`: repository, usecases...
 - Carpeta `presentation`: viewModels, views...
 
-4. Intalación de `dependencias` (de momento).
+Añadida las subcarpetas para la sección de personajes. Explicación `1. DUDA.`
+
+4. Instalación de `dependencias` (de momento).
 * 1. Serialización: `kotlinx.serialization` para manejar `JSON`. (`@Serializable`). Utilizado por ejemplo a la hora de transformar la entidad `CharacterDto` recibida del json por otro nombres.
 * 2. ConstraintLayout: `androidx.constraintlayout` y elegimos `constraintlayout-compose`. Para realizar en Compose (vistas).
 * 3. ViewModel: `androidx.lifecycle` llamada `lifecycle-viewmodel-compose`. Descartamos versiones `alpha` coger la última que no sea de este tipo. Para los ViewModels.
 * 4. Navigation:  navigation compose. `androidx.navigation`.
 * 5. Coil: `io.coil-kt` y aplicamos la de `coil-compose`. Carga de imágenes de web.
 * 6. Extensión de iconos: buscar `material-icons` obtener `material-icons-extended`.
+
+5. Añadir en el esqueleto (`punto 3.`) a aparte la que esta ya de personajes, las `secciones` de `episodio`, `citas` y `juego`.
+En `1. DUDA`, explicado el esquema que he seguido para app (muy similar en personajes con las demás secciones que ahora implemento).
+
+Ejemplo con la `sección episodios`:
+
+
+
+6. ...
 
 
 ### 1. Fichero `Color.kt`
@@ -141,12 +152,12 @@ Ahora mi app tiene un `modo claro` con `tonos más suaves`, diferenciándose del
 
 
 ### 3. Fichero `Logger.kt`
+El archivo Logger.kt define una `interfaz de logging` que proporciona métodos estandarizados para registrar mensajes en diferentes niveles de severidad (Verbose, Debug, Info, Warning, Error, Assert). Su propósito es `centralizar y simplificar el proceso de depuración`, permitiendo que cualquier clase que la implemente pueda registrar logs sin repetir código. Además, asigna automáticamente `el nombre de la clase como etiqueta (tag)`, facilitando la identificación del origen de cada mensaje en Logcat.
 
+### 4. Fichero ...
+ME QUEDAN IMPLEMENTAR PARA LOS OTROS SECCIONES, PASAR A REALIZAR LAS PANTALLAS BONITAS, REPASAR LAS CLASES DE ROBERTO.
 
-ME QUEDAN EL LOGGER, IMPLEMENTAR PARA LOS OTROS SECCIONES, PASAR A REALIZAR LAS PANTALLAS BONITAS.
-
-
-### X. DUDAS
+### X. MIS DUDAS
 
 #### 1. DUDA
 @@@@ DUDA @@@@
@@ -317,4 +328,5 @@ En este caso, sí es correcto usar `val json: String` en el constructor, porque:
 En tu caso, como `json es una propiedad que usarás en múltiples funciones`, debe ser `val`.
 
 ### 3. DUDA
-...
+
+### 4. DUDA
