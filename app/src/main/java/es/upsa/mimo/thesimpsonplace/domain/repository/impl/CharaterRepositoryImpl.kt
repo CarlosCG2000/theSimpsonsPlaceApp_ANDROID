@@ -29,10 +29,16 @@ class CharaterRepositoryImpl(val dao: CharacterDao, val databaseDao: CharacterDa
     override fun getCharactersByName(name: String): List<Character> {
         val filteredCharactersDto: List<CharacterDto> = dao.getCharactersByName(name = name)
         val filteredCharacters: List<Character> = filteredCharactersDto.map { it.toCharacter() }
-        val favoriteCharacterIds = databaseDao.getAllCharactersDb().map { it.id }.toSet()
 
+        // 🚀 2️⃣ Obtener los personajes favoritos de la BD y convertirlos en un Map para acceso rápido
+        val favoriteCharactersMap = databaseDao.getAllCharactersDb().associateBy { it.id }
+
+        // 🚀 3️⃣ Fusionar datos del JSON con la BD (si el personaje está en la BD, tomar `esFavorito` de ahí)
         return filteredCharacters.map { character ->
-            character.copy(esFavorito = favoriteCharacterIds.contains(character.id))
+            val characterDb = favoriteCharactersMap[character.id] // Buscar personaje en la BD
+            character.copy(
+                esFavorito = characterDb?.esFavorito == true // Si está en la BD, usar su estado real
+            )
         }
     }
 

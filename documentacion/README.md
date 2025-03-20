@@ -533,7 +533,7 @@ Mantén una para la `API/JSON` y otra para la `BD`, así no mezclas responsabili
 
 ### 6. DUDA
 @@@@ DUDA @@@@
-Y si en vez de combinar en el repositorio `los episodios de db` con los de `json` se realiza por `separado` y cada vez que se vea un elemento de episodio lo que haga sea llamar a la función de ver si esta en la BD si esta ver su `estado de fav y visto` y según ese mostrar de una forma u otra. Eso no seria más correcto o mejor en rendimiento?
+Y si en vez de combinar en el repositorio `los episodios de db` con los de `json` se realiza por `separado` y cada vez que se vea un elemento de episodio lo que haga sea llamar a la función de ver si esta en la BD si esta ver su `estado de fav y visto` y según ese mostrar de una forma u otra. Eso no seria más correcto o mejor en rendimiento? **¿Es mejor unir los datos de la `BD y JSON en el repositorio` o `consultarlos al mostrarlos`?**
 
 @@@@ RESPUESTA GHAT GPT @@@@
 **¿Es mejor unir los datos de la `BD y JSON en el repositorio` o `consultarlos al mostrarlos`?**
@@ -639,6 +639,7 @@ fun EpisodeListScreen(viewModel: EpisodeViewModel) {
 💡 Luego, usa Flow de Room para escuchar cambios en la BD y actualizar la UI sin necesidad de consultas extra.
 
 ### 7. DUDA
+
 @@@@ DUDA @@@@
 **Conceptos básicos, 3 dudas**
 
@@ -742,3 +743,7 @@ override suspend fun deleteCharacterDb(id: Int) {
     databaseDao.deleteCharacterDb(id)
 }
 ```
+
+### DUDA 8
+
+
