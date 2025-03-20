@@ -801,3 +801,101 @@ class MyApp : Application() {
 • Se inicializa una única vez en toda la app.
 
 ### 9. DUDA
+@@@@ DUDA @@@@
+Le paso la sección de **casos de uso de `Quotes`** para que me **muestre posibles mejoras**
+
+@@@@ RESPUESTA GHAT GPT @@@@
+
+1️⃣ Usar operator `fun invoke()` en vez de `execute()`
+• Es una buena práctica en casos de uso, ya que hace que el código sea más limpio y fácil de usar.
+• En vez de useCase.execute(), puedes simplemente llamar useCase().
+
+```kotlin
+interface GetAllQuoteDbUseCase {
+    operator fun invoke(): List<Quote>
+}
+```
+
+```kotlin
+val getAllQuoteDbUseCase = GetAllQuoteDbUseCaseImpl(repository) // Crear una instancia del UseCase correctamente
+val quotes = getAllQuoteDbUseCase() // Dado que invoke() está sobrescrito, puedes llamarlo como una función normal
+```
+
+• Con la version antigua con `execute()` en vez de `invoke()`
+```kotlin
+interface GetAllEpisodesDbUseCase {
+    fun execute(): List<Quote>
+}
+```
+```kotlin
+val getAllQuoteDbUseCase = GetAllQuoteDbUseCaseImpl(repository) // Crear una instancia del UseCase correctamente
+val quotes = getAllQuoteDbUseCase.execute() // añadir la invocación con `.execute()`
+```
+
+2️⃣ Marcar los casos de uso como `suspend` si acceden a la `BD` o `API`, pero no si es `JSON`.
+• Como `Room` y `API` son `operaciones asincrónicas`, lo correcto es hacerlas en un `hilo en segundo plano`.
+
+Debes marcar un caso de uso con suspend si realiza una operación bloqueante o de larga duración, como:
+✅ Llamadas a la API (Red)
+✅ Consultas a la base de datos (Room, Firebase…)
+✅ Operaciones pesadas (cálculos intensivos)
+
+💡 Si accedes a un JSON en memoria (Mock de datos), no es necesario usar suspend porque la operación es rápida y no bloquea el hilo principal.
+
+👀 Si `getEpisodeByIdUseCase` llama internamente a `getEpisodeByIdDbUseCase`, y este último es `suspend`, entonces `getEpisodeByIdUseCase` también debería ser `suspend`, porque una función normal no puede llamar directamente a una función suspend sin estar dentro de una corrutina.
+
+📌 Reglas básicas
+- Si una función accede a una `BD o API` → `suspend`
+- Si una `función llama` a `otra suspend` → también `suspend`
+
+• Modifica las interfaces y las implementaciones con suspend:
+
+¿Cómo funciona `suspend`?
+En Kotlin, suspend se usa en funciones que pausan su ejecución sin bloquear el hilo.
+🚀 Se usan en `coroutines`, permitiendo `ejecutar código de forma asíncrona`.
+
+ ¿Cómo funciona `viewModelScope.launch {}`?
+`viewModelScope.launch` es una `corrutina vinculada al ciclo de vida del ViewModel`.
+👉 Se `cancela` automáticamente cuando el `ViewModel` se `destruye`.
+
+```kotlin
+interface GetQuotesUseCase {
+    suspend operator fun invoke(numElementos: Int, textPersonaje: String): List<Quote>
+}
+
+class GetQuotesUseCaseImpl(val repository: QuoteRepository): GetQuotesUseCase {
+    override suspend fun invoke(numElementos: Int, textPersonaje: String): List<Quote>
+        = repository.getQuotes(numElementos, textPersonaje)
+}
+```
+
+🔹 Así podrás llamarlo desde una corrutina en un ViewModel:
+```kotlin
+viewModelScope.launch {
+    val quotes = getQuotesUseCase(10, "Homer Simpson")
+}
+```
+
+¿Por qué usar `viewModelScope.launch` y no `GlobalScope.launch`?
+✅ `viewModelScope.launch` ➝ Mejor gestión del ciclo de vida, se cancela automáticamente.
+❌ `GlobalScope.launch` ➝ No se cancela, puede causar memory leaks si la UI desaparece.
+
+📌 Conclusión
+✔ Si una función llama a otra suspend, debe ser suspend
+✔ Si mezcla datos de una fuente no suspend (JSON) con una suspend (BD), debe ser suspend
+✔ Si no accede a una BD/API ni llama a otra suspend, entonces no necesita ser suspend
+✔ Ejecuta los suspend con viewModelScope.launch en ViewModel.
+✔ Evita GlobalScope.launch para prevenir memory leaks.
+
+3️⃣ Unificar el `nombre de los casos de uso` de la `BD` y `API`
+• Para diferenciar mejor los casos de uso, puedes agregar un sufijo:
+• Para la API: FetchQuotesUseCase
+• Para la BD: LoadQuotesFromDbUseCase
+
+✅ Más limpio: El código es más corto y más claro al usar invoke().
+✅ Asincronía: Usar suspend evita bloqueos en la UI y mejora el rendimiento.
+✅ Más idiomático: Seguirás las prácticas recomendadas de Kotlin.
+
+### 10. DUDA
+
+
