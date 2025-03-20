@@ -155,9 +155,9 @@ El archivo Logger.kt define una `interfaz de logging` que proporciona métodos e
 
 ### 4. Fichero ...
 - LEER MANU PROYECTO
-- VER VIDEO CLASE 1 DE ANTONIO LEIVA Y VIDEOS DE MIMO POR EL SUBIDOS
+- VER VIDEO CLASE 1 y 2 DE ANTONIO LEIVA (Y VIDEOS DE MIMO POR EL SUBIDOS)
 - REPASAR LAS CLASES DE ROBERTO
-- PASAR A REALIZAR EL VIEW MODEL (TODAVIA SIN SER ASINCRONO) **### DUDA 11.** Y LAS PANTALLAS BONITAS.
+- PASAR A REALIZAR EL VIEW MODEL Y CORRUTINAS (ASINCRONÍA) **### DUDA 11.** Y LAS PANTALLAS BONITAS.
 
 ### X. MIS DUDAS
 
@@ -1074,5 +1074,16 @@ class QuoteViewModel(private val getQuotesUseCase: GetQuotesUseCase) : ViewModel
 
 🚀 Uniendo todo, obtienes una UI reactiva, persistente y eficiente.
 
-### 12. DUDA
+### 12. DUDA (NUEVA)
+```kotlin
+fun loadQuotes(numElements: Int) {
+    viewModelScope.launch(Dispatchers.IO) { // Llamada en segundo plano
+        val result = getQuotesUseCase(numElements)
+        _quotes.value = result // Actualizar UI
+    }
+}
+```
+
+Mis dudas son en que función debe de poner el `suspend` en la del dao (del data), en la que se pasa en el repositorio o en al que se pasa al caso de uso o en todas. Y luego en cual hay que poner el contexto `viewModelScope.launch(Dispatchers.IO)` en el ViewModel donde se llama la función, el componente (vista) donde se llama la función o en ambos.
+
 
