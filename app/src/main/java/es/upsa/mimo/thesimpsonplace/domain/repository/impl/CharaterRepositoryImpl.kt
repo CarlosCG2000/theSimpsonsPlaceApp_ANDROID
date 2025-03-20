@@ -10,32 +10,30 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
 class CharaterRepositoryImpl(val dao: CharacterDao, val databaseDao: CharacterDatabaseDao): CharaterRepository {
 
     override fun getAllCharacters(): List<Character> {
-        // 🚀 1️⃣ Cargar datos del JSON/API
-        val allCharactersDto: List<CharacterDto> = dao.getAllCharacters() // según tenga definido la extracción en el dao 'CharacterDao'
-        val allCharacters: List<Character> = allCharactersDto.map { it.toCharacter() } // realizamos el mapea a la entidad 'Character'
-        //return allCharacters
+        // 🚀 1️⃣ Obtener todos los personajes del JSON/API y mapearlos a la entidad `Character`
+        val allCharactersDto = dao.getAllCharacters()
+        val allCharacters = allCharactersDto.map { it.toCharacter() }
 
-        // 🚀 2️⃣ Cargar datos de la BD
-        val allCharactersDB: List<Character> = databaseDao.getAllCharactersDb()
+        // 🚀 2️⃣ Obtener los personajes favoritos de la BD y convertirlos en un Map para acceso rápido
+        val favoriteCharactersMap = databaseDao.getAllCharactersDb().associateBy { it.id }
 
-        // 🚀 3️⃣️ Resultado final de los datos
+        // 🚀 3️⃣ Fusionar datos del JSON con la BD (si el personaje está en la BD, tomar `esFavorito` de ahí)
         return allCharacters.map { character ->
-            val characterDb = allCharactersDB[character.id]
-
-            if (characterDb != null) {
-                character.copy(
-                    esFavorito = true
-                )
-            } else {
-                character.copy()
-            }
+            val characterDb = favoriteCharactersMap[character.id] // Buscar personaje en la BD
+            character.copy(
+                esFavorito = characterDb?.esFavorito == true // Si está en la BD, usar su estado real
+            )
         }
     }
 
     override fun getCharactersByName(name: String): List<Character> {
-        val filterCharacterDto: List<CharacterDto> = dao.getCharactersByName(name = name)
-        val filterCharacter: List<Character> = filterCharacterDto.map { it.toCharacter() }
-        return filterCharacter
+        val filteredCharactersDto: List<CharacterDto> = dao.getCharactersByName(name = name)
+        val filteredCharacters: List<Character> = filteredCharactersDto.map { it.toCharacter() }
+        val favoriteCharacterIds = databaseDao.getAllCharactersDb().map { it.id }.toSet()
+
+        return filteredCharacters.map { character ->
+            character.copy(esFavorito = favoriteCharacterIds.contains(character.id))
+        }
     }
 
     override fun getAllCharactersDb(): List<Character> {

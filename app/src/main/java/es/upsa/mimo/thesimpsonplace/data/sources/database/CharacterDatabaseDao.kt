@@ -7,3 +7,4 @@ interface CharacterDatabaseDao {
     fun insertCharacterDb(character: Character): Unit // Insertar personaje en la base de datos
     fun deleteCharacterDb(id: Int): Unit // Borrar personaje en la base de datos
 }
+
