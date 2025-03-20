@@ -6,7 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersU
 
 class GetAllCharactersUseCaseImpl(val repository: CharaterRepository): GetAllCharactersUseCase {
 
-    override fun execute(): List<Character> {
+    override /*suspend*/ fun execute(): List<Character> {
         return repository.getAllCharacters()
     }
 

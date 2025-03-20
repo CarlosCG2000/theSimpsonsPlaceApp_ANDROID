@@ -6,7 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetFilterNameChar
 
 class GetFilterNameCharactersUseCaseImpl(val repository: CharaterRepository): GetFilterNameCharactersUseCase {
 
-    override fun execute(name: String): List<Character> {
+    override /*suspend*/ fun execute(name: String): List<Character> {
         return repository.getCharactersByName(name = name)
     }
 

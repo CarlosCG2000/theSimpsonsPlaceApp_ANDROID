@@ -154,7 +154,7 @@ Ahora mi app tiene un `modo claro` con `tonos más suaves`, diferenciándose del
 El archivo Logger.kt define una `interfaz de logging` que proporciona métodos estandarizados para registrar mensajes en diferentes niveles de severidad (Verbose, Debug, Info, Warning, Error, Assert). Su propósito es `centralizar y simplificar el proceso de depuración`, permitiendo que cualquier clase que la implemente pueda registrar logs sin repetir código. Además, asigna automáticamente `el nombre de la clase como etiqueta (tag)`, facilitando la identificación del origen de cada mensaje en Logcat.
 
 ### 4. Fichero ...
-ME QUEDAN IMPLEMENTAR PARA LOS OTROS SECCIONES, LEER MANU PROYECTO DE ANTONIO LEIVA, VER CLASES DE REPASAR LAS CLASES DE ROBERTO, PASAR A REALIZAR LAS PANTALLAS BONITAS.
+ME QUEDAN IMPLEMENTAR PARA LOS OTROS SECCIONES, LEER MANU PROYECTO, VER VIDEO DE ANTONIO LEIVA, VER CLASES DE REPASAR LAS CLASES DE ROBERTO, PASAR A REALIZAR LAS PANTALLAS BONITAS.
 
 ### X. MIS DUDAS
 

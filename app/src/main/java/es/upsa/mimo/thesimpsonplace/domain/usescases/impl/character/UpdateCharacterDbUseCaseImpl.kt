@@ -5,7 +5,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.UpdateCharacterDb
 
 class UpdateCharacterDbUseCaseImpl(val repository: CharaterRepository): UpdateCharacterDbUseCase {
 
-    override fun execute(id: Int) {
+    override /*suspend*/ fun execute(id: Int) {
         repository.deleteCharacterDb(id = id)
     }
 
