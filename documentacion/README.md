@@ -68,10 +68,9 @@ En `1. DUDA`, explicado el esquema que he seguido para app (muy similar en perso
 
 Ejemplo con la `sección episodios`:
 
-
+Ejemplo con la `sección citas`:
 
 6. ...
-
 
 ### 1. Fichero `Color.kt`
 
@@ -155,7 +154,7 @@ Ahora mi app tiene un `modo claro` con `tonos más suaves`, diferenciándose del
 El archivo Logger.kt define una `interfaz de logging` que proporciona métodos estandarizados para registrar mensajes en diferentes niveles de severidad (Verbose, Debug, Info, Warning, Error, Assert). Su propósito es `centralizar y simplificar el proceso de depuración`, permitiendo que cualquier clase que la implemente pueda registrar logs sin repetir código. Además, asigna automáticamente `el nombre de la clase como etiqueta (tag)`, facilitando la identificación del origen de cada mensaje en Logcat.
 
 ### 4. Fichero ...
-ME QUEDAN IMPLEMENTAR PARA LOS OTROS SECCIONES, REPASAR LAS CLASES DE ROBERTO, PASAR A REALIZAR LAS PANTALLAS BONITAS.
+ME QUEDAN IMPLEMENTAR PARA LOS OTROS SECCIONES, LEER MANU PROYECTO DE ANTONIO LEIVA, VER CLASES DE REPASAR LAS CLASES DE ROBERTO, PASAR A REALIZAR LAS PANTALLAS BONITAS.
 
 ### X. MIS DUDAS
 
@@ -745,7 +744,60 @@ override suspend fun deleteCharacterDb(id: Int) {
 ```
 
 ### 8. DUDA
+@@@@ DUDA @@@@
+Segun me explicas en la sección de Quote si quiero crear la BD con Room tengo que tener las entidades Room (al estilo que en SwiftUI para tener las entidades SwiftData tenia que tener las entidades con su macro @Model)
 
+Mi duda en el punto al igual de la integración con Room para la entidad QuoteEntity, entonces si quiero usar la misma BD de Room para persinajes y episodios tambien tendre que **¿crear sus entidades de ROOM verdad?**
 
+@@@@ RESPUESTA GHAT GPT @@@@
+Sí, si quieres usar Room para gestionar la persistencia de personajes (Character) y episodios (Episode), necesitas crear sus respectivas entidades de Room.
 
+Cada entidad de Room representa una tabla en la base de datos, por lo que debes definir una entidad por cada tipo de dato que quieras almacenar en la BD.
 
+1️⃣ Cómo estructurar las entidades en Room
+Para seguir una estructura coherente, puedes hacer lo mismo que hiciste con QuoteEntity, creando una entidad para personajes (CharacterEntity) y otra para episodios (EpisodeEntity).
+
+2️⃣ Definir RoomDatabase
+Una vez definidas las entidades, necesitas un RoomDatabase que maneje la BD completa.
+```kotlin
+import androidx.room.Database
+import androidx.room.RoomDatabase
+
+@Database(
+    entities = [QuoteEntity::class, CharacterEntity::class, EpisodeEntity::class], // Agregamos todas las entidades
+    version = 1,
+    exportSchema = false
+)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun quoteDao(): QuoteDatabaseDao
+    abstract fun characterDao(): CharacterDatabaseDao
+    abstract fun episodeDao(): EpisodeDatabaseDao
+}
+```
+
+3️⃣ Inicializar Room en Application
+Para que Room funcione en toda la app, inicialízala en Application:
+```kotlin
+import android.app.Application
+import androidx.room.Room
+
+class MyApp : Application() {
+    companion object {
+        lateinit var database: AppDatabase
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        database = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "app_database"
+        ).build()
+    }
+}
+```
+✅ Explicación:
+• Room.databaseBuilder() crea la BD.
+• Se inicializa una única vez en toda la app.
+
+### 9. DUDA

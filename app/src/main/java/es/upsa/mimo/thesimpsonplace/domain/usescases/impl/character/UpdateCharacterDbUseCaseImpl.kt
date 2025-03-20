@@ -1,7 +1,7 @@
-package es.upsa.mimo.thesimpsonplace.domain.usescases.impl
+package es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character
 
 import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
-import es.upsa.mimo.thesimpsonplace.domain.usescases.UpdateCharacterDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.character.UpdateCharacterDbUseCase
 
 class UpdateCharacterDbUseCaseImpl(val repository: CharaterRepository): UpdateCharacterDbUseCase {
 

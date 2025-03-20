@@ -3,7 +3,6 @@ package es.upsa.mimo.thesimpsonplace.data.mappers
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
 import es.upsa.mimo.thesimpsonplace.data.utils.toDate
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
-import kotlinx.serialization.SerialName
 import java.util.Date
 import kotlin.String
 
@@ -28,3 +27,33 @@ fun EpisodeDto.toEpisode(): Episode{
 //      esFavorito = false    // por defecto es 'false'
     )
 }
+
+// ROOM
+/**
+    // Mapper: Convertir EpisodeEntity a Episode
+    fun EpisodeEntity.toEpisode(): Episode {
+    return Episode(
+    id = id,
+    titulo = titulo,
+    temporada = temporada,
+    episodio = episodio,
+    lanzamiento = Date(lanzamiento), // Convertimos el timestamp a Date
+    descripcion = descripcion,
+    esFavorito = esFavorito,
+    esVisto = esVisto
+    )
+    }
+
+    // Mapper: Convertir Episode a EpisodeEntity
+    fun Episode.toEpisodeEntity(): EpisodeEntity {
+    return EpisodeEntity(
+    id = id,
+    titulo = titulo,
+    temporada = temporada,
+    episodio = episodio,
+    lanzamiento = lanzamiento.time, // Convertimos Date a timestamp
+    descripcion = descripcion,
+    esFavorito = esFavorito,
+    esVisto = esVisto
+    )
+ */

@@ -12,3 +12,26 @@ fun CharacterDto.toCharacter()
         genero = Gender.fromAbbreviation(genero) // Convierte "m" -> Male, "f" -> Female
 //      esFavorito = false    // por defecto es 'false'
     )
+
+// ROOM
+/**
+    // Mapper: Convertir CharacterEntity a Character
+    fun CharacterEntity.toCharacter(): Character {
+        return Character(
+            id = id,
+            nombre = nombre,
+            imagen = imagen,
+            esFavorito = esFavorito
+        )
+    }
+
+    // Mapper: Convertir Character a CharacterEntity
+    fun Character.toCharacterEntity(): CharacterEntity {
+        return CharacterEntity(
+            id = id,
+            nombre = nombre,
+            imagen = imagen,
+            esFavorito = esFavorito
+        )
+    }
+ */
