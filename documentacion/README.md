@@ -66,9 +66,9 @@ Añadida las subcarpetas para la sección de personajes. Explicación `1. DUDA.`
 5. Añadir en el esqueleto (`punto 3.`) a aparte la que esta ya de personajes, las `secciones` de `episodio`, `citas` y `juego`.
 En `1. DUDA`, explicado el esquema que he seguido para app (muy similar en personajes con las demás secciones que ahora implemento).
 
-Ejemplo con la `sección episodios`:
-
-Ejemplo con la `sección citas`:
+Ejemplo con la `sección episodios`: 😸
+Ejemplo con la `sección citas`: 😸
+Ejemplo con la `sección juego`: 😸
 
 6. ...
 
@@ -154,7 +154,10 @@ Ahora mi app tiene un `modo claro` con `tonos más suaves`, diferenciándose del
 El archivo Logger.kt define una `interfaz de logging` que proporciona métodos estandarizados para registrar mensajes en diferentes niveles de severidad (Verbose, Debug, Info, Warning, Error, Assert). Su propósito es `centralizar y simplificar el proceso de depuración`, permitiendo que cualquier clase que la implemente pueda registrar logs sin repetir código. Además, asigna automáticamente `el nombre de la clase como etiqueta (tag)`, facilitando la identificación del origen de cada mensaje en Logcat.
 
 ### 4. Fichero ...
-ME QUEDAN IMPLEMENTAR PARA LOS OTROS SECCIONES, LEER MANU PROYECTO, VER VIDEO DE ANTONIO LEIVA, VER CLASES DE REPASAR LAS CLASES DE ROBERTO, PASAR A REALIZAR LAS PANTALLAS BONITAS.
+- LEER MANU PROYECTO
+- VER VIDEO CLASE 1 DE ANTONIO LEIVA
+- REPASAR LAS CLASES DE ROBERTO
+- PASAR A REALIZAR EL VIEW MODEL (TODAVIA SIN SER ASINCRONO) **### DUDA 11.** Y LAS PANTALLAS BONITAS.
 
 ### X. MIS DUDAS
 
@@ -897,5 +900,76 @@ viewModelScope.launch {
 ✅ Más idiomático: Seguirás las prácticas recomendadas de Kotlin.
 
 ### 10. DUDA
+Como deberia implementar `la entidad y logica del juego`
 
+1️⃣ Creación de la entidad Question en `domain/entities` con `Question.kt`
+2️⃣ Creación del mapeo de Quote a Question en `domain/mappers` con `QuestionMapper.kt`
+3️⃣ Creación del caso de uso en `domain/usecases/quote` y `domain/usecases/impl/quote`
+4️⃣ Implementación del ViewModel en `presentation/viewmodel`
+
+```kotlin
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import es.upsa.mimo.thesimpsonplace.domain.entities.Question
+import es.upsa.mimo.thesimpsonplace.domain.usecases.GetQuestionsUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+
+class QuizViewModel(private val getQuestionsUseCase: GetQuestionsUseCase) : ViewModel() {
+
+    private val _questions = MutableStateFlow<List<Question>>(emptyList())
+    val questions: StateFlow<List<Question>> = _questions
+
+    fun loadQuestions(numElements: Int) {
+        viewModelScope.launch {
+            _questions.value = getQuestionsUseCase.execute(numElements)
+        }
+    }
+}
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.QuizViewModel
+
+@Composable
+fun QuizScreen(viewModel: QuizViewModel = viewModel()) {
+    val questions by viewModel.questions.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadQuestions(5) // Cargar 5 preguntas
+    }
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        questions.forEach { question ->
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = question.cita, style = MaterialTheme.typography.headlineSmall)
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    val opciones = listOf(question.personajeCorrecto) + question.personajeIncorrectos
+                    opciones.shuffled().forEach { opcion ->
+                        ClickableText(
+                            text = androidx.compose.ui.text.AnnotatedString(opcion),
+                            onClick = { /* TODO: Manejar la respuesta */ }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+```
+✅ Utilizamos `StateFlow` para manejar el `estado reactivo` en la UI.
+✅ `viewModelScope.launch` inicia una `corrutina` para llamadas suspendidas.
+
+### 11. DUDA 📚
 
