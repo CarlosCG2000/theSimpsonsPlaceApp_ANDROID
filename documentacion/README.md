@@ -155,7 +155,7 @@ El archivo Logger.kt define una `interfaz de logging` que proporciona métodos e
 
 ### 4. Fichero ...
 - LEER MANU PROYECTO
-- VER VIDEO CLASE 1 DE ANTONIO LEIVA
+- VER VIDEO CLASE 1 DE ANTONIO LEIVA Y VIDEOS DE MIMO POR EL SUBIDOS
 - REPASAR LAS CLASES DE ROBERTO
 - PASAR A REALIZAR EL VIEW MODEL (TODAVIA SIN SER ASINCRONO) **### DUDA 11.** Y LAS PANTALLAS BONITAS.
 
@@ -972,4 +972,107 @@ fun QuizScreen(viewModel: QuizViewModel = viewModel()) {
 ✅ `viewModelScope.launch` inicia una `corrutina` para llamadas suspendidas.
 
 ### 11. DUDA 📚
+📌 Entendiendo los conceptos: `ViewModel`, `Holder Observables` y `Corrutinas`
+
+Para que quede claro, vamos a separar y explicar cada concepto, cómo se relacionan y qué función cumplen en una aplicación con `Jetpack Compose`.
+
+#### 1️⃣ `ViewModel`: Persistencia y Gestión de Estado
+
+🔹 Propósito:
+El `ViewModel` es una `clase diseñada` para sobrevivir a los `cambios de configuración` (por ejemplo, la rotación de pantalla) y `almacenar el estado y la lógica de negocio` de una `pantalla`.
+
+🔹 Cómo ayuda a `la reactividad`:
+• Contiene `datos que la UI` necesita (ejemplo: una `lista de elementos`).
+• Expone esos datos con `Holder Observables (StateFlow, LiveData o MutableState)`.
+• La `UI se suscribe a estos datos`, por lo que se `actualiza automáticamente cuando cambian`.
+
+🔹 Ejemplo: `ViewModel` con `StateFlow`
+```kotlin
+class QuoteViewModel(private val getQuotesUseCase: GetQuotesUseCase) : ViewModel() {
+
+    private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
+    val quotes: StateFlow<List<Quote>> = _quotes // UI observa este flujo
+
+    fun loadQuotes(numElements: Int) {
+        viewModelScope.launch { // Corrutina (asincronía)
+            _quotes.value = getQuotesUseCase(numElements)
+        }
+    }
+}
+```
+
+✅ Aquí usamos `StateFlow` para que la` UI sea reactiva` a los cambios en `_quotes`.
+✅ `viewModelScope.launch` ejecuta el código en segundo plano (`corrutina`).
+
+⸻
+
+#### 2️⃣ `Holder Observables`: Estado Reactivo dentro de Compose
+
+🔹 Propósito:
+Un `Holder Observable (State, MutableState, StateFlow, LiveData)` mantiene `valores reactivos en la UI`.
+
+🔹 `Diferencia` con `ViewModel`:
+• Un `Holder Observable solo gestiona estado en la UI` (no persiste datos después de un cambio de configuración).
+• Un `ViewModel` `persiste datos y maneja lógica de negocio.`
+
+🔹 Ejemplo de `MutableState` dentro de una `Composable (sin ViewModel)`
+```kotlin
+@Composable
+fun CounterScreen() {
+    var counter by remember { mutableStateOf(0) }
+
+    Column {
+        Text("Contador: $counter")
+        Button(onClick = { counter++ }) {
+            Text("Incrementar")
+        }
+    }
+}
+```
+
+✅ Aquí `counter` es `reactivo`: cada vez que cambia, la `UI se actualiza automáticamente`.
+⚠️ Pero si `rotamos la pantalla`, el `contador` se `reinicia` porque `no hay ViewModel`.
+
+#### 3️⃣ `Corrutinas`: Ejecución Asíncrona en Segundo Plano
+
+🔹 Propósito:
+Las `corrutinas` permiten realizar `operaciones asíncronas sin bloquear el hilo principal`.
+• Perfectas para `llamadas a API`, base de `datos o tareas largas`.
+• Se integran dentro de `ViewModel` con `viewModelScope.launch { }`.
+
+🔹 Ejemplo de uso en `ViewModel`:
+```kotlin
+class QuoteViewModel(private val getQuotesUseCase: GetQuotesUseCase) : ViewModel() {
+
+    private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
+    val quotes: StateFlow<List<Quote>> = _quotes
+
+    fun loadQuotes(numElements: Int) {
+        viewModelScope.launch(Dispatchers.IO) { // Llamada en segundo plano
+            val result = getQuotesUseCase(numElements)
+            _quotes.value = result // Actualizar UI
+        }
+    }
+}
+```
+
+✅ La API se llama en Dispatchers.IO para no bloquear la UI.
+✅ La UI se actualiza cuando _quotes cambia.
+
+#### 📌 Diferencias clave entre ViewModel, Holder Observables y Corrutinas
+
+| Concepto | Función | Reactivo | Asíncrono | Dónde usarlo |
+|----------|---------|----------|-----------|--------------|
+| **ViewModel** | Persiste datos y maneja lógica de negocio | ✅ Sí (con `StateFlow` o `LiveData`) | 🚫 No (pero puede usar corrutinas) | Lógica de la pantalla |
+| **Holder Observables** (`State`, `MutableState`) | Estado reactivo dentro de la UI | ✅ Sí | 🚫 No | Dentro de una `@Composable` |
+| **Corrutinas** | Tareas en segundo plano | 🚫 No (por sí solas) | ✅ Sí | Llamadas a API, BD |
+
+📌 Conclusión
+1️⃣ Para hacer la UI reactiva: usa ViewModel con StateFlow o LiveData.
+2️⃣ Si los datos son locales a la pantalla: usa MutableState dentro de @Composable.
+3️⃣ Para hacer llamadas asíncronas: usa viewModelScope.launch { } con corrutinas.
+
+🚀 Uniendo todo, obtienes una UI reactiva, persistente y eficiente.
+
+### 12. DUDA
 
