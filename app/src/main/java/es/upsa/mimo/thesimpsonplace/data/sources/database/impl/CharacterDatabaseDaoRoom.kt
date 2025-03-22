@@ -6,7 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 // Implementación de 'CharacterDBDao' (acciones) en base de datos de 'Room'
 class CharacterDatabaseDaoRoom: CharacterDatabaseDao {
     override suspend fun getAllCharactersDb(): List<Character> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun insertCharacterDb(character: Character) {

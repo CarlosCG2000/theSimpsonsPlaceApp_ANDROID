@@ -14,16 +14,15 @@ class CharacterDaoJson(val context: Context, val json: String): CharacterDao {
     // json -> dependiendo del json va a ser para producción o para testing
 
     override suspend fun getAllCharacters(): List<CharacterDto> {
-        val jsonString = try {
-            context.assets.open(json ).bufferedReader().use { it.readText() }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return emptyList()
-        }
 
-        val gson = Gson()
-        val listType = object : TypeToken<List<Character>>() {}.type
-        return gson.fromJson(jsonString, listType)
+        // Abrir el archivo JSON desde los assets
+        val json = context.assets.open(json).bufferedReader().use { it.readText() }
+
+        // Configurar el deserializador de JSON
+        val jsonFormat = Json { ignoreUnknownKeys = true }
+
+        // Decodificar el JSON a una lista de objetos CharacterDto
+        return jsonFormat.decodeFromString<List<CharacterDto>>(json)
     }
 
     override suspend fun getCharactersByName(name: String): List<CharacterDto> {

@@ -1,6 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character
 
 import android.app.Application
+import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import es.upsa.mimo.thesimpsonplace.data.sources.database.CharacterDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseDaoRoom
@@ -21,18 +22,51 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.UpdateCharac
 
 class ListCharacterApplication: Application() {
 
+//    // La implementacion en producción de Impl.
+//    private val characterDao: CharacterDao = CharacterDaoJson(applicationContext, "personajes_data.json")
+//    private val characterDatabaseDao: CharacterDatabaseDao = CharacterDatabaseDaoRoom()
+//    private val characterRepository: CharaterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
+//
+//    val getAllCharacters: GetAllCharactersUseCase = GetAllCharactersUseCaseImpl(characterRepository)
+//    val getCharactersByName: GetFilterNameCharactersUseCase = GetFilterNameCharactersUseCaseImpl(characterRepository)
+//    val getAllCharactersDb: FetchAllCharactersDbUseCase = FetchAllCharactersDbUseCaseImpl(characterRepository)
+//    val insertCharacterDb: InsertCharacterDbUseCase = InsertCharacterDbUseCaseImpl(characterRepository)
+//    val deleteCharacterDb: UpdateCharacterDbUseCase = UpdateCharacterDbUseCaseImpl(characterRepository)
+//
+//    override fun onCreate(){
+//        val appContext = applicationContext
+//        super.onCreate()
+//    }
+
+    // Primero obtenemos el context de la aplicación
+    private lateinit var appContext: Context
+
     // La implementacion en producción de Impl.
-    private val characterDao: CharacterDao = CharacterDaoJson(applicationContext, "personajes_data.json")
-    private val characterDatabaseDao: CharacterDatabaseDao = CharacterDatabaseDaoRoom()
-    private val characterRepository: CharaterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
+    private lateinit var characterDao: CharacterDao
+    private lateinit var characterDatabaseDao: CharacterDatabaseDao
+    private lateinit var characterRepository: CharaterRepository
 
-    val getAllCharacters: GetAllCharactersUseCase = GetAllCharactersUseCaseImpl(characterRepository)
-    val getCharactersByName: GetFilterNameCharactersUseCase = GetFilterNameCharactersUseCaseImpl(characterRepository)
-    val getAllCharactersDb: FetchAllCharactersDbUseCase = FetchAllCharactersDbUseCaseImpl(characterRepository)
-    val insertCharacterDb: InsertCharacterDbUseCase = InsertCharacterDbUseCaseImpl(characterRepository)
-    val deleteCharacterDb: UpdateCharacterDbUseCase = UpdateCharacterDbUseCaseImpl(characterRepository)
+    lateinit var getAllCharacters: GetAllCharactersUseCase
+    lateinit var getCharactersByName: GetFilterNameCharactersUseCase
+    lateinit var getAllCharactersDb: FetchAllCharactersDbUseCase
+    lateinit var insertCharacterDb: InsertCharacterDbUseCase
+    lateinit var deleteCharacterDb: UpdateCharacterDbUseCase
 
-    override fun onCreate(){
+    override fun onCreate() {
         super.onCreate()
+
+        // Ahora puedes asignar el contexto después de llamar a super.onCreate()
+        appContext = applicationContext
+
+        // Luego de inicializar el contexto, puedes proceder con las inicializaciones
+        characterDao = CharacterDaoJson(appContext, "personajes_data.json")
+        characterDatabaseDao = CharacterDatabaseDaoRoom()
+        characterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
+
+        getAllCharacters = GetAllCharactersUseCaseImpl(characterRepository)
+        getCharactersByName = GetFilterNameCharactersUseCaseImpl(characterRepository)
+        getAllCharactersDb = FetchAllCharactersDbUseCaseImpl(characterRepository)
+        insertCharacterDb = InsertCharacterDbUseCaseImpl(characterRepository)
+        deleteCharacterDb = UpdateCharacterDbUseCaseImpl(characterRepository)
     }
 }
