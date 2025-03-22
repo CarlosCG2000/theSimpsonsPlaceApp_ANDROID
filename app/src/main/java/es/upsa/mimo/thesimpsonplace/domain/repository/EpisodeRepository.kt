@@ -5,17 +5,17 @@ import java.util.Date
 
 interface EpisodeRepository {
     // Casos de uso de la datos obtenido de la fuente principal
-    fun getAllEpisodes(): List<Episode>
-    fun getEpisodeById(id: String): Episode?
-    fun getEpisodesByTitle(title: String): List<Episode>
-    fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<Episode>
-    fun getEpisodesBySeason(season:Int): List<Episode>
-    fun getEpisodesByChapter(chapter:Int): List<Episode>
+    suspend fun getAllEpisodes(): List<Episode>
+    suspend fun getEpisodeById(id: String): Episode?
+    suspend fun getEpisodesByTitle(title: String): List<Episode>
+    suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<Episode>
+    suspend fun getEpisodesBySeason(season:Int): List<Episode>
+    suspend fun getEpisodesByChapter(chapter:Int): List<Episode>
 
     // Casos de uso de la datos de la base de datos
-    fun getAllEpisodesDb(): List<Episode>
-    fun getEpisodeByIdDb(id: String): Episode?
-    fun getEpisodeByIdsDb(ids: List<String>): List<Episode>?
-    fun updateEpisodeDb(id: String, esView: Boolean, isFav: Boolean): Unit
-    fun insertEpisodeDb(episode: Episode, esView: Boolean, isFav: Boolean): Unit
+    suspend fun getAllEpisodesDb(): List<Episode>
+    suspend fun getEpisodeByIdDb(id: String): Episode?
+    suspend fun getEpisodeByIdsDb(ids: List<String>): List<Episode>?
+    suspend fun updateEpisodeDb(id: String, esView: Boolean, isFav: Boolean): Unit
+    suspend fun insertEpisodeDb(episode: Episode, esView: Boolean, isFav: Boolean): Unit
 }

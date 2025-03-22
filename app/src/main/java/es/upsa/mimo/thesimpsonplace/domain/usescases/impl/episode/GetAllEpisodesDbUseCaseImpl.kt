@@ -5,5 +5,5 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUseCase
 
 class GetAllEpisodesDbUseCaseImpl(val repository: EpisodeRepository): GetAllEpisodesDbUseCase{
-    override /*suspend*/ fun execute(): List<Episode> = repository.getAllEpisodesDb()
+    override suspend fun execute(): List<Episode> = repository.getAllEpisodesDb()
 }

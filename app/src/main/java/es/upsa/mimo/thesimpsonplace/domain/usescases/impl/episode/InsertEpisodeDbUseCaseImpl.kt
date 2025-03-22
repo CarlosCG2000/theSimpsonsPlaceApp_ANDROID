@@ -6,7 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.InsertEpisodeDbUseC
 
 class InsertEpisodeDbUseCaseImpl(val repository: EpisodeRepository): InsertEpisodeDbUseCase {
 
-    override /*suspend*/ fun execute(
+    override suspend fun execute(
         episode: Episode,
         esView: Boolean,
         isFav: Boolean

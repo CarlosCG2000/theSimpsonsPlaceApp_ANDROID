@@ -7,7 +7,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuestionsUseCase
 
 class GetQuestionsUseCaseImpl(val repository: QuoteRepository): GetQuestionsUseCase {
 
-    override fun execute(): List<Question> {
+    override suspend fun execute(): List<Question> {
         return repository.getQuotes().map { it.toQuestion() }
     }
 

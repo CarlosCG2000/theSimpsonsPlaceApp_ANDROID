@@ -5,5 +5,5 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByChapterUseCase
 
 class GetEpisodesByChapterUseCaseImpl(val repository: EpisodeRepository):GetEpisodesByChapterUseCase {
-    override /*suspend*/ fun execute(chapter: Int): List<Episode> = repository.getEpisodesByChapter(chapter)
+    override suspend fun execute(chapter: Int): List<Episode> = repository.getEpisodesByChapter(chapter)
 }

@@ -7,7 +7,7 @@ import java.util.Date
 
 class GetEpisodesByDateUseCaseImpl(val repository: EpisodeRepository):GetEpisodesByDateUseCase {
 
-    override /*suspend*/ fun execute(
+    override suspend fun execute(
         minDate: Date?,
         maxDate: Date?
     ): List<Episode> = repository.getEpisodesByDate(minDate, maxDate)

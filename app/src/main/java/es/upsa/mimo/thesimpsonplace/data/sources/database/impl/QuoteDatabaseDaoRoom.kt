@@ -39,19 +39,19 @@ class QuoteDatabaseDaoRoom: QuoteDatabaseDao {
 //    •	@Insert(onConflict = OnConflictStrategy.REPLACE) previene duplicados.
 //    •	@Dao convierte la interfaz en un acceso a la BD.
 
-    override fun getAllQuoteDb(): List<Quote> {
+    override suspend fun getAllQuoteDb(): List<Quote> {
         TODO("Not yet implemented")
     }
 
-    override fun getQuoteByCitaDb(cita: String): Quote {
+    override suspend fun getQuoteByCitaDb(cita: String): Quote {
         TODO("Not yet implemented")
     }
 
-    override fun insertQuoteDb(quote: Quote) {
+    override suspend fun insertQuoteDb(quote: Quote) {
         TODO("Not yet implemented")
     }
 
-    override fun deleteQuoteDb(cita: String) {
+    override suspend fun deleteQuoteDb(cita: String) {
         TODO("Not yet implemented")
     }
 }

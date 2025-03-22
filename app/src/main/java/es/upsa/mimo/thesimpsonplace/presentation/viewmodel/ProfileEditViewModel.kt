@@ -7,19 +7,19 @@ import androidx.lifecycle.ViewModel
 
 class ProfileFormViewModel: ViewModel() {
 
-    var state by mutableStateOf(ProfileEditUiState())
+    var state by mutableStateOf(ProfileEditStateUI())
         private set // no se puede modificar la varaible fuera de aquí
 
     fun onLoginClick(user: String, pass: String){
         state = when {
-            user.contains('@') -> ProfileEditUiState(error = "User must be a valid name")
-            pass.length < 5 -> ProfileEditUiState(error = "Password must be at least 5 characters")
-            else -> ProfileEditUiState(loggedIn = true)
+            user.contains('@') -> ProfileEditStateUI(error = "User must be a valid name")
+            pass.length < 5 -> ProfileEditStateUI(error = "Password must be at least 5 characters")
+            else -> ProfileEditStateUI(loggedIn = true)
         }
     }
 
      fun onLoggedIn() {
-        state = ProfileEditUiState(loggedIn = false)
+        state = ProfileEditStateUI(loggedIn = false)
     }
 
 }

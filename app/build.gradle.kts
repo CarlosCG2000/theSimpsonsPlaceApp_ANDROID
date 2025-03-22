@@ -41,7 +41,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,6 +55,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose) // Navigation compose
     implementation(libs.coil.compose) // Coil Compose (cargar imagenes web)
     implementation(libs.androidx.material.icons.extended) // Material Icons Extension (para tener mas iconos)
+    implementation(libs.gson)  // GSON
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

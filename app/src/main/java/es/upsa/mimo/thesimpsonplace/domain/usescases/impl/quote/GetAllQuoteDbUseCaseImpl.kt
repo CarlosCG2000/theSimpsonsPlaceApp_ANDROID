@@ -5,5 +5,5 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetAllQuoteDbUseCase
 
 class GetAllQuoteDbUseCaseImpl(val repository: QuoteRepository): GetAllQuoteDbUseCase {
-    override /*suspend*/ fun execute(): List<Quote> = repository.getAllQuoteDb()
+    override suspend fun execute(): List<Quote> = repository.getAllQuoteDb()
 }

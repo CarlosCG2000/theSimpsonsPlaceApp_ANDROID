@@ -6,6 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleU
 
 class GetEpisodesByTitleUseCaseImpl(val repository: EpisodeRepository):GetEpisodesByTitleUseCase {
 
-    override /*suspend*/ fun execute(title: String): List<Episode> = repository.getEpisodesByTitle(title)
+    override suspend fun execute(title: String): List<Episode> = repository.getEpisodesByTitle(title)
 
 }

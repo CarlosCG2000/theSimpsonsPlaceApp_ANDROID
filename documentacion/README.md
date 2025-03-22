@@ -62,6 +62,7 @@ Añadida las subcarpetas para la sección de personajes. Explicación `1. DUDA.`
 * 4. Navigation:  navigation compose. `androidx.navigation`.
 * 5. Coil: `io.coil-kt` y aplicamos la de `coil-compose`. Carga de imágenes de web.
 * 6. Extensión de iconos: buscar `material-icons` obtener `material-icons-extended`.
+* 7. `com.google.code.gson`: `GSON` para obtener del fichero json los personajes (character).
 
 5. Añadir en el esqueleto (`punto 3.`) a aparte la que esta ya de personajes, las `secciones` de `episodio`, `citas` y `juego`.
 En `1. DUDA`, explicado el esquema que he seguido para app (muy similar en personajes con las demás secciones que ahora implemento).
@@ -1077,7 +1078,7 @@ class QuoteViewModel(private val getQuotesUseCase: GetQuotesUseCase) : ViewModel
 ```kotlin
 fun loadQuotes(numElements: Int) {
     viewModelScope.launch(Dispatchers.IO) { // Llamada en segundo plano
-        val result = getQuotesUseCase(numElements)
+        val result = getQuotesUseCase(numElements) // función suspend
         _quotes.value = result // Actualizar UI
     }
 }
@@ -1085,4 +1086,170 @@ fun loadQuotes(numElements: Int) {
 
 Mis dudas son en que función debe de poner el `suspend` en la del dao (del data), en la que se pasa en el repositorio o en al que se pasa al caso de uso o en todas. Y luego en cual hay que poner el contexto `viewModelScope.launch(Dispatchers.IO)` en el ViewModel donde se llama la función, el componente (vista) donde se llama la función o en ambos.
 
+EXPLICACIÓN MIA:
+Basicamente para llamar a las funciones `suspend` en las `vistas` voy a tener que abrir un contructor (`launch` o `async`) de una corrutina (con su contexto (`scope`, adecuado)) para poder llamar a la funcion: (ESTO EN EL VIEW MODEL)
+```kotlin
+viewModelScope.launch(Dispatcher.Main) { // si no se pone nada por defecto en el hilo principal (UI). Falta ver cual es el 'scope'.
+     performCpuTask() // funcion suspend (tengra el contexto incluido). Declarar en el View Model
 
+    cpuResult = context.getString(R.string.cpu)
+    isCpuLoading = true
+}
+```
+
+Y en el el `View Model` se declarar la `función suspend` con el `contexto ya incluido`: (LO MISMO ESTO SERIA EN EL REPOSITORIO)
+```kotlin
+private suspend performCpuTask(): Int = withContext(Dispatcher.Default){ // función en el contexto del hilo secundario de Default
+    var result = 0
+    for(i in 1..1_000_000){
+        result += i
+    }
+    result
+}
+```
+
+Mis dudas es como se declara en los `casos de uso y mas abajo` si solo con la `funcion como suspend` o añadiendole el contexto, etc.
+
+Y tambien que `Scope` tendre que usar. El `viewModelScope` usa por defecto el `Dispatcher.Main`.
+
+¿`viewModelScope` en la `vista` o en el `View Model`? Y que queda la vista aun mas limpia: (ESOT YA EN LA VISTA)
+
+```kotlin
+@Composable
+fun MiPantalla(viewModel: MiViewModel = viewModel()) {
+    Button(onClick = { viewModel.realizarTareaLarga() }) {
+        Text("Ejecutar tarea")
+    }
+}
+```
+
+DUDA A CHAT GPT
+Mi duda escomo aplicar corrutinas correctamente en mi App, el cual quiero tener una estructura que data -> domain -> presentation con la arquitectura MVVM, la cuestion es:
+Por ejemplo:
+- En data la entidad Character y la interfaz CharacterDao, la cual integra varias funciones para realizar a una API y CharacterDBDao con varias funciones para una BD. Y luego tengo la carpeta impl que tiene implementaciones de esta interfaces.
+
+interface CharacterDatabaseDao {
+    fun getAllCharactersDb(): List<Character> // Obtener todos los personajes de la base de datos
+    ...
+}
+
+class CharacterDatabaseDaoRoom: CharacterDatabaseDao {
+    override fun getAllCharactersDb(): List<Character> {
+        TODO("Not yet implemented")
+    }
+    ...
+}
+
+¿Como lo tendria que definir como?
+ suspend  fun getAllCharactersDb(): List<Character> 
+
+    override suspend fun getAllCharactersDb(): List<Character> {
+        TODO("Not yet implemented")
+    }
+
+- En  domain tengo la entity correspondiente de Character y un repository CharaterRepository  y CharaterRepositoryImpl, ¿esto seria asi?
+interface CharaterRepository {
+    // Casos de uso de la datos obtenido de la fuente principal
+    suspend fun getAllCharacters(): List<Character>
+    suspend fun getCharactersByName(name: String): List<Character> // Nueva: filtrar los personajes por nombre
+...
+}
+
+class CharaterRepositoryImpl(val dao: CharacterDao, val databaseDao: CharacterDatabaseDao): CharaterRepository {
+
+    override suspend fun getAllCharacters(): List<Character>{
+        // 🚀 1️⃣ Obtener todos los personajes del JSON/API y mapearlos a la entidad Character
+        val allCharactersDto = dao.getAllCharacters()
+        val allCharacters = allCharactersDto.map { it.toCharacter() }
+
+        // 🚀 2️⃣ Obtener los personajes favoritos de la BD y convertirlos en un Map para acceso rápido
+        val favoriteCharactersMap = databaseDao.getAllCharactersDb().associateBy { it.id }
+
+        // 🚀 3️⃣ Fusionar datos del JSON con la BD (si el personaje está en la BD, tomar esFavorito de ahí)
+        return allCharacters.map { character ->
+            val characterDb = favoriteCharactersMap[character.id] // Buscar personaje en la BD
+            character.copy(
+                esFavorito = characterDb?.esFavorito == true // Si está en la BD, usar su estado real
+            )
+        }
+    }
+
+Ademas tengo los caoss d euso con su interfaces y implementaciones igualmente:¿Serian asi?
+interface FetchAllCharactersDbUseCase {
+    suspend fun execute(): List<Character>
+}
+
+class FetchAllCharactersDbUseCaseImpl(val repository: CharaterRepository): FetchAllCharactersDbUseCase {
+    override /*suspend*/ fun execute(): List<Character> = withContext(Dispatcher.IO){
+        TODO("Not yet implemented")
+    }
+}
+
+- Luego estarria la carpeta presenter con los viewmodes y views (composables):
+Estaria el CharactersStateUI: data class CharactersStateUI (val chararacters:List<Character> = emptyList())
+El ListCharacterApplication: 
+class ListCharacterApplication: Application() {
+
+    // La implementacion en producción de Impl.
+    private val characterDao: CharacterDao = CharacterDaoJson("mi_ruta_archivo_json")
+    private val characterDatabaseDao: CharacterDatabaseDao = CharacterDatabaseDaoRoom()
+    private val characterRepository: CharaterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
+
+    val getAllCharacters: GetAllCharactersUseCase = GetAllCharactersUseCaseImpl(characterRepository)
+    val getCharactersByName: GetFilterNameCharactersUseCase = GetFilterNameCharactersUseCaseImpl(characterRepository)
+    val getAllCharactersDb: FetchAllCharactersDbUseCase = FetchAllCharactersDbUseCaseImpl(characterRepository)
+    val insertCharacterDb: InsertCharacterDbUseCase = InsertCharacterDbUseCaseImpl(characterRepository)
+    val deleteCharacterDb: UpdateCharacterDbUseCase = UpdateCharacterDbUseCaseImpl(characterRepository)
+
+    override fun onCreate(){
+        super.onCreate()
+    }
+}
+
+El view model:
+class CharacterViewModel(val getAllCharacters: GetAllCharactersUseCase): ViewModel() {
+    private val _characters: MutableStateFlow<CharactersStateUI> = MutableStateFlow(CharactersStateUI()) // Asincrono esta en un hilo secundario
+    val characters: StateFlow<CharactersStateUI> = _characters.asStateFlow()
+
+    // Hay que llamar a los casos de uso
+    fun getAllCharacters(){
+        val charactersList = getAllCharacters.execute() // recibimos la lista de los contactos
+
+        // it es 'state.value' que es el valor actual de los contactos y lo actualizamos a 'contactsList'
+        _characters.update {
+            it.copy( charactersList )
+        }
+    }
+
+    companion object {
+        fun factory(): Factory = object : Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                // Accedemos al objeto Aplication con la implementacion (unica que tenemos)
+                // A través de extras se puede acceder al Aplication (al igual que se podia al Bundle).
+                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as ListCharacterApplication
+
+                // Puedo acceder a través de 'application' al casos de uso que le pasamos por parámetro.
+                return CharacterViewModel (application.getAllCharacters) as T
+            }
+        }
+    }
+}
+
+Y la pantalla del listado de personajes:
+@Composable
+fun CharactersScreen(   navigateToFilterCharacters: () -> Unit
+) {
+
+    val viewModel: CharacterViewModel = viewModel(factory = CharacterViewModel.factory())
+    val characters: State<CharactersStateUI> = viewModel.characters.collectAsState() // sincrono para manejarlo en la UI
+
+    LazyColumn() {
+                    items(items = characters){ character ->
+                        Text(character.name)
+                    }
+                }
+...
+}
+
+
+https://www.youtube.com/shorts/f8LlvvhRaFs?feature=share

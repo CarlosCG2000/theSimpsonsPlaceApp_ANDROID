@@ -6,7 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDb
 
 class InsertCharacterDbUseCaseImpl(val repository: CharaterRepository): InsertCharacterDbUseCase {
 
-    override /*suspend*/ fun execute(character: Character) {
+    override suspend fun execute(character: Character) {
         repository.insertCharacterDb(character)
     }
 

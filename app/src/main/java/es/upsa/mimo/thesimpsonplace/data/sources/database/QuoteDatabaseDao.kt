@@ -3,8 +3,8 @@ package es.upsa.mimo.thesimpsonplace.data.sources.database
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 
 interface  QuoteDatabaseDao {
-    fun getAllQuoteDb(): List<Quote>
-    fun getQuoteByCitaDb(cita: String): Quote
-    fun insertQuoteDb(quote: Quote)
-    fun deleteQuoteDb(cita: String)
+    suspend fun getAllQuoteDb(): List<Quote>
+    suspend fun getQuoteByCitaDb(cita: String): Quote
+    suspend fun insertQuoteDb(quote: Quote)
+    suspend fun deleteQuoteDb(cita: String)
 }

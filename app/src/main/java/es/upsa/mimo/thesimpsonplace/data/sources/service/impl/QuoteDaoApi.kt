@@ -5,7 +5,7 @@ import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 
 class QuoteDaoApi: QuoteDao {
 
-    override fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> {
+    override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> {
         TODO("Not yet implemented")
         // Para hacer una llamada HTTP en Kotlin (equivalente a URLSession en SwiftUI), usa Retrofit con suspend y @GET.
         // Solución: Implementar API con Retrofit
