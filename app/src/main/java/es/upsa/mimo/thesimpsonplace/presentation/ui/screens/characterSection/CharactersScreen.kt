@@ -1,6 +1,5 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection
 
-import android.app.Application
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

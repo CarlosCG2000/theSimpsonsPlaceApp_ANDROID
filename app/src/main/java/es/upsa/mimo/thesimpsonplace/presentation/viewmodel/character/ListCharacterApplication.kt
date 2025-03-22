@@ -2,7 +2,6 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character
 
 import android.app.Application
 import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import es.upsa.mimo.thesimpsonplace.data.sources.database.CharacterDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
@@ -21,23 +20,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.InsertCharac
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.UpdateCharacterDbUseCaseImpl
 
 class ListCharacterApplication: Application() {
-
-//    // La implementacion en producción de Impl.
-//    private val characterDao: CharacterDao = CharacterDaoJson(applicationContext, "personajes_data.json")
-//    private val characterDatabaseDao: CharacterDatabaseDao = CharacterDatabaseDaoRoom()
-//    private val characterRepository: CharaterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
-//
-//    val getAllCharacters: GetAllCharactersUseCase = GetAllCharactersUseCaseImpl(characterRepository)
-//    val getCharactersByName: GetFilterNameCharactersUseCase = GetFilterNameCharactersUseCaseImpl(characterRepository)
-//    val getAllCharactersDb: FetchAllCharactersDbUseCase = FetchAllCharactersDbUseCaseImpl(characterRepository)
-//    val insertCharacterDb: InsertCharacterDbUseCase = InsertCharacterDbUseCaseImpl(characterRepository)
-//    val deleteCharacterDb: UpdateCharacterDbUseCase = UpdateCharacterDbUseCaseImpl(characterRepository)
-//
-//    override fun onCreate(){
-//        val appContext = applicationContext
-//        super.onCreate()
-//    }
-
     // Primero obtenemos el context de la aplicación
     private lateinit var appContext: Context
 

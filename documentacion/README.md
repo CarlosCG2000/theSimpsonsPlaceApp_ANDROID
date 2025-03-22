@@ -1252,4 +1252,10 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit
 }
 
 
-https://www.youtube.com/shorts/f8LlvvhRaFs?feature=share
+HACER QUE REOCGA EL NOMBRE Y LA FOTO DEL OTRO JSON Y LAS JUNTE EN LA ENTIDAD.
+
+HACER LOS JSON DE LOS EPISODIOS.
+
+VIDEOS VIDEOS VIDEOS DE EJEMPLOS.
+
+PASAR A LA VISUALZIACIONES

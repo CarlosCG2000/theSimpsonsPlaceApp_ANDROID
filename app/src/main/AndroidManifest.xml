@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- OJO AÑADIR EL  android:name=".presentation.viewmodel.character.ListCharacterApplication" -->
     <application
         android:name=".presentation.viewmodel.character.ListCharacterApplication"
         android:allowBackup="true"
