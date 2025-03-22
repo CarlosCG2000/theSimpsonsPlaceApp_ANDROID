@@ -33,13 +33,13 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit,
                         navigationArrowBack:() -> Unit
 ) {
     // val context = LocalContext.current
-//    val viewModel: CharacterViewModel = viewModel(factory = CharacterViewModel.factory())
-//    val state: State<CharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
+    val viewModel: CharacterViewModel = viewModel(factory = CharacterViewModel.factory())
+    val state: State<CharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
-    //LaunchedEffect(Unit /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
-     //   viewModel.getAllCharacters()
-    //}
+    LaunchedEffect(Unit /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
+        viewModel.getAllCharacters()
+    }
 
     Scaffold(
         bottomBar = {
@@ -71,11 +71,11 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit,
                 // LOGO SIMPSONS
                 Text("NavegacionPersonajes", fontSize = 24.sp, fontWeight = Bold)
 
-//                LazyColumn() {
-//                    items(items = state.value.characters){ character ->
-//                        Text(character.nombre)
-//                    }
-//                }
+                LazyColumn() {
+                    items(items = state.value.characters){ character ->
+                        Text(character.nombre)
+                    }
+                }
             }
         }
     }

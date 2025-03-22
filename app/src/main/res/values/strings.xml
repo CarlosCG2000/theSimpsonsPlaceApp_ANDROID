@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TheSimpsonPlace</string>
+    <string name="title_activity_prueba">PruebaActivity</string>
 </resources>

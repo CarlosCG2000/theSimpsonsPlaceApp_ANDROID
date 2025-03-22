@@ -22,7 +22,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.UpdateCharac
 class ListCharacterApplication: Application() {
 
     // La implementacion en producción de Impl.
-    private val characterDao: CharacterDao = CharacterDaoJson(applicationContext, "prod/personajes_data.json")
+    private val characterDao: CharacterDao = CharacterDaoJson(applicationContext, "personajes_data.json")
     private val characterDatabaseDao: CharacterDatabaseDao = CharacterDatabaseDaoRoom()
     private val characterRepository: CharaterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
 
