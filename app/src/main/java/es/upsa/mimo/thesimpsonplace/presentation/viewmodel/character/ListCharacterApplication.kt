@@ -41,7 +41,7 @@ class ListCharacterApplication: Application() {
         appContext = applicationContext
 
         // Luego de inicializar el contexto, puedes proceder con las inicializaciones
-        characterDao = CharacterDaoJson(appContext, "personajes_data.json")
+        characterDao = CharacterDaoJson(appContext, "personajes_data.json", "imagenes_data.json")
         characterDatabaseDao = CharacterDatabaseDaoRoom()
         characterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
 

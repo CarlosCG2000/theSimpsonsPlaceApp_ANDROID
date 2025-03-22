@@ -1,11 +1,17 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,7 +30,14 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.CharacterViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.CharactersStateUI
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 
 @Composable
 fun CharactersScreen(   navigateToFilterCharacters: () -> Unit,
@@ -70,12 +83,44 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit,
                 // LOGO SIMPSONS
                 Text("NavegacionPersonajes", fontSize = 24.sp, fontWeight = Bold)
 
-                LazyColumn() {
-                    items(items = state.value.characters){ character ->
-                        Text(character.nombre)
+                LazyColumn {
+                    items(state.value.characters) { character ->
+                        CharacterItem(character)
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CharacterItem(character: Character) {
+    val context = LocalContext.current
+    val imageResId = context.resources.getIdentifier(
+        character.imagen?.lowercase(),
+        "drawable",
+        context.packageName
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Image(
+            painter = painterResource(id = imageResId),
+            contentDescription = character.nombre,
+            modifier = Modifier
+                .size(80.dp)
+                .clip(CircleShape)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column {
+            Text(text = character.nombre, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(text = character.genero.toString(), fontSize = 16.sp)
+            Text(text = character.esFavorito.toString(), fontSize = 16.sp)
         }
     }
 }

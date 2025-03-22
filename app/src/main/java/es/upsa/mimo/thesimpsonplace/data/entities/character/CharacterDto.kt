@@ -8,7 +8,8 @@ data class CharacterDto(
     //Mapea los nombres de los atributos del JSON a los de la clase.
     @SerialName("id") val id: Int?, // Puede ser String o Int en la API, lo tratamos como Int
     @SerialName("name") val nombre: String?,
-    @SerialName("gender") val genero: String?
+    @SerialName("gender") val genero: String?,
+    val imagen: String? = null
 ) {
     fun getIdAsInt(): Int? {
         return id?.toInt()
