@@ -5,15 +5,15 @@ import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 
 class EpisodeDatabaseDaoRoom: EpisodeDatabaseDao {
     override suspend fun getAllEpisodesDb(): List<Episode> {
-        TODO("Not yet implemented")
+        return emptyList<Episode>()
     }
 
     override suspend fun getEpisodeByIdDb(id: String): Episode? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override suspend fun getEpisodeByIdsDb(ids: List<String>): List<Episode>? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override suspend fun updateEpisodeDb(id: String, esView: Boolean, isFav: Boolean) {

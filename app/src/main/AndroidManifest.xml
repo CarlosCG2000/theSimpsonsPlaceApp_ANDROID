@@ -6,7 +6,7 @@
 
     <!-- OJO AÑADIR EL  android:name=".presentation.viewmodel.character.ListCharacterApplication" -->
     <application
-        android:name=".presentation.viewmodel.character.ListCharacterApplication"
+        android:name=".presentation.viewmodel.TheSimpsonPlaceApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

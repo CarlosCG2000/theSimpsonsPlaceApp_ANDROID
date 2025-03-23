@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.presentation.viewmodel
+package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

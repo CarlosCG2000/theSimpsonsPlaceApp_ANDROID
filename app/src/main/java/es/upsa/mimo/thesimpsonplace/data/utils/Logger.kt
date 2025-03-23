@@ -2,6 +2,8 @@ package es.upsa.mimo.thesimpsonplace.data.utils
 
 import android.util.Log
 
+class LoggerClass : Logger // para poder llamarla en funciones y utlizarla
+
 interface Logger {
 
     val tag: String // '= javaClass.simpleName', no se pueden añadir properties (estados) en interfaces
@@ -37,3 +39,4 @@ interface Logger {
         Log.wtf(tag, message)
     }
 }
+

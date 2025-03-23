@@ -41,7 +41,7 @@ sealed class Screen(val route: String) {
     object FilterEpisodes : Screen("navigateToFilterEpisode")
     object FavoriteEpisodes : Screen("navigateToFavoriteEpisode")
     object EpisodeDetailStatic: Screen("episodeDetail/{id}")
-    data class EpisodeDetail(val id: Int) : Screen("episodeDetail/$id") // Pasando parámetros en la ruta
+    data class EpisodeDetail(val id: String) : Screen("episodeDetail/$id") // Pasando parámetros en la ruta
 
     object MainQuotes: Screen("navigateToAllQuote")
     object FilterQuotes : Screen("navigateToFilterQuotes")
@@ -147,9 +147,9 @@ fun NavegacionApp() {
         // route = Contiene un parámetro dinámico dentro de la ruta "{id}", que será reemplazado por un valor real en tiempo de ejecución.
         // arguments = Espera un argumento llamado "id", que debe ser de tipo Int.
         composable( route = Screen.EpisodeDetailStatic.route,
-                    arguments = listOf(navArgument("id") { type = NavType.IntType })
+                    arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { navBackStackEntry -> // Es el objeto que contiene la información sobre la pantalla a la que se ha navegado. Permite acceder a los argumentos de la ruta.
-            val id = navBackStackEntry.arguments?.getInt("id") ?: 0 // Recupera el argumento "id" pasado en la navegación.
+            val id = navBackStackEntry.arguments?.getString("id") ?: "0" // Recupera el argumento "id" pasado en la navegación.
 
             EpisodeDetailScreen(
                 id = id, // Llama a la pantalla EpisodeDetailScreen, pasándole el id obtenido de la navegación.

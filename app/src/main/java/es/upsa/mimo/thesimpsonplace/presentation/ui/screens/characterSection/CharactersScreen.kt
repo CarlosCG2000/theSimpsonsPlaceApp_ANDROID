@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.CharacterViewModel
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.CharactersStateUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.LaunchedEffect
@@ -45,8 +45,8 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit,
                         navigationArrowBack:() -> Unit
 ) {
     // val context = LocalContext.current
-    val viewModel: CharacterViewModel = viewModel(factory = CharacterViewModel.factory())
-    val state: State<CharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
+    val viewModel: ListCharactersViewModel = viewModel(factory = ListCharactersViewModel.factory())
+    val state: State<ListCharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
     LaunchedEffect(Unit /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {

@@ -25,7 +25,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 fun EpisodesFilterScreen(
                          navigateToAllEpisodes: () -> Unit,
                          navigateToFavoriteEpisode: () -> Unit,
-                         onEpisodeSelected: (Int) -> Unit,
+                         onEpisodeSelected: (String) -> Unit,
                          navigationArrowBack:() -> Unit) {
 
     val listItems: List<String> = (1..50).map { "Item $it" }
@@ -63,7 +63,7 @@ fun EpisodesFilterScreen(
                             text = item,
                             modifier = Modifier
                                 .clickable {
-                                    onEpisodeSelected(index + 1) // Ahora puedes obtener la posición del item
+                                    onEpisodeSelected("${ index + 1 }") // Ahora puedes obtener la posición del item
                                 }
                                 .padding(20.dp)
                         )
