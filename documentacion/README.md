@@ -1263,7 +1263,7 @@ PASAR A LA VISUALZIACIONES
 
 - VER LOGGER ✅
 - VER PASO DE IDA NAVEGACION DEL EPISODE ✅
-- VER HILT (inyeccion automatica)
+- VER HILT (inyeccion automatica) ⚠️
 
 ✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
 
