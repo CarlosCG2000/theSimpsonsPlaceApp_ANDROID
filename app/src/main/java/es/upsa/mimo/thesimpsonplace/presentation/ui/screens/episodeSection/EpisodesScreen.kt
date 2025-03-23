@@ -38,12 +38,13 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 
 @Composable
-fun EpisodesScreen(navigateToFilterEpisode: () -> Unit,
-                   navigateToFavoriteEpisode: () -> Unit,
-                   onEpisodeSelected: (String) -> Unit,
-                   navigationArrowBack:() -> Unit) {
+fun EpisodesScreen(
+    viewModel: ListEpisodesViewModel = viewModel(factory = ListEpisodesViewModel.factory()),
+    navigateToFilterEpisode: () -> Unit,
+    navigateToFavoriteEpisode: () -> Unit,
+    onEpisodeSelected: (String) -> Unit,
+    navigationArrowBack:() -> Unit) {
 
-    val viewModel: ListEpisodesViewModel = viewModel(factory = ListEpisodesViewModel.factory())
     val state: State<ListEpisodesStateUI> = viewModel.episodesState.collectAsState() // pasa a ser sincrono para manejarlo en la UI
 
     // Crear instancia de Logger
@@ -124,6 +125,11 @@ fun EpisodeItem(index:Int, episode: Episode, onEpisodeSelected: (String) -> Unit
 @Composable
 fun EpisodesScreenPreview() {
     Column {
-        EpisodesScreen( {}, {}, {}, {})
+        EpisodesScreen(
+            navigateToFilterEpisode = {},
+            navigateToFavoriteEpisode = {},
+            onEpisodeSelected = {},
+            navigationArrowBack = {}
+        )
     }
 }

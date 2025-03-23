@@ -1276,6 +1276,7 @@ PASAR A LA VISUALZIACIONES. ❌
 - VER PASO DE IDA NAVEGACION DEL EPISODE ✅
 - VER HILT (inyeccion automatica) ⚠️
 - VER PAGINACIÓN (Paging 3, carga diferida) ⚠️
+- VER RETROFIT (llamada a API'S) ⚠️
 
 #### ✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
 

@@ -40,12 +40,13 @@ import androidx.compose.ui.unit.dp
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 
 @Composable
-fun CharactersScreen(   navigateToFilterCharacters: () -> Unit,
-                        navigateToFavoriteCharacters: () -> Unit,
-                        navigationArrowBack:() -> Unit
+fun CharactersScreen(
+    viewModel: ListCharactersViewModel = viewModel(factory = ListCharactersViewModel.factory()),
+    navigateToFilterCharacters: () -> Unit,
+    navigateToFavoriteCharacters: () -> Unit,
+    navigationArrowBack:() -> Unit
 ) {
-    // val context = LocalContext.current
-    val viewModel: ListCharactersViewModel = viewModel(factory = ListCharactersViewModel.factory())
+
     val state: State<ListCharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
@@ -129,6 +130,6 @@ fun CharacterItem(character: Character) {
 @Composable
 fun CharactersScreenPreview() {
     Column {
-        CharactersScreen({},{}, {})
+        CharactersScreen(navigateToFilterCharacters = {}, navigateToFavoriteCharacters ={}, navigationArrowBack = {})
     }
 }

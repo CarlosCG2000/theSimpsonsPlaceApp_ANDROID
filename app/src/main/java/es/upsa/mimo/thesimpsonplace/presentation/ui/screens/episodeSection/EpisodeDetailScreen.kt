@@ -25,9 +25,11 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetail
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeViewModel
 
 @Composable
-fun EpisodeDetailScreen(id: String, navigationArrowBack:() -> Unit) {
+fun EpisodeDetailScreen(
+    viewModel: DetailsEpisodeViewModel = viewModel(factory = DetailsEpisodeViewModel.factory()),
+    id: String,
+    navigationArrowBack:() -> Unit) {
 
-    val viewModel: DetailsEpisodeViewModel = viewModel(factory = DetailsEpisodeViewModel.factory())
     val state: State<DetailsEpisodeStateUI> = viewModel.episodeState.collectAsState() // lo hago sincrono para usarlo en la pantalla
 
     LaunchedEffect(Unit) {
@@ -71,5 +73,5 @@ fun EpisodeDetailScreen(id: String, navigationArrowBack:() -> Unit) {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun EpisodeDetailScreenPreview() {
-        EpisodeDetailScreen("1"){}
+        EpisodeDetailScreen(id = "1"){}
 }
