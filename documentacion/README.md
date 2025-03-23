@@ -1275,8 +1275,9 @@ PASAR A LA VISUALZIACIONES. ❌
 - VER LOGGER ✅
 - VER PASO DE IDA NAVEGACION DEL EPISODE ✅
 - VER HILT (inyeccion automatica) ⚠️
+- VER PAGINACIÓN (Paging 3, carga diferida) ⚠️
 
-✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
+#### ✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
 
 Hilt es la solución recomendada para manejar dependencias en Android. Te permitirá evitar la creación manual de objetos y simplificar tu código.
 
@@ -1388,3 +1389,145 @@ fun CharactersScreen(viewModel: ListCharactersViewModel = hiltViewModel()) {
 ✅ Evita el uso manual de Application para gestionar dependencias
 
 Si tienes dudas o errores al implementarlo, dime y te ayudo. 😉
+
+#### ✅ VER PAGINACIÓN (Paging 3, carga diferida)
+¿Mi app se podria mejorar en vez de llamando a todos los personajes o episodios de sus json usandolo con paging 3?
+
+Sí, Paging 3 mejoraría el rendimiento de tu app, ya que actualmente estás cargando todos los personajes o episodios de una sola vez, lo que podría generar problemas de rendimiento y consumo de memoria, especialmente si el JSON es grande.
+
+🚀 Beneficios de usar Paging 3
+
+✔ Carga datos en páginas en lugar de cargar todo el JSON de golpe.
+✔ Optimiza memoria y rendimiento al evitar mantener todos los elementos en RAM.
+✔ Automatiza el paginado sin que tengas que gestionar la paginación manualmente.
+✔ Soporte para Jetpack Compose y coroutines, ideal para tu arquitectura MVVM.
+
+⸻
+
+🔹 Cómo implementar Paging 3 en tu app
+
+Te explico cómo adaptar tu app para cargar episodios de manera paginada con Paging 3.
+
+1️⃣ Agregar dependencias de Paging 3
+En build.gradle (Module: app), agrega:
+```gladle
+dependencies {
+    implementation "androidx.paging:paging-runtime-ktx:3.2.1"
+    implementation "androidx.paging:paging-compose:3.2.1" // Para Jetpack Compose
+}
+```
+
+2️⃣ Crear PagingSource para cargar episodios
+Debes crear una clase que extienda PagingSource<Int, EpisodeDto>, que se encargará de cargar episodios por páginas desde el JSON.
+```kotlin
+class EpisodePagingSource(
+    private val context: Context,
+    private val fileName: String
+) : PagingSource<Int, EpisodeDto>() {
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EpisodeDto> {
+        try {
+            val page = params.key ?: 1 // Página actual, si es null, empieza en 1
+            val pageSize = params.loadSize // Tamaño de la página
+
+            // Cargar JSON completo (esto se optimiza si viene de una API)
+            val jsonFormat = Json { ignoreUnknownKeys = true }
+            val json = context.assets.open(fileName).bufferedReader().use { it.readText() }
+            val episodesDto = jsonFormat.decodeFromString<EpisodesDto>(json)
+
+            val episodes = episodesDto.episodios?.map { it.toEpisode() } ?: emptyList()
+
+            // Calcular los índices de paginación
+            val fromIndex = (page - 1) * pageSize
+            val toIndex = minOf(fromIndex + pageSize, episodes.size)
+
+            if (fromIndex >= episodes.size) return LoadResult.Page(emptyList(), null, null)
+
+            return LoadResult.Page(
+                data = episodes.subList(fromIndex, toIndex),
+                prevKey = if (page == 1) null else page - 1,
+                nextKey = if (toIndex < episodes.size) page + 1 else null
+            )
+
+        } catch (e: Exception) {
+            return LoadResult.Error(e)
+        }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, EpisodeDto>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
+    }
+}
+```
+
+3️⃣ Crear EpisodeRepository para manejar paginación
+```kotlin
+class EpisodeRepository(private val context: Context) {
+    fun getPagedEpisodes(fileName: String): Pager<Int, EpisodeDto> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10, // Tamaño de cada página
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { EpisodePagingSource(context, fileName) }
+        )
+    }
+}
+```
+
+4️⃣ Modificar ListEpisodesViewModel para usar Paging 3
+```kotlin
+class ListEpisodesViewModel(private val repository: EpisodeRepository) : ViewModel() {
+    val episodesFlow = repository.getPagedEpisodes("episodios_test.json")
+        .flow
+        .cachedIn(viewModelScope) // Optimiza la caché para recomposiciones
+}
+```
+
+5️⃣ Mostrar los episodios en LazyColumn con collectAsLazyPagingItems
+```kotlin
+@Composable
+fun EpisodesScreen(navigateToFilterEpisode: () -> Unit,
+                   navigateToFavoriteEpisode: () -> Unit,
+                   onEpisodeSelected: (Int) -> Unit,
+                   navigationArrowBack: () -> Unit) {
+
+    val viewModel: ListEpisodesViewModel = viewModel()
+    val episodes = viewModel.episodesFlow.collectAsLazyPagingItems()
+
+    LazyColumn {
+        items(episodes) { episode ->
+            episode?.let {
+                Text(text = it.titulo)
+            }
+        }
+
+        episodes.apply {
+            when {
+                loadState.refresh is LoadState.Loading -> {
+                    item { CircularProgressIndicator() }
+                }
+                loadState.append is LoadState.Loading -> {
+                    item { CircularProgressIndicator() }
+                }
+                loadState.refresh is LoadState.Error -> {
+                    item { Text("Error al cargar los episodios") }
+                }
+            }
+        }
+    }
+}
+```
+
+🚀 Resultado Final
+Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSON de golpe. Esto hará que tu app sea más eficiente, rápida y escalable. 🎯
+
+#### SEGUIMOS
+...
+
+
+
+
