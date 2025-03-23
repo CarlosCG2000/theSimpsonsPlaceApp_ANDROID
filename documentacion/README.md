@@ -1123,11 +1123,12 @@ fun MiPantalla(viewModel: MiViewModel = viewModel()) {
 }
 ```
 
-DUDA A CHAT GPT
+### DUDA A CHAT GPT
 Mi duda escomo aplicar corrutinas correctamente en mi App, el cual quiero tener una estructura que data -> domain -> presentation con la arquitectura MVVM, la cuestion es:
 Por ejemplo:
 - En data la entidad Character y la interfaz CharacterDao, la cual integra varias funciones para realizar a una API y CharacterDBDao con varias funciones para una BD. Y luego tengo la carpeta impl que tiene implementaciones de esta interfaces.
 
+```kotlin
 interface CharacterDatabaseDao {
     fun getAllCharactersDb(): List<Character> // Obtener todos los personajes de la base de datos
     ...
@@ -1139,15 +1140,19 @@ class CharacterDatabaseDaoRoom: CharacterDatabaseDao {
     }
     ...
 }
+```
 
 ¿Como lo tendria que definir como?
+```kotlin
  suspend  fun getAllCharactersDb(): List<Character> 
 
     override suspend fun getAllCharactersDb(): List<Character> {
         TODO("Not yet implemented")
     }
+```
 
 - En  domain tengo la entity correspondiente de Character y un repository CharaterRepository  y CharaterRepositoryImpl, ¿esto seria asi?
+```kotlin
 interface CharaterRepository {
     // Casos de uso de la datos obtenido de la fuente principal
     suspend fun getAllCharacters(): List<Character>
@@ -1173,8 +1178,11 @@ class CharaterRepositoryImpl(val dao: CharacterDao, val databaseDao: CharacterDa
             )
         }
     }
+}
+```
 
 Ademas tengo los caoss d euso con su interfaces y implementaciones igualmente:¿Serian asi?
+```kotlin
 interface FetchAllCharactersDbUseCase {
     suspend fun execute(): List<Character>
 }
@@ -1184,10 +1192,12 @@ class FetchAllCharactersDbUseCaseImpl(val repository: CharaterRepository): Fetch
         TODO("Not yet implemented")
     }
 }
+```
 
 - Luego estarria la carpeta presenter con los viewmodes y views (composables):
 Estaria el CharactersStateUI: data class CharactersStateUI (val chararacters:List<Character> = emptyList())
-El ListCharacterApplication: 
+El ListCharacterApplication:
+```kotlin
 class ListCharacterApplication: Application() {
 
     // La implementacion en producción de Impl.
@@ -1205,8 +1215,10 @@ class ListCharacterApplication: Application() {
         super.onCreate()
     }
 }
+```
 
 El view model:
+```kotlin
 class CharacterViewModel(val getAllCharacters: GetAllCharactersUseCase): ViewModel() {
     private val _characters: MutableStateFlow<CharactersStateUI> = MutableStateFlow(CharactersStateUI()) // Asincrono esta en un hilo secundario
     val characters: StateFlow<CharactersStateUI> = _characters.asStateFlow()
@@ -1234,8 +1246,10 @@ class CharacterViewModel(val getAllCharacters: GetAllCharactersUseCase): ViewMod
         }
     }
 }
+```
 
 Y la pantalla del listado de personajes:
+```kotlin
 @Composable
 fun CharactersScreen(   navigateToFilterCharacters: () -> Unit
 ) {
@@ -1250,8 +1264,9 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit
                 }
 ...
 }
+```
 
-
+### TAREAS
 HACER QUE REOCGA EL NOMBRE Y LA FOTO EL OTRO JSON Y LAS JUNTE EN LA ENTIDAD. ✅
 HACER LOS JSON DE LOS EPISODIOS. ✅
 VIDEOS VIDEOS VIDEOS DE EJEMPLOS. ❌
