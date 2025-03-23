@@ -1264,3 +1264,116 @@ PASAR A LA VISUALZIACIONES
 - VER LOGGER ✅
 - VER PASO DE IDA NAVEGACION DEL EPISODE ✅
 - VER HILT (inyeccion automatica)
+
+✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
+
+Hilt es la solución recomendada para manejar dependencias en Android. Te permitirá evitar la creación manual de objetos y simplificar tu código.
+
+1️⃣ Agregar Hilt al proyecto
+En el build.gradle (Project), añade el classpath de Hilt:
+```grandle
+dependencies {
+    classpath "com.google.dagger:hilt-android-gradle-plugin:2.50"
+}
+```
+
+Luego, en el build.gradle (Module), agrega las dependencias necesarias:
+```grandle
+plugins {
+    id 'com.android.application'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin' // 🔥 Agregar Hilt Plugin
+}
+
+dependencies {
+    implementation "com.google.dagger:hilt-android:2.50"
+    kapt "com.google.dagger:hilt-android-compiler:2.50"
+}
+```
+
+Y sincroniza el proyecto.
+
+2️⃣ Configurar la Application con Hilt
+Modifica tu TheSimpsonPlaceApp para que sea reconocida por Hilt:
+```kotlin
+@HiltAndroidApp
+class TheSimpsonPlaceApp : Application()
+```
+
+3️⃣ Crear el Módulo de Hilt para las Dependencias
+
+Crea una nueva clase llamada AppModule.kt donde definiremos las dependencias:
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideGetAllCharactersUseCase(): GetAllCharactersUseCase {
+        return GetAllCharactersUseCase(/* Inyectar repositorio aquí */)
+    }
+}
+```
+
+✅ Ahora Hilt sabrá cómo crear GetAllCharactersUseCase y lo mantendrá en memoria como un Singleton.
+
+4️⃣ Modificar el ViewModel para usar Hilt
+En ListCharactersViewModel, cambia su constructor para que Hilt lo maneje:
+
+```kotlin
+@HiltViewModel
+class ListCharactersViewModel @Inject constructor(
+    private val getAllCharacters: GetAllCharactersUseCase
+) : ViewModel() {
+
+    private val _stateCharacter: MutableStateFlow<ListCharactersStateUI> = MutableStateFlow(ListCharactersStateUI())
+    val stateCharacter: StateFlow<ListCharactersStateUI> = _stateCharacter.asStateFlow()
+
+    fun getAllCharacters() {
+        viewModelScope.launch {
+            val charactersList = getAllCharacters.execute()
+            _stateCharacter.update {
+                it.copy(charactersList)
+            }
+        }
+    }
+}
+```
+
+💡 Nota:
+• Se agrega @HiltViewModel para que Hilt lo reconozca.
+• Se usa @Inject en el constructor, para que Hilt lo cree automáticamente.
+
+
+5️⃣ Inyectar el ViewModel en el Composable
+En tu Composable, usa hiltViewModel() para obtener el ViewModel:
+```kotlin
+@Composable
+fun CharactersScreen(viewModel: ListCharactersViewModel = hiltViewModel()) {
+    val state by viewModel.stateCharacter.collectAsState()
+
+    LazyColumn {
+        items(state.charactersList) { character ->
+            Text(character.name)
+        }
+    }
+}
+```
+
+✅ ¡Listo! Ahora el ViewModel se inyecta automáticamente sin necesidad de una factory() manual.
+
+🔹 Resumen
+	1.	Agregar Hilt al build.gradle
+	2.	Anotar @HiltAndroidApp en la Application
+	3.	Crear un @Module con @Provides para las dependencias
+	4.	Anotar @HiltViewModel en el ViewModel y usar @Inject en su constructor
+	5.	Usar hiltViewModel() en los Composables para obtener el ViewModel automáticamente
+
+🚀 Ventajas de Hilt:
+✅ No necesitas una factory() para cada ViewModel
+✅ Maneja las dependencias automáticamente
+✅ Mejora la escalabilidad del código
+✅ Evita el uso manual de Application para gestionar dependencias
+
+Si tienes dudas o errores al implementarlo, dime y te ayudo. 😉
