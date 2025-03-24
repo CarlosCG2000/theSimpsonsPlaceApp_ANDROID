@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
@@ -14,8 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListEpisodesViewModel( val getAllEpisodesUseCase: GetAllEpisodesUseCase ): ViewModel() {
+@HiltViewModel
+class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAllEpisodesUseCase ): ViewModel() {
     private val _episodesState: MutableStateFlow<ListEpisodesStateUI> = MutableStateFlow(ListEpisodesStateUI()) // en hilo secundario
     val episodesState: StateFlow<ListEpisodesStateUI> = _episodesState.asStateFlow()
 
@@ -29,15 +33,16 @@ class ListEpisodesViewModel( val getAllEpisodesUseCase: GetAllEpisodesUseCase ):
         }
     }
 
-    companion object {
-        fun factory(): Factory = object : Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-
-                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
-
-                return ListEpisodesViewModel (application.getAllEpisodes) as T
-            }
-        }
-    }
+//    //  Inyección de dependecias manual
+//    companion object {
+//        fun factory(): Factory = object : Factory {
+//            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+//
+//                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
+//
+//                return ListEpisodesViewModel (application.getAllEpisodes) as T
+//            }
+//        }
+//    }
 
 }

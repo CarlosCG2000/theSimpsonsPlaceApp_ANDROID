@@ -4,8 +4,9 @@ import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByDateUseCase
 import java.util.Date
+import javax.inject.Inject
 
-class GetEpisodesByDateUseCaseImpl(val repository: EpisodeRepository):GetEpisodesByDateUseCase {
+class GetEpisodesByDateUseCaseImpl  @Inject constructor(val repository: EpisodeRepository):GetEpisodesByDateUseCase {
 
     override suspend fun execute(
         minDate: Date?,

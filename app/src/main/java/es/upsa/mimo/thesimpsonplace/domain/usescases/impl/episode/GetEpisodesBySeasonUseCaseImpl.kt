@@ -3,7 +3,8 @@ package es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeasonUseCase
+import javax.inject.Inject
 
-class GetEpisodesBySeasonUseCaseImpl(val repository: EpisodeRepository):GetEpisodesBySeasonUseCase {
+class GetEpisodesBySeasonUseCaseImpl  @Inject constructor(val repository: EpisodeRepository):GetEpisodesBySeasonUseCase {
     override suspend fun execute(season: Int): List<Episode> = repository.getEpisodesBySeason(season)
 }

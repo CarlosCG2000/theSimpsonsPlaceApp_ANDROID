@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.upsa.mimo.thesimpsonplace.data.utils.Logger
 import es.upsa.mimo.thesimpsonplace.data.utils.LoggerClass
@@ -39,7 +40,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.
 
 @Composable
 fun EpisodesScreen(
-    viewModel: ListEpisodesViewModel = viewModel(factory = ListEpisodesViewModel.factory()),
+    viewModel: ListEpisodesViewModel = hiltViewModel(), // viewModel(factory = ListEpisodesViewModel.factory()),
     navigateToFilterEpisode: () -> Unit,
     navigateToFavoriteEpisode: () -> Unit,
     onEpisodeSelected: (String) -> Unit,

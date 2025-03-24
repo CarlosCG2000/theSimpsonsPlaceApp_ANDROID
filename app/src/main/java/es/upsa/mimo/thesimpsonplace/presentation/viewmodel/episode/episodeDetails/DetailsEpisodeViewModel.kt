@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCase
@@ -16,8 +17,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailsEpisodeViewModel( val getEpisodeByIdUseCase: GetEpisodeByIdUseCase ) : ViewModel() {
+@HiltViewModel
+class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: GetEpisodeByIdUseCase ) : ViewModel() {
     private val _episodeState: MutableStateFlow<DetailsEpisodeStateUI> = MutableStateFlow(DetailsEpisodeStateUI()) // en hilo secundario
     val episodeState: StateFlow<DetailsEpisodeStateUI> = _episodeState.asStateFlow()
 
@@ -31,15 +34,16 @@ class DetailsEpisodeViewModel( val getEpisodeByIdUseCase: GetEpisodeByIdUseCase 
         }
     }
 
-    companion object {
-        fun factory(): Factory = object : Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-
-                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
-
-                return DetailsEpisodeViewModel (application.getEpisodeById) as T
-            }
-        }
-    }
+//    //  Inyección de dependecias manual
+//    companion object {
+//        fun factory(): Factory = object : Factory {
+//            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+//
+//                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
+//
+//                return DetailsEpisodeViewModel (application.getEpisodeById) as T
+//            }
+//        }
+//    }
 
 }

@@ -9,8 +9,12 @@ import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CharaterRepositoryImpl(val dao: CharacterDao, val databaseDao: CharacterDatabaseDao): CharaterRepository {
+// 	@Inject constructor(...): Hilt puede inyectarlo directamente sin necesidad de un @Provides en el AppModule.
+class CharaterRepositoryImpl @Inject constructor(val dao: CharacterDao,
+                                                 val databaseDao: CharacterDatabaseDao): CharaterRepository {
 
     override suspend fun getAllCharacters(): List<Character> {
         return withContext(Dispatchers.IO) { // withContext cambia el contexto de ejecución de la corrutina sin crear una nueva

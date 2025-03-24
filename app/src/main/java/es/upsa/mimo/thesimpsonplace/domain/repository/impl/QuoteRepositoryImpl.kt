@@ -6,10 +6,12 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 // 'QuoteRepositoryImpl' usa inyección de dependencias (api y db).
 // Separa API y BD, cumpliendo el Principio de Responsabilidad Única (SRP).
-class QuoteRepositoryImpl(private val apiDao: QuoteDao, private val dbDao: QuoteDatabaseDao) : QuoteRepository {
+class QuoteRepositoryImpl  @Inject constructor(private val apiDao: QuoteDao,
+                                               private val dbDao: QuoteDatabaseDao) : QuoteRepository {
 
     override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> {
         return withContext(Dispatchers.IO) {

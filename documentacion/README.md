@@ -1532,5 +1532,111 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 ...
 
 
+- HACER EL `HILT` CON `RETROFIT` PARA LA CONSULTA DE LA `API DE CITAS` ⚠️
 
+- REALIZAR EL `HILT` PARA EL `TESTING` CON LOS `DATOS DE TEST` ⚠️
 
+# EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA
+
+-  Cuando la implementación de mi dao, repositorio, casos de usos... no incluye `@Inject constructor()`, por ejemplo `CharacterDaoJson.kt`.
+```kotlin
+    class CharacterDaoJson (@ApplicationContext private val context: Context,
+                            @Named("dataJson") private val dataJson: String,
+                            @Named("imageJson") private val imagJson: String
+                        ): CharacterDao {
+
+        override suspend fun getAllCharacters(): List<CharacterDto> {
+            try {
+                // Abrir el archivo JSON desde los assets
+                //...
+            } catch (e: Exception) {
+                // ...
+            }
+        }
+
+        override suspend fun getCharactersByName(name: String): List<CharacterDto> {
+        // ...
+        }
+    }
+```
+
+- Al no usar en esa implementación `@Inject constructor`, en mi `AppModule.kt` lo tengo que definir con `@Provides` para asignar dicha implementación manualmente al `CharacterDao`.
+```kotlin
+    @Provides // Añadir, al no usar '@Inject constructor()' en 'CharacterDaoJson', para saber que implementación usar automaticamente
+    @Singleton
+    fun provideCharacterDao(@ApplicationContext context: Context): CharacterDao {
+        val test = false
+
+        return if (test) {
+            CharacterDaoJson(context, "personajes_test.json", "imagenes_test.json")
+        } else {
+            CharacterDaoJson(context, "personajes_data.json", "imagenes_data.json")
+        }
+    }
+```
+
+- Esto seria util si quiero `cambiar de implementación de los datos de forma sencilla` (de jsons, apis, db...). Se lo he aplicado a todos `los Dao` (tanto de personajes, episodio y citas) tanto de llamadas de json, api, o BD en Room (con su propio fichero esta ultima `DatabaseModule.kt`).
+
+- Luego para los `repositorios` y `caso de uso` lo que quiero es que `siempre sean los mismo` por lo tanto les pongo el `@Inject constructor` para que automaticamente asigne dicho repositorio a su interfaz. Ejemplo de repositorio y caso de uso.
+```kotlin
+    class CharaterRepositoryImpl @Inject constructor (val dao: CharacterDao,
+                                                    val databaseDao: CharacterDatabaseDao): CharaterRepository {
+
+        override suspend fun getAllCharacters(): List<Character> {
+            return withContext(Dispatchers.IO) {
+
+                val allCharactersDto = dao.getAllCharacters()
+                val allCharacters = allCharactersDto.map { it.toCharacter() }
+                // ...
+            }
+        }
+    }
+
+    class GetAllCharactersUseCaseImpl @Inject constructor( private val repository: CharaterRepository ): GetAllCharactersUseCase {
+        override suspend fun execute(): List<Character> {
+            return repository.getAllCharacters()
+        }
+    }
+```
+
+- Y luego tengo que conectar a traves de un `@Binds` dicha implementación con su interfaz. Solo para los que se implementan de forma automatica, ultimos vistos con `@Inject constructor` ya que los otros usan `@Provides` que por defecto tienen `@Binds`. Lo añado en un clase abstracta `DomainModule.kt`.
+
+```kotlin
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class DomainModule {
+        @Binds
+        @Singleton
+        abstract fun bindCharacterRepository(impl: CharaterRepositoryImpl): CharaterRepository
+
+        @Binds
+        abstract fun bindGetAllCharactersUseCase( useCaseImpl: GetAllCharactersUseCaseImpl ): GetAllCharactersUseCase
+
+        // ...
+    }
+:...
+```
+
+- [DUDA]
+📌 ¿Cuándo usar `@Singleton`?
+Regla general: Usa `@Singleton` en aquellas clases que deban tener una única instancia en toda la aplicación.
+
+📌 En tu caso:
+1.	`DAO (CharacterDao)` -> ✅ @Singleton
+•	Debe haber una única instancia de `CharacterDaoJson` o cualquier otro `DAO` para que no se creen múltiples accesos a los archivos `JSON` o la `BD`.
+2.	`Repositorios (CharacterRepository)` -> ✅ @Singleton
+•	Queremos una única instancia de `CharacterRepositoryImpl` para que las consultas a la `API/BD` sean centralizadas y no se creen múltiples instancias innecesarias.
+3.	`Casos de uso (UseCase)` -> ❌ No poner `@Singleton`
+•	No es necesario que los casos de uso sean singleton porque el `ViewModel` solo los usa mientras está en memoria. Hilt los manejará automáticamente sin duplicaciones.
+4.	`ViewModels` -> ❌ No poner `@Singleton`
+•	Los ViewModels ya tienen su propio ciclo de vida, y Hilt los maneja con `@HiltViewModel`, por lo que no deben ser singleton.
+📌 Explicación:
+•	`@Singleton` en el repositorio porque queremos que haya una única instancia durante toda la app.
+•	Sin `@Singleton` en los casos de uso, porque no es necesario y `Hilt` ya gestiona su ciclo de vida correctamente.
+
+✅ Resumen final
+1.	Usa `@Provides` cuando la clase no tiene `@Inject constructor`, como `CharacterDaoJson`.
+2.	Usa `@Binds` cuando quieres enlazar una implementación (`CharaterRepositoryImpl`) con su interfaz (`CharaterRepository`).
+3.	Pon `@Singleton` en `DAOs` y `Repositorios`, pero NO en casos de uso ni `ViewModels`.
+
+# EXPLICACIÓN LLAMADA A API (`RETROFIT`) --> MIA

@@ -37,11 +37,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 
 @Composable
 fun CharactersScreen(
-    viewModel: ListCharactersViewModel = viewModel(factory = ListCharactersViewModel.factory()),
+    viewModel: ListCharactersViewModel = hiltViewModel(), // = viewModel(factory = ListCharactersViewModel.factory()
     navigateToFilterCharacters: () -> Unit,
     navigateToFavoriteCharacters: () -> Unit,
     navigationArrowBack:() -> Unit

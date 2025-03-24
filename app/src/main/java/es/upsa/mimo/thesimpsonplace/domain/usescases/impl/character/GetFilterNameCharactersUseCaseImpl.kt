@@ -4,8 +4,9 @@ import android.content.Context
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetFilterNameCharactersUseCase
+import javax.inject.Inject
 
-class GetFilterNameCharactersUseCaseImpl(val repository: CharaterRepository): GetFilterNameCharactersUseCase {
+class GetFilterNameCharactersUseCaseImpl  @Inject constructor(val repository: CharaterRepository): GetFilterNameCharactersUseCase {
 
     override suspend fun execute(name: String): List<Character> {
         return repository.getCharactersByName(name = name)

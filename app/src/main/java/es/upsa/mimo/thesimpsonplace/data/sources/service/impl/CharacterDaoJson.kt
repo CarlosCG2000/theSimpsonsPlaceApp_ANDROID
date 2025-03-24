@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
 import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
 import es.upsa.mimo.thesimpsonplace.data.entities.character.ImageDto
@@ -12,10 +13,17 @@ import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import kotlinx.serialization.json.Json
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Named
 import kotlin.text.get
 
 // Implementación de 'CharacterDtoDao' (acciones) en testing (y preview) o producción
-class CharacterDaoJson(val context: Context, val dataJson: String, val imagJson: String): CharacterDao {
+// @Inject constructor(...) -> Permite que Hilt maneje la creación de la clase.
+//@Singleton
+class CharacterDaoJson /* ❌ @Inject constructor (Usando @Provides) */(@ApplicationContext private val context: Context, // Evita la necesidad de pasar manualmente el contexto.
+                                           @Named("dataJson") private val dataJson: String,
+                                           @Named("imageJson") private val imagJson: String
+                                           ): CharacterDao {
 
     // json -> dependiendo del json va a ser para producción o para testing
     override suspend fun getAllCharacters(): List<CharacterDto> {
@@ -60,3 +68,4 @@ class CharacterDaoJson(val context: Context, val dataJson: String, val imagJson:
         return getAllCharacters().filter { it.nombre?.contains(name, ignoreCase = true) == true }
     }
 }
+

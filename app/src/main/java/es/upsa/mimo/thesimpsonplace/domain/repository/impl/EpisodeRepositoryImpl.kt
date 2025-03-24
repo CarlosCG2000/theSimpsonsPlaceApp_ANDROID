@@ -9,8 +9,10 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Date
+import javax.inject.Inject
 
-class EpisodeRepositoryImpl(val dao: EpisodeDao, val databaseDao: EpisodeDatabaseDao): EpisodeRepository {
+class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
+                                                val databaseDao: EpisodeDatabaseDao): EpisodeRepository {
 
     suspend fun fusionSourceDB(episodesSource: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeStateUI
@@ -26,7 +27,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetail
 
 @Composable
 fun EpisodeDetailScreen(
-    viewModel: DetailsEpisodeViewModel = viewModel(factory = DetailsEpisodeViewModel.factory()),
+    viewModel: DetailsEpisodeViewModel = hiltViewModel(),// viewModel(factory = DetailsEpisodeViewModel.factory()),
     id: String,
     navigationArrowBack:() -> Unit) {
 
