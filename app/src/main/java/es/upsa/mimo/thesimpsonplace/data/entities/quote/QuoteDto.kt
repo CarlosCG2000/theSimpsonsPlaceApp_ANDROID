@@ -1,17 +1,15 @@
 package es.upsa.mimo.thesimpsonplace.data.entities.quote
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class QuoteDto (
-    @SerialName("quote") val cita: String,
-    @SerialName("character") val personaje: String,
-    @SerialName("image") val imagen: String
+    @SerializedName("quote") val cita: String?, // Ojo '@SerializedName' y no '@SerialName'
+    @SerializedName("character") val personaje: String?,
+    @SerializedName("image") val imagen: String?
 )
 
 // 4️⃣ Integración con Room
-//Crea la entidad QuoteEntity:
+// Crea la entidad QuoteEntity:
 /**
     // @Entity(tableName = "quote") crea una tabla en la BD.
     @Entity(tableName = "quote")

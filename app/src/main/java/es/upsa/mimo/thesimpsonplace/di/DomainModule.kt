@@ -4,54 +4,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
-import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
-import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
-import es.upsa.mimo.thesimpsonplace.domain.repository.impl.CharaterRepositoryImpl
-import es.upsa.mimo.thesimpsonplace.domain.repository.impl.EpisodeRepositoryImpl
-import es.upsa.mimo.thesimpsonplace.domain.repository.impl.QuoteRepositoryImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.FetchAllCharactersDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetFilterNameCharactersUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.UpdateCharacterDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdsDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByChapterUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByDateUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeasonUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.InsertEpisodeDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.UpdateEpisodeDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.FetchAllCharactersDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.GetAllCharactersUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.GetFilterNameCharactersUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.InsertCharacterDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.UpdateCharacterDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetAllEpisodesDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetAllEpisodesUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodeByIdDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodeByIdUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodeByIdsDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesByChapterUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesByDateUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesBySeasonUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesByTitleUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.InsertEpisodeDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.UpdateEpisodeDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.DeleteQuoteDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.GetAllQuoteDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.GetQuestionsUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.GetQuotesUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.InsertQuoteDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.DeleteQuoteDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetAllQuoteDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuestionsUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuotesUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.InsertQuoteDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.repository.* //CharaterRepository
+import es.upsa.mimo.thesimpsonplace.domain.repository.impl.* //CharaterRepositoryImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.character.* //FetchAllCharactersDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.* //GetAllEpisodesDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.* //FetchAllCharactersDbUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.* //GetAllEpisodesDbUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.* //DeleteQuoteDbUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.* // DeleteQuoteDbUseCase
 import javax.inject.Singleton
 
 // Un @Module no puede contener métodos abstractos (@Binds) y métodos concretos (@Provides) al mismo tiempo. Por ello se crea una nueva clase.

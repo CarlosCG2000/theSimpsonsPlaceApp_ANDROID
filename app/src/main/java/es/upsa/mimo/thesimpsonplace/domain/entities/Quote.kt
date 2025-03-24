@@ -7,6 +7,7 @@ data class Quote (
     val id: UUID = UUID.randomUUID(), // no puedes instanciar un UUID directamente con UUID(), ya que UUID no tiene un constructor sin parámetros.
     val cita: String,
     val personaje: String,
-    val imagen: URL
+    val imagen: URL,
+    var esFavorito: Boolean = false
 )
 

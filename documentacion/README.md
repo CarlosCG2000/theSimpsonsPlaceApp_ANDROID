@@ -1532,11 +1532,10 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 ...
 
 
-- HACER EL `HILT` CON `RETROFIT` PARA LA CONSULTA DE LA `API DE CITAS` ⚠️
 
 - REALIZAR EL `HILT` PARA EL `TESTING` CON LOS `DATOS DE TEST` ⚠️
 
-# EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA
+# EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA ✅
 
 -  Cuando la implementación de mi dao, repositorio, casos de usos... no incluye `@Inject constructor()`, por ejemplo `CharacterDaoJson.kt`.
 ```kotlin
@@ -1639,4 +1638,9 @@ Regla general: Usa `@Singleton` en aquellas clases que deban tener una única in
 2.	Usa `@Binds` cuando quieres enlazar una implementación (`CharaterRepositoryImpl`) con su interfaz (`CharaterRepository`).
 3.	Pon `@Singleton` en `DAOs` y `Repositorios`, pero NO en casos de uso ni `ViewModels`.
 
-# EXPLICACIÓN LLAMADA A API (`RETROFIT`) --> MIA
+# EXPLICACIÓN LLAMADA A API (`RETROFIT`) --> MIA ✅
+- El `QuoteDto` se caracteriza por tener los atributos como `@SerializedName` y no como `@SerialName`.
+- El `QuoteDao.kt` es la interfaz, hay que añadir el `método de la operación` (@Get) y sus posibles `querys`.
+- No se necesita `QuoteDaoApi.kt` por que la implementación con la APi se hace atraves del fichero `NetworkModule.kt`.
+- El `NetworkModule.kt` define `los providers` de `Retrofit` y de mi `Api` en concreto como si fiese el `QuoteDaoApi.kt`.
+- En el `AppModule.kt` borramos el provider para el `QuoteDaoApi.kt` (que ya hemos borrado su implementacón por `NetworkModule.kt`).

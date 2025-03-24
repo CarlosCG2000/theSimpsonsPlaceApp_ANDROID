@@ -40,7 +40,7 @@ class QuoteDatabaseDaoRoom: QuoteDatabaseDao {
 //    •	@Dao convierte la interfaz en un acceso a la BD.
 
     override suspend fun getAllQuoteDb(): List<Quote> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun getQuoteByCitaDb(cita: String): Quote {
