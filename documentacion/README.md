@@ -63,6 +63,8 @@ Añadida las subcarpetas para la sección de personajes. Explicación `1. DUDA.`
 * 5. Coil: `io.coil-kt` y aplicamos la de `coil-compose`. Carga de imágenes de web.
 * 6. Extensión de iconos: buscar `material-icons` obtener `material-icons-extended`.
 * 7. `com.google.code.gson`: `GSON` para obtener del fichero json los personajes (character).
+* 8. `hilt`: para inyección de dependecias
+* 9. `retrofit`: para llamada a red/apis
 
 5. Añadir en el esqueleto (`punto 3.`) a aparte la que esta ya de personajes, las `secciones` de `episodio`, `citas` y `juego`.
 En `1. DUDA`, explicado el esquema que he seguido para app (muy similar en personajes con las demás secciones que ahora implemento).
@@ -1270,7 +1272,7 @@ fun CharactersScreen(   navigateToFilterCharacters: () -> Unit
 HACER QUE REOCGA EL NOMBRE Y LA FOTO EL OTRO JSON Y LAS JUNTE EN LA ENTIDAD. ✅
 HACER LOS JSON DE LOS EPISODIOS. ✅
 VIDEOS VIDEOS VIDEOS DE EJEMPLOS. ❌
-PASAR A LA VISUALZIACIONES. ❌
+PASAR A LA VISUALIZACIONES. ❌
 
 - VER LOGGER ✅
 - VER PASO DE IDA NAVEGACION DEL EPISODE ✅
@@ -1315,7 +1317,7 @@ class TheSimpsonPlaceApp : Application()
 
 3️⃣ Crear el Módulo de Hilt para las Dependencias
 
-Crea una nueva clase llamada AppModule.kt donde definiremos las dependencias:
+Crea una nueva clase llamada `AppModule.kt` donde definiremos las dependencias:
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -1329,10 +1331,10 @@ object AppModule {
 }
 ```
 
-✅ Ahora Hilt sabrá cómo crear GetAllCharactersUseCase y lo mantendrá en memoria como un Singleton.
+✅ Ahora `Hilt` sabrá cómo crear `GetAllCharactersUseCase` y lo mantendrá en memoria como un `Singleton`.
 
 4️⃣ Modificar el ViewModel para usar Hilt
-En ListCharactersViewModel, cambia su constructor para que Hilt lo maneje:
+En `ListCharactersViewModel`, cambia su `constructor` para que `Hilt` lo maneje:
 
 ```kotlin
 @HiltViewModel

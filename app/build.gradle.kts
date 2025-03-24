@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization) // Serialization
+    kotlin("kapt")
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -56,6 +58,12 @@ dependencies {
     implementation(libs.coil.compose) // Coil Compose (cargar imagenes web)
     implementation(libs.androidx.material.icons.extended) // Material Icons Extension (para tener mas iconos)
     implementation(libs.gson)  // GSON
+    implementation(libs.dagger.hilt)
+    implementation(libs.dagger.hilt.navigation)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.converter.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

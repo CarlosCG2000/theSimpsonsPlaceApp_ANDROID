@@ -8,5 +8,4 @@ class FetchAllCharactersDbUseCaseImpl(val repository: CharaterRepository): Fetch
     override suspend fun execute(): List<Character> {
         TODO("Not yet implemented")
     }
-
 }

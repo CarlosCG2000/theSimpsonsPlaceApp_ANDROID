@@ -16,5 +16,4 @@ class CharacterDatabaseDaoRoom: CharacterDatabaseDao {
     override suspend fun deleteCharacterDb(id: Int) {
         TODO("Not yet implemented")
     }
-
 }
