@@ -102,14 +102,14 @@ fun EpisodesScreen(
                         color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                     )
                 } else {
-                    listEpisodes(state.value.episodes, onEpisodeSelected)
+                    ListEpisodes(state.value.episodes, onEpisodeSelected)
                 }
             }
     }
 }
 
 @Composable
-fun listEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
+fun ListEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -119,22 +119,22 @@ fun listEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
     ) {
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            /**
+
             itemsIndexed(episodes) { index,item ->
                 EpisodeItem(index, item, onEpisodeSelected)
             }
-            */
 
-            items(episodes) {episode ->
-                EpisodeItem(episode, onEpisodeSelected)
-            }
+//            items(episodes) {episode ->
+//                EpisodeItem(episode, onEpisodeSelected)
+//            }
         }
 
     }
 }
 
 @Composable
-fun EpisodeItem(episode: Episode, onEpisodeSelected: (String) -> Unit) {
+fun EpisodeItem(index: Int, episode: Episode, onEpisodeSelected: (String) -> Unit) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,7 +152,7 @@ fun EpisodeItem(episode: Episode, onEpisodeSelected: (String) -> Unit) {
                 }// .background()
         ) {
 
-            Text(text = episode.titulo, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(text = "${index + 1} - ${episode.titulo}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Spacer(modifier = Modifier.width(16.dp))
             Row {
                 Text(text = episode.lanzamiento.toFormattedString(), fontSize = 20.sp)

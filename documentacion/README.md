@@ -1894,7 +1894,6 @@ class GetAllCharactersUseCase @Inject constructor(private val repository: Charac
 Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repository, no en el ViewModel.
 
 #
-HAGO LOS DETALLES DE EPSIDOSIO QUE QEUDEN CON SUS ROW CORRESPONDIENTE, ETC Y LUEOG TAMBIEN EL CALCULO DE QUE EPISODIO ES, ETC.
 HAGO LAS 3 PANTALLAS DE CADA SECCION DE LOS FILTROS.
 DEJO PREPARADA LAS PANTALLAS DE FAVORITOS.
 HAGO LA LOGICA AY PANTALLA DEL JUEGO.
