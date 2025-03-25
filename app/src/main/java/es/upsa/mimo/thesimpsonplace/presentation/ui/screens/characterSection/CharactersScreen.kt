@@ -88,28 +88,26 @@ fun CharactersScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color.Gray) // ✅ Fondo blanco para mejor visibilidad,
+                // .background(Color.Gray) // ✅ Fondo blanco para mejor visibilidad,
         ) {
             if(state.value.isLoading){
                 CircularProgressIndicator(
                     color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                 )
             } else {
-                CharacterList(paddingValues, state.value.characters)
+                CharacterList(Modifier.fillMaxSize(), state.value.characters)
             }
         }
     }
 }
 
 @Composable
-fun CharacterList(paddingValues: PaddingValues, character: List<Character>) {
+fun CharacterList(modifier: Modifier, character: List<Character>) {
     Column(
-        modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+        modifier = modifier, // Ocupa toda la pantalla
         // verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
         horizontalAlignment = Alignment.CenterHorizontally
     ) { // Centra horizontalmente
-        // LOGO SIMPSONS
-        Text("NavegacionPersonajes", fontSize = 24.sp, fontWeight = Bold)
 
         LazyColumn {
             items(character) { character ->
