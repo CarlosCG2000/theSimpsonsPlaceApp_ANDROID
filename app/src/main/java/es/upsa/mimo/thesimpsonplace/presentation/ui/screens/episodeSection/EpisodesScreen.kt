@@ -102,18 +102,17 @@ fun EpisodesScreen(
                         color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                     )
                 } else {
-                    ListEpisodes(state.value.episodes, onEpisodeSelected)
+                    ListEpisodes(Modifier.fillMaxSize(),
+                        state.value.episodes, onEpisodeSelected)
                 }
             }
     }
 }
 
 @Composable
-fun ListEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
+fun ListEpisodes(modifier: Modifier, episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 60.dp), // Ocupa toda la pantalla
+        modifier = modifier, // Ocupa toda la pantalla
         //verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
         // horizontalAlignment = Alignment.CenterHorizontally // Centra horizontalmente
     ) {

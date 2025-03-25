@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import java.util.Date
 
@@ -7,10 +8,14 @@ interface EpisodeRepository {
     // Casos de uso de la datos obtenido de la fuente principal
     suspend fun getAllEpisodes(): List<Episode>
     suspend fun getEpisodeById(id: String): Episode?
-    suspend fun getEpisodesByTitle(title: String): List<Episode>
-    suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<Episode>
-    suspend fun getEpisodesBySeason(season:Int): List<Episode>
-    suspend fun getEpisodesByChapter(chapter:Int): List<Episode>
+    suspend fun getEpisodesByTitle(title: String,
+                                   episodes: List<Episode> = emptyList()): List<Episode>
+    suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?,
+                                  episodes: List<Episode> = emptyList()): List<Episode>
+    suspend fun getEpisodesBySeason(season:Int,
+                                    episodes: List<Episode> = emptyList()): List<Episode>
+    suspend fun getEpisodesByChapter(chapter:Int,
+                                     episodes: List<Episode> = emptyList()): List<Episode>
 
     // Casos de uso de la datos de la base de datos
     suspend fun getAllEpisodesDb(): List<Episode>

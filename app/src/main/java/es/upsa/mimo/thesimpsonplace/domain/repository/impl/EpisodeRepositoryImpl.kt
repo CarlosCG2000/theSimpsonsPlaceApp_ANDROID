@@ -73,40 +73,53 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
         }
     }
 
-    override suspend fun getEpisodesByTitle(title: String): List<Episode> {
+    override suspend fun getEpisodesByTitle(title: String,
+                                            episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
+
             // 🚀 1️⃣ Cargar datos del JSON/API
             val episodesDtoByTitle: List<EpisodeDto> = dao.getEpisodesByTitle(title)
             val episodesByTitle: List<Episode> = episodesDtoByTitle.map { it.toEpisode() }
 
-            fusionSourceDB(episodesByTitle)
+            // 🚀 2️⃣ Filtrar solo los episodios que están en ambas listas
+            val filteredEpisodes = episodesByTitle.filter { it in episodes }
+
+            fusionSourceDB(if(episodes.isEmpty()) episodesByTitle else filteredEpisodes)
         }
     }
 
-    override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<Episode> {
+    override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?,
+                                           episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
             val episodesDtoByDate: List<EpisodeDto> = dao.getEpisodesByDate(minDate, maxDate)
             val episodesByDate: List<Episode> = episodesDtoByDate.map { it.toEpisode() }
 
-            fusionSourceDB(episodesByDate)
+            // 🚀 2️⃣ Filtrar solo los episodios que están en ambas listas
+            val filteredEpisodes = episodesByDate.filter { it in episodes }
+
+            fusionSourceDB(if(episodes.isEmpty()) episodesByDate else filteredEpisodes)
         }
     }
 
-    override suspend fun getEpisodesBySeason(season: Int): List<Episode> {
+    override suspend fun getEpisodesBySeason(season: Int,
+                                             episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
             val episodesDtoBySeason: List<EpisodeDto> = dao.getEpisodesBySeason(season)
             val episodesBySeason: List<Episode> = episodesDtoBySeason.map { it.toEpisode() }
+            val filteredEpisodes = episodesBySeason.filter { it in episodes }
 
-            fusionSourceDB(episodesBySeason)
+            fusionSourceDB(if(episodes.isEmpty()) episodesBySeason else filteredEpisodes)
         }
     }
 
-    override suspend fun getEpisodesByChapter(chapter: Int): List<Episode> {
+    override suspend fun getEpisodesByChapter(chapter: Int,
+                                              episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
             val episodesDtoByChapter: List<EpisodeDto> = dao.getEpisodesByChapter(chapter)
             val episodesByChapter: List<Episode> = episodesDtoByChapter.map { it.toEpisode() }
+            val filteredEpisodes = episodesByChapter.filter { it in episodes }
 
-            fusionSourceDB(episodesByChapter)
+            fusionSourceDB(if(episodes.isEmpty()) episodesByChapter else filteredEpisodes)
         }
     }
 

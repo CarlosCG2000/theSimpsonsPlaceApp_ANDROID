@@ -33,12 +33,10 @@ class EpisodeDaoJson(val context: Context,
     }
 
     override suspend fun getEpisodesByTitle(title: String): List<EpisodeDto> {
-
-        return getAllEpisodes().filter { it.titulo?.contains(title, ignoreCase = true) == true }
+        return  getAllEpisodes().filter { it.titulo?.contains(title, ignoreCase = true) == true }
     }
 
     override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<EpisodeDto> {
-
         return getAllEpisodes().filter { episode ->
             val date = episode.lanzamiento?.toDate() ?: return@filter false
 
@@ -47,12 +45,10 @@ class EpisodeDaoJson(val context: Context,
     }
 
     override suspend fun getEpisodesBySeason(season: Int): List<EpisodeDto> {
-
         return getAllEpisodes().filter { it.temporada == season }
     }
 
     override suspend fun getEpisodesByChapter(chapter: Int): List<EpisodeDto> {
-
         return getAllEpisodes().filter { it.episodio == chapter }
     }
 
