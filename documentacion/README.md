@@ -1532,6 +1532,8 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 #### SEGUIMOS
 ...
 
+
+- AÑADIR `LA LÓGICA` CASI COMPLETA DE LA APLICACIÓN ⚠️
 - REALIZAR EL `HILT` PARA EL `TESTING` CON LOS `DATOS DE TEST` ⚠️
 - HACER BIEN LA COMPROBACIÓN DE LOS `LOGGER` ⚠️
 - VER BIEN LOS `COLORES`, `ESTILOS` Y `STRINGS` (RECURSOS) DE LA PANTALLA ⚠️
@@ -1891,4 +1893,8 @@ class GetAllCharactersUseCase @Inject constructor(private val repository: Charac
 
 Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repository, no en el ViewModel.
 
-## 
+#
+HAGO LOS DETALLES DE EPSIDOSIO QUE QEUDEN CON SUS ROW CORRESPONDIENTE, ETC Y LUEOG TAMBIEN EL CALCULO DE QUE EPISODIO ES, ETC.
+HAGO LAS 3 PANTALLAS DE CADA SECCION DE LOS FILTROS.
+DEJO PREPARADA LAS PANTALLAS DE FAVORITOS.
+HAGO LA LOGICA AY PANTALLA DEL JUEGO.

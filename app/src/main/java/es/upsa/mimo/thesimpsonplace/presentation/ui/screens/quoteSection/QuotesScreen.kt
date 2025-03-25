@@ -193,10 +193,9 @@ fun QuoteItem(quote: Quote,
                             imageVector = Icons.Filled.Star, // Usa el ícono de estrella
                             contentDescription = "Favorito",
                             tint = if (isFavorite) Color.Yellow else Color.Red, // Amarillo si es favorito, rojo si no
-                            modifier = Modifier.size(24.dp) // Tamaño del icono
+                            modifier = Modifier.size(38.dp) // Tamaño del icono
                         )
                     }
-
                 }
 
                 Log.i("image","${quote.imagen.toString()}")

@@ -54,7 +54,7 @@ fun EpisodeDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color.White) // ✅ Fondo blanco para mejor visibilidad,
+                // .background(Color.White) // ✅ Fondo blanco para mejor visibilidad,
         ) {
             if(state.value.isLoading) {
                 CircularProgressIndicator(
@@ -79,6 +79,7 @@ fun CharacterDetails(paddingValues: PaddingValues, episode: Episode?) {
         Text("Titulo ${episode?.titulo}", fontSize = 24.sp, fontWeight = Bold)
         Text("descripcion ${episode?.descripcion}", fontSize = 24.sp, fontWeight = Bold)
         Text("temporada ${episode?.temporada}", fontSize = 24.sp, fontWeight = Bold)
+
         Text("esVisto ${episode?.esVisto}", fontSize = 24.sp, fontWeight = Bold)
         Text("esFavorito ${episode?.esFavorito}", fontSize = 24.sp, fontWeight = Bold)
 

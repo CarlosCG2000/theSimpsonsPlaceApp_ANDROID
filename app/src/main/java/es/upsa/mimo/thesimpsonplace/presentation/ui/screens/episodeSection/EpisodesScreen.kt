@@ -12,10 +12,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.RemoveRedEye
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import es.upsa.mimo.thesimpsonplace.data.utils.Logger
 import es.upsa.mimo.thesimpsonplace.data.utils.LoggerClass
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.mappers.toFormattedString
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
@@ -107,8 +119,14 @@ fun listEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
     ) {
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            itemsIndexed(episodes) { index, item ->
+            /**
+            itemsIndexed(episodes) { index,item ->
                 EpisodeItem(index, item, onEpisodeSelected)
+            }
+            */
+
+            items(episodes) {episode ->
+                EpisodeItem(episode, onEpisodeSelected)
             }
         }
 
@@ -116,23 +134,38 @@ fun listEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
 }
 
 @Composable
-fun EpisodeItem(index:Int, episode: Episode, onEpisodeSelected: (String) -> Unit) {
-
-    Column(
+fun EpisodeItem(episode: Episode, onEpisodeSelected: (String) -> Unit) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                onEpisodeSelected(episode.id) // Ahora puedes obtener la posición del item
-            }
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor =
+                                    if (episode.esFavorito) Color.Gray else Color(0xFF2C3E72) ), // Azul oscuro o Gris
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable {
+                    onEpisodeSelected(episode.id) // Ahora puedes obtener la posición del item
+                }// .background()
+        ) {
 
-        Text(text = episode.titulo, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        Spacer(modifier = Modifier.width(16.dp))
-        Row {
-            Text(text = episode.lanzamiento.toString(), fontSize = 20.sp)
-            Text(text = episode.temporada.toString(), fontSize = 16.sp)
-            Text(text = episode.esVisto.toString(), fontSize = 16.sp)
+            Text(text = episode.titulo, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Spacer(modifier = Modifier.width(16.dp))
+            Row {
+                Text(text = episode.lanzamiento.toFormattedString(), fontSize = 20.sp)
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(text = "Temporada ${ episode.temporada }", fontSize = 20.sp)
+                Spacer(modifier = Modifier.width(16.dp))
+                Icon(
+                    imageVector = if (episode.esVisto) Icons.Filled.Visibility else Icons.Filled.VisibilityOff, // Usa el ícono de estrella
+                    contentDescription = "Favorito",
+                    tint = if (episode.esVisto) Color.Yellow else Color.Red, // Amarillo si es visto, rojo si no
+                    modifier = Modifier.size(38.dp) // Tamaño del icono
+                )
+            }
         }
     }
 }

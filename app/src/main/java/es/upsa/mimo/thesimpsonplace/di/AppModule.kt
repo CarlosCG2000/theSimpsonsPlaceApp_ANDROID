@@ -51,7 +51,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideEpisodeDao(@ApplicationContext context: Context): EpisodeDao {
-        val test = true
+        val test = false
 
         return if(test) {
             EpisodeDaoJson(context, "episodios_test.json")

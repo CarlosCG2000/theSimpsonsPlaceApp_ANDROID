@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,8 +33,17 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersL
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import es.upsa.mimo.thesimpsonplace.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -109,15 +119,24 @@ fun CharacterList(paddingValues: PaddingValues, character: List<Character>) {
     }
 }
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun CharacterItem(character: Character) {
     val context = LocalContext.current
 
-    val imageResId = context.resources.getIdentifier(
-        character.imagen?.lowercase(),
-        "drawable",
-        context.packageName
-    )
+    var isFavorite by remember { mutableStateOf(character.esFavorito) }
+
+    // Motivo no puedo pasar las 2000 personajes uno por uno dando su R.drawable: "homer" to R.drawable.homer, "bart" to R.drawable.bart...
+    val imageResId = remember(character.imagen) {
+
+        val id = context.resources.getIdentifier(
+            character.imagen?.lowercase(),
+            "drawable",
+            context.packageName
+        )
+
+        if (id == 0) R.drawable.not_specified else id
+    }
 
     Row(
         modifier = Modifier
@@ -137,7 +156,24 @@ fun CharacterItem(character: Character) {
         Column {
             Text(text = character.nombre, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Text(text = character.genero.toString(), fontSize = 16.sp)
-            Text(text = character.esFavorito.toString(), fontSize = 16.sp)
+
+
+            IconButton(onClick = {
+                isFavorite = !isFavorite
+                // funcion de cambio en la BD
+                /** if (isFavorite){
+                dbCharacterViewModel.insert(quote)
+                } else {
+                dbCharacterViewModel.delete(quote)
+                } */
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Star, // Usa el ícono de estrella
+                    contentDescription = "Favorito",
+                    tint = if (isFavorite) Color.Yellow else Color.Red, // Amarillo si es favorito, rojo si no
+                    modifier = Modifier.size(38.dp) // Tamaño del icono
+                )
+            }
         }
     }
 }
