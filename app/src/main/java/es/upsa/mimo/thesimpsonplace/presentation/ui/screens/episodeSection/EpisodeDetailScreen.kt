@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeViewModel
@@ -47,27 +50,41 @@ fun EpisodeDetailScreen(
     )
     { paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize().background(Color.Magenta).padding(paddingValues),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(Color.White) // ✅ Fondo blanco para mejor visibilidad,
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
-                verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) { // Centra horizontalmente
-                // LOGO SIMPSONS
-                Text("Episodio en detalles con ID $id", fontSize = 24.sp, fontWeight = Bold)
-                Text("Titulo ${state.value.episode?.titulo}", fontSize = 24.sp, fontWeight = Bold)
-                Text("descripcion ${state.value.episode?.descripcion}", fontSize = 24.sp, fontWeight = Bold)
-                Text("temporada ${state.value.episode?.temporada}", fontSize = 24.sp, fontWeight = Bold)
-                Text("esVisto ${state.value.episode?.esVisto}", fontSize = 24.sp, fontWeight = Bold)
-                Text("esFavorito ${state.value.episode?.esFavorito}", fontSize = 24.sp, fontWeight = Bold)
-
-                Text("escritores ${state.value.episode?.escritores}", fontSize = 24.sp, fontWeight = Bold)
-                Text("directores ${state.value.episode?.directores}", fontSize = 24.sp, fontWeight = Bold)
-                Text("invitados ${state.value.episode?.invitados}", fontSize = 24.sp, fontWeight = Bold)
+            if(state.value.isLoading) {
+                CircularProgressIndicator(
+                    color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                )
+            } else {
+                CharacterDetails(paddingValues, state.value.episode)
             }
         }
+    }
+}
+
+@Composable
+fun CharacterDetails(paddingValues: PaddingValues, episode: Episode?) {
+    Column(
+        modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+        verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) { // Centra horizontalmente
+        // LOGO SIMPSONS
+        Text("Episodio en detalles con ID ${episode?.id}", fontSize = 24.sp, fontWeight = Bold)
+        Text("Titulo ${episode?.titulo}", fontSize = 24.sp, fontWeight = Bold)
+        Text("descripcion ${episode?.descripcion}", fontSize = 24.sp, fontWeight = Bold)
+        Text("temporada ${episode?.temporada}", fontSize = 24.sp, fontWeight = Bold)
+        Text("esVisto ${episode?.esVisto}", fontSize = 24.sp, fontWeight = Bold)
+        Text("esFavorito ${episode?.esFavorito}", fontSize = 24.sp, fontWeight = Bold)
+
+        Text("escritores ${episode?.escritores}", fontSize = 24.sp, fontWeight = Bold)
+        Text("directores ${episode?.directores}", fontSize = 24.sp, fontWeight = Bold)
+        Text("invitados ${episode?.invitados}", fontSize = 24.sp, fontWeight = Bold)
     }
 }
 

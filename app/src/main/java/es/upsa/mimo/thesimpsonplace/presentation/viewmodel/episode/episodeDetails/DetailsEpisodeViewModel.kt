@@ -12,6 +12,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCa
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.TheSimpsonPlaceApp
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,10 +27,12 @@ class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: Ge
 
     fun getEpisodeById(id:String){
         viewModelScope.launch {
+            _episodeState.update { it.copy(isLoading = true) }
+
             val getEpisode: Episode? = getEpisodeByIdUseCase.execute(id)
 
             _episodeState.update {
-                it.copy(getEpisode)
+                it.copy(episode = getEpisode, isLoading = false)
             }
         }
     }

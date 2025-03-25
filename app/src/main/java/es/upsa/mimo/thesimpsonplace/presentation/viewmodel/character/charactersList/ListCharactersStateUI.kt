@@ -2,4 +2,5 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.characters
 
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 
-data class ListCharactersStateUI (val characters:List<Character> = emptyList())
+data class ListCharactersStateUI (val characters:List<Character> = emptyList(),
+                                  val isLoading: Boolean = false)

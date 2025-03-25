@@ -2,4 +2,5 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetai
 
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 
-data class DetailsEpisodeStateUI (val episode: Episode? = null)
+data class DetailsEpisodeStateUI (val episode: Episode? = null,
+                                  val isLoading: Boolean = false)

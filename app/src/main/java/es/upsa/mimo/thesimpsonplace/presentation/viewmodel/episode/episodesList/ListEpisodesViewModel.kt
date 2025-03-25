@@ -11,6 +11,7 @@ import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.TheSimpsonPlaceApp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,10 +26,14 @@ class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAl
 
     fun getAllEpisodes(){
         viewModelScope.launch {
+            _episodesState.update { it.copy(isLoading = true) }
+
             val getAllEpisodes: List<Episode> = getAllEpisodesUseCase.execute()
 
+            // delay(2000)
+
             _episodesState.update {
-                it.copy(getAllEpisodes)
+                it.copy(getAllEpisodes, isLoading = false)
             }
         }
     }

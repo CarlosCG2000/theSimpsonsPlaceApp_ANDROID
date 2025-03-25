@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,28 +77,42 @@ fun EpisodesScreen(
             )
         }
     ) { paddingValues ->
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(Color.Red),
-                contentAlignment = Alignment.Center) {
 
-                Column(modifier = Modifier
+            Box(
+                contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
+                modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 60.dp), // Ocupa toda la pantalla
-                    //verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-                   // horizontalAlignment = Alignment.CenterHorizontally // Centra horizontalmente
-                    ){
-
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        itemsIndexed(state.value.episodes) { index, item ->
-                            EpisodeItem(index, item, onEpisodeSelected)
-                        }
-                    }
-
+                    .padding(paddingValues)
+                    // .background(Color.Primary) // ✅ Fondo blanco para mejor visibilidad,
+            ) {
+                if (state.value.isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                    )
+                } else {
+                    listEpisodes(state.value.episodes, onEpisodeSelected)
                 }
             }
+    }
+}
+
+@Composable
+fun listEpisodes(episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 60.dp), // Ocupa toda la pantalla
+        //verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
+        // horizontalAlignment = Alignment.CenterHorizontally // Centra horizontalmente
+    ) {
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            itemsIndexed(episodes) { index, item ->
+                EpisodeItem(index, item, onEpisodeSelected)
+            }
         }
+
+    }
 }
 
 @Composable
@@ -120,7 +136,6 @@ fun EpisodeItem(index:Int, episode: Episode, onEpisodeSelected: (String) -> Unit
         }
     }
 }
-
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable

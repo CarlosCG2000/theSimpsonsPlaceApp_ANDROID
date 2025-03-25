@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersL
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -63,7 +65,8 @@ fun CharactersScreen(
                 navigateToFilterCharacters,
                 navigateToFavoriteCharacters
             )
-        }, topBar = {
+        },
+        topBar = {
             TopBarComponent(
                 title = "Listado de Personajes Fav",
                 onNavigationArrowBack = navigationArrowBack
@@ -71,25 +74,36 @@ fun CharactersScreen(
         }
     ) { paddingValues ->
         Box(
+            contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color.Gray),
-            contentAlignment = Alignment.Center
+                .background(Color.Gray) // ✅ Fondo blanco para mejor visibilidad,
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
-                // verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) { // Centra horizontalmente
-                // LOGO SIMPSONS
-                Text("NavegacionPersonajes", fontSize = 24.sp, fontWeight = Bold)
+            if(state.value.isLoading){
+                CircularProgressIndicator(
+                    color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                )
+            } else {
+                CharacterList(paddingValues, state.value.characters)
+            }
+        }
+    }
+}
 
-                LazyColumn {
-                    items(state.value.characters) { character ->
-                        CharacterItem(character)
-                    }
-                }
+@Composable
+fun CharacterList(paddingValues: PaddingValues, character: List<Character>) {
+    Column(
+        modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+        // verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) { // Centra horizontalmente
+        // LOGO SIMPSONS
+        Text("NavegacionPersonajes", fontSize = 24.sp, fontWeight = Bold)
+
+        LazyColumn {
+            items(character) { character ->
+                CharacterItem(character)
             }
         }
     }
@@ -98,6 +112,7 @@ fun CharactersScreen(
 @Composable
 fun CharacterItem(character: Character) {
     val context = LocalContext.current
+
     val imageResId = context.resources.getIdentifier(
         character.imagen?.lowercase(),
         "drawable",

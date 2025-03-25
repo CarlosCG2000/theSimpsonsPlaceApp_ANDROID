@@ -1276,9 +1276,10 @@ PASAR A LA VISUALIZACIONES. ❌
 
 - VER LOGGER ✅
 - VER PASO DE IDA NAVEGACION DEL EPISODE ✅
-- VER HILT (inyeccion automatica) ⚠️
+- VER HILT (inyeccion automatica) ✅
 - VER PAGINACIÓN (Paging 3, carga diferida) ⚠️
-- VER RETROFIT (llamada a API'S) ⚠️
+- VER RETROFIT (llamada a API'S) ✅
+- VER BD CON ROOMS ⚠️
 
 #### ✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
 
@@ -1532,6 +1533,11 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 ...
 
 - REALIZAR EL `HILT` PARA EL `TESTING` CON LOS `DATOS DE TEST` ⚠️
+- HACER BIEN LA COMPROBACIÓN DE LOS `LOGGER` ⚠️
+- VER BIEN LOS `COLORES`, `ESTILOS` Y `STRINGS` (RECURSOS) DE LA PANTALLA ⚠️
+- EDITAR LA `INTERFAZ` PARA QUE SEA LA BONITA Y BUENA DE VERDAD ⚠️
+
+- EMPIZAR VIDEO DE: `https://www.youtube.com/watch?v=lX7CeooKCcQ&t=13959s`
 
 # EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA ✅
 
@@ -1642,3 +1648,247 @@ Regla general: Usa `@Singleton` en aquellas clases que deban tener una única in
 - No se necesita `QuoteDaoApi.kt` por que la implementación con la APi se hace atraves del fichero `NetworkModule.kt`.
 - El `NetworkModule.kt` define `los providers` de `Retrofit` y de mi `Api` en concreto como si fiese el `QuoteDaoApi.kt`.
 - En el `AppModule.kt` borramos el provider para el `QuoteDaoApi.kt` (que ya hemos borrado su implementacón por `NetworkModule.kt`).
+
+# Diferencia entre usar `LiveData` y `StateFlow`. ¿Cuando usar cada cual? --> CHAT GPT ✅
+📌 ¿Cuándo usar LiveData y cuándo usar StateFlow?
+
+✅ Usar LiveData cuando:
+	1.	El estado depende del ciclo de vida de la UI
+	•	LiveData se detiene cuando el LifecycleOwner (ejemplo: Activity o Fragment) está en onStop(), y se reinicia en onStart().
+	2.	Ya tienes un código basado en LiveData
+	•	Si estás migrando una app antigua con LiveData, usarlo puede hacer la transición más sencilla.
+	3.	Estás en un ViewModel que usa LiveData en XML (DataBinding)
+	•	LiveData es compatible con DataBinding y se puede conectar directamente a los elementos de la UI.
+
+⸻
+
+✅ Usar StateFlow cuando:
+	1.	Estás trabajando con Jetpack Compose
+	•	StateFlow se integra mejor con collectAsState(), eliminando la dependencia de LifecycleOwner.
+	2.	Necesitas manejar estados de UI de forma reactiva
+	•	Como en una pantalla de login donde el email y la contraseña están cambiando constantemente.
+	3.	Quieres usar Flow en la arquitectura
+	•	StateFlow permite usar operadores como map, filter, combine para procesar datos de manera eficiente.
+
+⸻
+
+📌 Aplicación en tu código
+
+Tienes un ViewModel con:
+	•	_email como StateFlow
+	•	_password como LiveData
+
+🔹 Problema: Mezcla de StateFlow y LiveData
+
+No es un error, pero sería más consistente usar uno solo. Para Jetpack Compose, es mejor usar StateFlow.
+
+🔹 Opción 1: Convertir todo a StateFlow (recomendado para Compose)
+
+```kotlin
+class LoginViewModel : ViewModel() {
+
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email.asStateFlow()
+
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password.asStateFlow()
+
+    fun updateEmail(newEmail: String) {
+        _email.value = newEmail
+    }
+
+    fun updatePassword(newPassword: String) {
+        _password.value = newPassword
+    }
+}
+
+// En Compose:
+@Composable
+fun Login(viewModel: LoginViewModel) {
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+
+    TextField(value = email, onValueChange = { viewModel.updateEmail(it) })
+    TextField(value = password, onValueChange = { viewModel.updatePassword(it) })
+}
+```
+
+✅ Ventajas:
+	•	Usa StateFlow, que es más eficiente en Compose.
+	•	Evita la necesidad de observeAsState().
+	•	Funciona bien con remember.
+
+⸻
+
+🔹 Opción 2: Mantener LiveData (si tu proyecto ya usa LiveData)
+
+Si por alguna razón necesitas mantener LiveData, podrías hacer:
+```kotlin
+class LoginViewModel : ViewModel() {
+
+    private val _email = MutableLiveData("")
+    val email: LiveData<String> = _email
+
+    private val _password = MutableLiveData("")
+    val password: LiveData<String> = _password
+
+    fun updateEmail(newEmail: String) {
+        _email.value = newEmail
+    }
+
+    fun updatePassword(newPassword: String) {
+        _password.value = newPassword
+    }
+}
+
+// En Compose:
+@Composable
+fun Login(viewModel: LoginViewModel) {
+    val email by viewModel.email.observeAsState("")
+    val password by viewModel.password.observeAsState("")
+
+    TextField(value = email, onValueChange = { viewModel.updateEmail(it) })
+    TextField(value = password, onValueChange = { viewModel.updatePassword(it) })
+}
+```
+
+❌ Desventajas:
+	•	LiveData no está diseñado para Compose.
+	•	No es tan eficiente como StateFlow en términos de asincronía.
+
+⸻
+
+📌 Conclusión
+
+| Si usas Jetpack Compose → ✅ Usa StateFlow
+| Si usas XML + ViewModel → ✅ Usa LiveData
+
+Tu caso es Jetpack Compose, así que es mejor cambiar todo a StateFlow. 🚀
+
+# ¿`Funciones suspend` en el `View Model` o antes (casos de uso, repositorio, dao...)? --> CHAT GPT ✅
+En general, no se recomienda tener funciones suspend dentro del ViewModel, a menos que sean necesarias. La mejor práctica en la arquitectura MVVM es delegar la lógica suspendida a los casos de uso (UseCases) o repositorios, y llamar a esas funciones suspendidas desde viewModelScope.launch.
+
+⸻
+
+📌 ¿Por qué evitar suspend en el ViewModel?
+	1.	El ViewModel no es responsable de manejar la asincronía
+	•	Su responsabilidad es preparar y exponer los datos a la UI.
+	•	No debe manejar la lógica de negocio directamente.
+	2.	Dificulta el testeo unitario
+	•	suspend fun dentro del ViewModel requiere usar runBlockingTest o MainDispatcherRule para testear, lo que lo hace más complicado.
+	•	Si delegamos a un UseCase, podemos testear más fácilmente sin depender del ViewModel.
+	3.	Mejor separación de responsabilidades
+	•	ViewModel → Se encarga de exponer datos a la UI.
+	•	UseCase → Se encarga de la lógica de negocio.
+	•	Repository → Se encarga de acceder a los datos de API o BD.
+
+⸻
+
+📌 Comparación de enfoques
+
+🚫 Ejemplo INCORRECTO (Lógica suspendida en el ViewModel)
+
+```kotlin
+class LoginViewModel : ViewModel() {
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    suspend fun onLoginSelected() {
+        _isLoading.value = true
+        delay(4000)  // ❌ Manejo de asincronía dentro del ViewModel (no recomendado)
+        _isLoading.value = false
+    }
+}
+```
+
+❌ Problemas:
+	•	suspend en el ViewModel no permite llamarla directamente desde la UI sin usar viewModelScope.launch.
+	•	Dificulta la reutilización y testeo.
+
+⸻
+
+✅ Ejemplo CORRECTO (Manejo de asincronía con viewModelScope.launch)
+```kotlin
+class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    fun onLoginSelected() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            loginUseCase.execute()  // ✅ Llamamos al caso de uso suspendido
+            _isLoading.value = false
+        }
+    }
+}
+```
+
+Y en el UseCase (LoginUseCase):
+```kotlin
+class LoginUseCase(private val repository: UserRepository) {
+    suspend fun execute() {
+        delay(4000)  // Simulación de llamada de red
+        repository.login()
+    }
+}
+```
+
+✅ Ventajas:
+	•	ViewModel no maneja directamente la asincronía.
+	•	UseCase encapsula la lógica suspendida.
+	•	Testeo más fácil, porque podemos mockear LoginUseCase.
+
+⸻
+
+📌 ¿Cómo aplicar esto en tu código de Los Simpsons?
+
+Tú ya lo tienes bien estructurado en tu app de Los Simpsons, donde:
+	•	El ViewModel usa viewModelScope.launch
+	•	El UseCase maneja la lógica suspendida
+
+Ejemplo de tu código:
+```kotlin
+@HiltViewModel
+class ListCharactersViewModel @Inject constructor(
+    private val getAllCharacters: GetAllCharactersUseCase
+) : ViewModel() {
+
+    private val _stateCharacter = MutableStateFlow(ListCharactersStateUI())
+    val stateCharacter: StateFlow<ListCharactersStateUI> = _stateCharacter.asStateFlow()
+
+    fun getAllCharacters() {
+        viewModelScope.launch {
+            val charactersList = getAllCharacters.execute() // ✅ Llamada al caso de uso
+            _stateCharacter.update { it.copy(charactersList) }
+        }
+    }
+}
+```
+
+Y el UseCase:
+```kotlin
+class GetAllCharactersUseCase @Inject constructor(private val repository: CharacterRepository) {
+    suspend fun execute(): List<Character> {
+        return repository.getAllCharacters()  // ✅ Aquí ocurre la llamada suspendida
+    }
+}
+```
+
+✅ Ventajas de esta estructura:
+	•	ViewModel solo se encarga de gestionar el estado.
+	•	UseCase maneja la lógica de negocio suspendida.
+	•	Repository accede a los datos reales (API/BD).
+	•	Más modular y fácil de testear.
+
+⸻
+
+📌 Conclusión
+	•	❌ suspend fun dentro del ViewModel → No recomendado.
+	•	✅ viewModelScope.launch en el ViewModel y suspend en el UseCase → Mejor enfoque.
+	•	Tu app de Los Simpsons ya sigue la mejor práctica. 🚀
+
+Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repository, no en el ViewModel.
+
+## 

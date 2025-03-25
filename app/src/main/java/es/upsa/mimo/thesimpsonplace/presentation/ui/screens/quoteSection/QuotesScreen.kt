@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,10 +67,10 @@ fun QuotesScreen(
 ) {
 
     val state: State<ListQuotesStateUI> = viewModel.stateQuotes.collectAsState() // sincrono para manejarlo en la UI
-    var nuevasCitas by remember { mutableStateOf(true) }
+    var generateNewQuotes by remember { mutableStateOf(true) }
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
-    LaunchedEffect(nuevasCitas /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
+    LaunchedEffect(generateNewQuotes /**Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
         viewModel.getQuotes()
     }
 
@@ -97,29 +99,49 @@ fun QuotesScreen(
                 .background(Color.Green),
             contentAlignment = Alignment.Center
         ) {
-
-                Column(
-                    modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
-                    verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { // Centra horizontalmente
-                    // LOGO SIMPSONS
-                    Button(onClick = { nuevasCitas = !nuevasCitas }) {
-                        Text("Nuevos citas")
-                    }
-
-                    LazyColumn {
-                        items(state.value.quotes) { quote ->
-                            QuoteItem(quote)
-                        }
-                    }
+                if (state.value.isLoading) {
+                        CircularProgressIndicator(
+                            color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                        )
+                } else {
+                    generateNewQuotes = listQuotes(state.value.quotes, generateNewQuotes)
                 }
             }
         }
     }
 
 @Composable
+fun listQuotes(quotes: List<Quote>,
+               generateNewQuotes: Boolean): Boolean {
+
+    var changeQuotes by remember { mutableStateOf(generateNewQuotes) }
+
+    Column(
+        modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+        verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) { // Centra horizontalmente
+        // LOGO SIMPSONS
+        Button(onClick = { changeQuotes = !generateNewQuotes }) {
+            Text("Nuevos citas")
+        }
+
+        LazyColumn {
+            items(quotes) { quote ->
+                QuoteItem(quote)
+            }
+        }
+    }
+
+    return changeQuotes
+}
+
+
+@Composable
 fun QuoteItem(quote: Quote) {
+
+    // Crear boton de estrella, (cada vez que se de se cambia de valor), modificar de estado en la BD
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
