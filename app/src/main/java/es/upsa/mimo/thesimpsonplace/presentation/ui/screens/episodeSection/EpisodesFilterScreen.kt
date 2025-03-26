@@ -286,7 +286,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
             }
 
             Row(
-                modifier = Modifier.background(Color.Green)
+                modifier = Modifier //.background(Color.Green)
                     .constrainAs(columnPicker) {
                         top.linkTo(columnDate.bottom)
                         bottom.linkTo(listEpisodes.top)
@@ -344,7 +344,8 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 CircularProgressIndicator(
                     color = Color.Yellow,
                     modifier = Modifier.constrainAs(spinner) {
-                        centerTo(parent)
+                        top.linkTo(columnPicker.bottom)
+                        bottom.linkTo(parent.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
