@@ -47,6 +47,7 @@ import es.upsa.mimo.thesimpsonplace.data.utils.Logger
 import es.upsa.mimo.thesimpsonplace.data.utils.LoggerClass
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toFormattedString
+import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
@@ -102,15 +103,19 @@ fun EpisodesScreen(
                         color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                     )
                 } else {
-                    ListEpisodes(Modifier.fillMaxSize(),
-                        state.value.episodes, onEpisodeSelected)
+                    ListEpisodes(modifier = Modifier.fillMaxSize(),
+                                 episodes = state.value.episodes,
+                                 onEpisodeSelected = onEpisodeSelected)
                 }
             }
     }
 }
 
 @Composable
-fun ListEpisodes(modifier: Modifier, episodes: List<Episode>, onEpisodeSelected: (String) -> Unit) {
+fun ListEpisodes(modifier: Modifier,
+                 episodes: List<Episode>,
+                 allEpisodes: List<Episode> = episodes,
+                 onEpisodeSelected: (String) -> Unit) {
     Column(
         modifier = modifier, // Ocupa toda la pantalla
         //verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
@@ -119,20 +124,23 @@ fun ListEpisodes(modifier: Modifier, episodes: List<Episode>, onEpisodeSelected:
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-            itemsIndexed(episodes) { index,item ->
-                EpisodeItem(index, item, onEpisodeSelected)
+            items(episodes) {episode ->
+                val indiceEpisodio = allEpisodes.indexOfFirst { it.id == episode.id }.takeIf { it != -1 } ?: -1
+
+                EpisodeItem(indiceEpisodio, episode, onEpisodeSelected)
             }
 
-//            items(episodes) {episode ->
-//                EpisodeItem(episode, onEpisodeSelected)
+            //            itemsIndexed(episodes) { index, item ->
+//                EpisodeItem(index, item, onEpisodeSelected)
 //            }
+
         }
 
     }
 }
 
 @Composable
-fun EpisodeItem(index: Int, episode: Episode, onEpisodeSelected: (String) -> Unit) {
+fun EpisodeItem(indiceEpisodio: Int, episode: Episode, onEpisodeSelected: (String) -> Unit) {
 
     Card(
         modifier = Modifier
@@ -150,8 +158,7 @@ fun EpisodeItem(index: Int, episode: Episode, onEpisodeSelected: (String) -> Uni
                     onEpisodeSelected(episode.id) // Ahora puedes obtener la posición del item
                 }// .background()
         ) {
-
-            Text(text = "${index + 1} - ${episode.titulo}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(text = "${indiceEpisodio + 1} - ${episode.titulo}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Spacer(modifier = Modifier.width(16.dp))
             Row {
                 Text(text = episode.lanzamiento.toFormattedString(), fontSize = 20.sp)

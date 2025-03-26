@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav
 
+import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -31,68 +33,42 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
 
     val stateEpisode: StateFlow<ListEpisodesFilterStateUI> = _stateEpisode.asStateFlow()
 
+    private var allEpisodes: List<Episode> = emptyList() // 🔹 Lista completa de episodios
+    private val defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 17) }.timeInMillis
+
     fun updateEpisodes(episodes: List<Episode>) {
+        allEpisodes = episodes
         _stateEpisode.update { it.copy(episodes = episodes, isLoading = false) } // ✅ Actualiza correctamente el estado
     }
 
-    // Hay que llamar a los casos de uso
-    fun getEpisodesByTitle(title:String) {
-        viewModelScope.launch {
+    fun getEpisodesFilter(title: String = "", minDate: Date = Date(defaultMinDate), maxDate: Date = Date(), season: Int = 0, episode: Int = 0, isView: Boolean = false, order: Boolean = false){
 
+        viewModelScope.launch {
             _stateEpisode.update { it.copy(isLoading = true) }
 
-            val episodesAnt = _stateEpisode.value.episodes
+            // Comenzamos con la lista completa (allEpisodes)
+            var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase.execute(title, allEpisodes)
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase.execute(minDate, maxDate, filteredEpisodes)
+            // else if (filteredEpisodes.isNotEmpty()) // filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
+            // else if (filteredEpisodes.isNotEmpty()) // filteredEpisodes = getEpisodesByChapterUseCase.execute(episode, filteredEpisodes)
 
-            val episodesList = getEpisodesByTitleUseCase.execute(title, episodesAnt) // ✅ Obtiene los personajes
-
+// FALTA FILTRO DE SI ESTA VISTO O NO EL EPISODIO (AÑADIRLO EN TODOS LADOS, CASOS DE USO, REPOSITORIO, ETC) Y RECOTAR CUANDO SE A SEASON Y EPISODE 0 SE LLAME A TODOS
+// ...
             _stateEpisode.update {
-                it.copy(episodes = episodesList, isLoading = false)
+                it.copy(episodes = filteredEpisodes, isLoading = false) // Orden inverso, isLoading = false)
             }
+
+//            if (order){
+//                _stateEpisode.update {
+//                    it.copy(episodes = filteredEpisodes.sortedBy { it.lanzamiento }, isLoading = false) // Orden inverso, isLoading = false)
+//                }
+//            } else {
+//                _stateEpisode.update {
+//                    it.copy(episodes = filteredEpisodes.sortedByDescending { it.lanzamiento }, isLoading = false) // Orden inverso, isLoading = false)
+//                }
+//            }
         }
+
     }
 
-    fun getEpisodesByDate(minDate: Date, maxDate: Date) {
-        viewModelScope.launch {
-
-            _stateEpisode.update { it.copy(isLoading = true) }
-
-            val episodesAnt = _stateEpisode.value.episodes
-
-            val episodesList = getEpisodesByDateUseCase.execute(minDate, maxDate, episodesAnt) // ✅ Obtiene los personajes
-
-            _stateEpisode.update {
-                it.copy(episodes = episodesList, isLoading = false)
-            }
-        }
-    }
-
-    fun getEpisodesBySeason(season: Int) {
-        viewModelScope.launch {
-
-            _stateEpisode.update { it.copy(isLoading = true) }
-
-            val episodesAnt = _stateEpisode.value.episodes
-
-            val episodesList = getEpisodesBySeasonUseCase.execute(season, episodesAnt) // ✅ Obtiene los personajes
-
-            _stateEpisode.update {
-                it.copy(episodes = episodesList, isLoading = false)
-            }
-        }
-    }
-
-    fun getEpisodesByChapter(episode: Int) {
-        viewModelScope.launch {
-
-            _stateEpisode.update { it.copy(isLoading = true) }
-
-            val episodesAnt = _stateEpisode.value.episodes
-
-            val episodesList = getEpisodesByChapterUseCase.execute(episode, episodesAnt) // ✅ Obtiene los personajes
-
-            _stateEpisode.update {
-                it.copy(episodes = episodesList, isLoading = false)
-            }
-        }
-    }
 }

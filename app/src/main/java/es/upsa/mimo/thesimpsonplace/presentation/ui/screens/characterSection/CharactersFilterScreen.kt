@@ -139,7 +139,7 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
             } else {
                 CharacterList(
                     Modifier.constrainAs(characterList) {
-                        top.linkTo(textFieldFilter.bottom)
+                        top.linkTo(textFieldFilter.bottom, 5.dp)
                         start.linkTo(parent.start)
                     },
                     state.value.characters
