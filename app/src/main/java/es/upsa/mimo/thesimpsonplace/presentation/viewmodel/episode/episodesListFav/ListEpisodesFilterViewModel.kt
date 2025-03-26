@@ -12,6 +12,8 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByChapte
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByDateUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeasonUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByViewUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesOrderUseCase
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +29,8 @@ import javax.inject.Inject
 class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUseCase: GetEpisodesByTitleUseCase,
                                                         val getEpisodesByDateUseCase: GetEpisodesByDateUseCase,
                                                         val getEpisodesBySeasonUseCase: GetEpisodesBySeasonUseCase,
+                                                        val getEpisodesByViewUseCase: GetEpisodesByViewUseCase,
+                                                        val getEpisodesOrderUseCase: GetEpisodesOrderUseCase,
                                                         val getEpisodesByChapterUseCase: GetEpisodesByChapterUseCase): ViewModel() {
 
     private val _stateEpisode: MutableStateFlow<ListEpisodesFilterStateUI> = MutableStateFlow(ListEpisodesFilterStateUI()) // Asincrono esta en un hilo secundario
@@ -49,33 +53,26 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
             // Comenzamos con la lista completa (allEpisodes)
             var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase.execute(title, allEpisodes)
             if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase.execute(minDate, maxDate, filteredEpisodes)
-
-             if (filteredEpisodes.isNotEmpty()) {
-                Log.i("getEpisodesFilter", season.toString())
-                Log.i("getEpisodesFilter",  "Antes del filtro $filteredEpisodes")
-                filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
-                Log.i("getEpisodesFilter",  "Despues del filtro $filteredEpisodes")
-            }
-
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
             if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByChapterUseCase.execute(episode, filteredEpisodes)
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByViewUseCase.execute(isView, filteredEpisodes)
 
-// FALTA FILTRO DE SI ESTA VISTO O NO EL EPISODIO (AÑADIRLO EN TODOS LADOS, CASOS DE USO, REPOSITORIO, ETC) Y RECOTAR CUANDO SE A SEASON Y EPISODE 0 SE LLAME A TODOS
-// ...
             _stateEpisode.update {
                 it.copy(episodes = filteredEpisodes, isLoading = false) // Orden inverso, isLoading = false)
             }
-
-//            if (order){
-//                _stateEpisode.update {
-//                    it.copy(episodes = filteredEpisodes.sortedBy { it.lanzamiento }, isLoading = false) // Orden inverso, isLoading = false)
-//                }
-//            } else {
-//                _stateEpisode.update {
-//                    it.copy(episodes = filteredEpisodes.sortedByDescending { it.lanzamiento }, isLoading = false) // Orden inverso, isLoading = false)
-//                }
-//            }
         }
-
     }
+
+    fun getEpisodesOrder(isAscendent: Boolean) {
+        viewModelScope.launch {
+            _stateEpisode.update { it.copy(isLoading = true) }
+            val episodesOrder: List<Episode> = getEpisodesOrderUseCase.execute(isAscendent, _stateEpisode.value.episodes)
+
+            _stateEpisode.update {
+                it.copy(episodes = episodesOrder, isLoading = false)
+            }
+        }
+    }
+
 
 }

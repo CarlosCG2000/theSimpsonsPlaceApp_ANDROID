@@ -53,5 +53,4 @@ class EpisodeDaoJson(val context: Context,
         return if (chapter == 0) getAllEpisodes()
               else getAllEpisodes().filter { it.episodio == chapter }
     }
-
 }

@@ -16,6 +16,10 @@ interface EpisodeRepository {
                                     episodes: List<Episode> = emptyList()): List<Episode>
     suspend fun getEpisodesByChapter(chapter:Int,
                                      episodes: List<Episode> = emptyList()): List<Episode>
+    suspend fun getEpisodesByView(isView: Boolean,
+                                     episodes: List<Episode> = emptyList()): List<Episode>
+    suspend fun getEpisodesOrder(isAscendent: Boolean,
+                                 episodes: List<Episode> = emptyList()): List<Episode>
 
     // Casos de uso de la datos de la base de datos
     suspend fun getAllEpisodesDb(): List<Episode>

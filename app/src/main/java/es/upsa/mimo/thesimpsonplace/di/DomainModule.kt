@@ -59,6 +59,10 @@ abstract class DomainModule {
     abstract fun  bindGetEpisodesBySeasonUseCase(impl: GetEpisodesBySeasonUseCaseImpl): GetEpisodesBySeasonUseCase
     @Binds
     abstract fun  bindGetEpisodesByChapterUseCase(impl: GetEpisodesByChapterUseCaseImpl): GetEpisodesByChapterUseCase
+    @Binds
+    abstract fun  bindGetEpisodesByViewUseCase(impl: GetEpisodesByViewUseCaseImpl): GetEpisodesByViewUseCase
+    @Binds
+    abstract fun  bindGetEpisodesOrderUseCase(impl: GetEpisodesOrderUseCaseImpl): GetEpisodesOrderUseCase
 
     @Binds
     abstract fun  bindGetAllEpisodesDbUseCase(impl: GetAllEpisodesDbUseCaseImpl): GetAllEpisodesDbUseCase

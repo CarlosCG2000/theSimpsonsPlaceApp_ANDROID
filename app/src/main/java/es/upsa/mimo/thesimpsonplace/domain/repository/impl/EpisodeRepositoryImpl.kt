@@ -123,6 +123,23 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
         }
     }
 
+    // (2) Necesitamos tratar 'Episode' y no 'EpisodeDto' por eso esta lógica se encuentra aquí (Repository) y no en el Dao
+    override suspend fun getEpisodesByView(isView: Boolean,
+                                           episodes: List<Episode>): List<Episode> {
+        return withContext(Dispatchers.IO) {
+
+            val episodesMapper = fusionSourceDB(episodes)
+
+            episodesMapper.filter { it.esVisto == isView }
+        }
+    }
+
+    override suspend fun getEpisodesOrder(isAscendent: Boolean,
+                                          episodes: List<Episode>): List<Episode> {
+        return if (isAscendent) episodes.sortedBy { it.lanzamiento }
+               else episodes.sortedByDescending { it.lanzamiento }
+    }
+
     // _____________________________ DE LA BASE DE DATOS _____________________________
     override suspend fun getAllEpisodesDb(): List<Episode> {
         return withContext(Dispatchers.IO) {

@@ -176,6 +176,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 modifier = Modifier
                     .constrainAs(textFieldFilter) {
                         top.linkTo(parent.top)
+                        bottom.linkTo(columnDate.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
@@ -187,11 +188,13 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 modifier = Modifier
                     .constrainAs(columnDate) {
                         top.linkTo(textFieldFilter.bottom)
+                        bottom.linkTo(columnPicker.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
                     }
-                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly,
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 // verticalArrangement = Arrangement.SpaceBetween
             ) {
                 // DatePickerDialog solo se muestra cuando showDialogMinDate es true
@@ -283,9 +286,10 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
             }
 
             Row(
-                modifier = Modifier
+                modifier = Modifier.background(Color.Green)
                     .constrainAs(columnPicker) {
                         top.linkTo(columnDate.bottom)
+                        bottom.linkTo(listEpisodes.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
@@ -326,8 +330,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 
                 IconButton(onClick = {
                     isOrder = !isOrder
-
-
+                    viewModel.getEpisodesOrder(isOrder)
                 }) {
                     Icon(
                         imageVector = if (isOrder) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
@@ -353,7 +356,6 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                         modifier = Modifier
                             .constrainAs(listEpisodes) {
                                 top.linkTo(columnPicker.bottom)
-                                bottom.linkTo(parent.bottom)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                             }
