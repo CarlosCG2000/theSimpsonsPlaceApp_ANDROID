@@ -45,11 +45,13 @@ class EpisodeDaoJson(val context: Context,
     }
 
     override suspend fun getEpisodesBySeason(season: Int): List<EpisodeDto> {
-        return getAllEpisodes().filter { it.temporada == season }
+        return if (season == 0) getAllEpisodes()
+        else getAllEpisodes().filter { it.temporada == season }
     }
 
     override suspend fun getEpisodesByChapter(chapter: Int): List<EpisodeDto> {
-        return getAllEpisodes().filter { it.episodio == chapter }
+        return if (chapter == 0) getAllEpisodes()
+              else getAllEpisodes().filter { it.episodio == chapter }
     }
 
 }

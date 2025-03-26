@@ -49,8 +49,15 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
             // Comenzamos con la lista completa (allEpisodes)
             var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase.execute(title, allEpisodes)
             if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase.execute(minDate, maxDate, filteredEpisodes)
-            // else if (filteredEpisodes.isNotEmpty()) // filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
-            // else if (filteredEpisodes.isNotEmpty()) // filteredEpisodes = getEpisodesByChapterUseCase.execute(episode, filteredEpisodes)
+
+             if (filteredEpisodes.isNotEmpty()) {
+                Log.i("getEpisodesFilter", season.toString())
+                Log.i("getEpisodesFilter",  "Antes del filtro $filteredEpisodes")
+                filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
+                Log.i("getEpisodesFilter",  "Despues del filtro $filteredEpisodes")
+            }
+
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByChapterUseCase.execute(episode, filteredEpisodes)
 
 // FALTA FILTRO DE SI ESTA VISTO O NO EL EPISODIO (AÑADIRLO EN TODOS LADOS, CASOS DE USO, REPOSITORIO, ETC) Y RECOTAR CUANDO SE A SEASON Y EPISODE 0 SE LLAME A TODOS
 // ...
