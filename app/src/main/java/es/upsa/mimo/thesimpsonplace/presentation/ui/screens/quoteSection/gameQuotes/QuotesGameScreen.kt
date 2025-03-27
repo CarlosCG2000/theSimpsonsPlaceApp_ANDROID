@@ -127,8 +127,8 @@ fun QuotesGameScreen(
                         Button(
                             onClick = {
                                 showDialog = false
-                                navigateToQuestionQuotes() }
-                            ,
+                                navigateToQuestionQuotes()
+                          },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
                         ) {
                             Text("Start", color = Color.Black)
