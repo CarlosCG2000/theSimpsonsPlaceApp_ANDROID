@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -98,14 +99,35 @@ fun QuotesQuestionScreen(
     var showDialog by remember { mutableStateOf(false) }
     var correctAnswers by remember { mutableStateOf(0) }
 
-    // Verificar que hay preguntas antes de acceder
-    val questions = state.value.questions
+//    if (questions.isEmpty()) {
+//        viewModel.getQuestions()
+//        return
+//    }
 
-    if (questions.isEmpty()) {
-        viewModel.getQuestions()
+    // ✅ Ejecutar getQuestions() solo una vez al iniciar
+    LaunchedEffect(Unit) {
+        if (state.value.questions.isEmpty()) {
+            viewModel.getQuestions()
+        }
+    }
+
+    // Si está cargando, mostrar un indicador
+    if (state.value.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
         return
     }
-    val currentQuestion = questions[currentQuestionIndex]
+
+    // Si no hay preguntas después de cargar, mostrar un mensaje de error
+    if (state.value.questions.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No questions available.", color = Color.White)
+        }
+        return
+    }
+
+    val currentQuestion = state.value.questions[currentQuestionIndex]
 
     // Se guarda el orden aleatorio de respuestas solo una vez por pregunta
     val shuffledOptions by remember(currentQuestion) {
@@ -189,7 +211,7 @@ fun QuotesQuestionScreen(
                                 currentQuestionIndex++
                                 selectedAnswer = null
                             } else {
-                                navigateToResultQuotes()
+                                navigateToResultQuotes() // ENVIAR LAS PREGUNTAS ACERTADAS
                             }
                         },
                         modifier = Modifier

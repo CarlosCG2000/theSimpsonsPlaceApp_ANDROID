@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuestionsUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuotesUseCase
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,5 +27,4 @@ class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuest
             }
         }
     }
-
 }
