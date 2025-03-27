@@ -106,15 +106,7 @@ fun QuotesScreen(
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
                 .padding(paddingValues)
-        )
-//      Box(
-//          modifier = Modifier
-//              .fillMaxSize()
-//              .padding(paddingValues)
-//              .background(Color.Green),
-//          contentAlignment = Alignment.Center
-//       )
-        {
+        ) {
             val (boton, listado) = createRefs()
 
             Button(
@@ -171,7 +163,7 @@ fun QuotesScreen(
 fun listQuotes(modifier: Modifier = Modifier, quotes: List<Quote>) {
 
     LazyColumn( modifier = modifier, // Ocupa toda la pantalla
-        verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
+        verticalArrangement = Arrangement.Top, // Centra verticalmente dentro de Column
         horizontalAlignment = Alignment.CenterHorizontally) {
         items(quotes) { quote ->
             QuoteItem(quote)
