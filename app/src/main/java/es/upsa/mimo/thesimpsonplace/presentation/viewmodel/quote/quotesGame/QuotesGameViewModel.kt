@@ -1,0 +1,33 @@
+package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuestionsUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuotesUseCase
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuestionsUseCase ): ViewModel() {
+    private val _stateQuestions: MutableStateFlow<QuotesGameUI> = MutableStateFlow(QuotesGameUI()) // Asincrono esta en un hilo secundario
+    val stateQuestions: StateFlow<QuotesGameUI> = _stateQuestions.asStateFlow()
+
+    fun getQuestions(){
+        viewModelScope.launch {
+            _stateQuestions.update { it.copy( isLoading = true) }
+
+            val questions = getQuestionsUseCase.execute()
+
+            _stateQuestions.update {
+                it.copy(questions = questions, isLoading = false)
+            }
+        }
+    }
+
+}
