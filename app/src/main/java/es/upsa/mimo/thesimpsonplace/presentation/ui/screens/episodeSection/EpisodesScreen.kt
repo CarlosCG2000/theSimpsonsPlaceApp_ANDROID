@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.upsa.mimo.thesimpsonplace.data.utils.Logger
@@ -92,22 +93,22 @@ fun EpisodesScreen(
     ) { paddingValues ->
 
             Box(
-                contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    // .background(Color.Primary) // ✅ Fondo blanco para mejor visibilidad,
-            ) {
-                if (state.value.isLoading) {
-                    CircularProgressIndicator(
-                        color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
-                    )
-                } else {
-                    ListEpisodes(modifier = Modifier.fillMaxSize(),
-                                 episodes = state.value.episodes,
-                                 onEpisodeSelected = onEpisodeSelected)
-                }
+            contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                // .background(Color.Primary) // ✅ Fondo blanco para mejor visibilidad,
+        ) {
+            if (state.value.isLoading) {
+                CircularProgressIndicator(
+                    color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                )
+            } else {
+                ListEpisodes(modifier = Modifier.fillMaxSize(),
+                             episodes = state.value.episodes,
+                             onEpisodeSelected = onEpisodeSelected)
             }
+        }
     }
 }
 

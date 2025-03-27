@@ -1,15 +1,12 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection
 
-import android.R.attr.height
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -278,28 +275,32 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 
             }
 
-            if(state.value.isLoading || stateAllEpisodes.value.isLoading){
-                CircularProgressIndicator(
-                    color = Color.Yellow,
-                    modifier = Modifier.layoutId("idSpinner")
-                )
-            }
-            else {
-                if (state.value.episodes.isEmpty()) {
-                    NoContentComponent(Modifier
-                        .layoutId("idListEpisodes")
-                        .padding(top = 10.dp)
-                        .fillMaxSize()
-                        .background(Color(0xFF0F1A35)))
+            Box(
+                modifier = Modifier.layoutId("idListEpisodes"),
+                //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
+                contentAlignment = Alignment.Center // 🔹 Centra el contenido
+            ) {
+                if(state.value.isLoading || stateAllEpisodes.value.isLoading){
+                    CircularProgressIndicator( color = Color.Yellow )
                 }
                 else {
-                    ListEpisodes(
-                        modifier = Modifier.layoutId("idListEpisodes"),
-                        episodes = state.value.episodes,
-                        allEpisodes = stateAllEpisodes.value.episodes,
-                        onEpisodeSelected = onEpisodeSelected
-                    )
-                }
+                        if (state.value.episodes.isEmpty()) {
+                            NoContentComponent(
+                                Modifier
+                                    .layoutId("idListEpisodes")
+                                    //.padding(top = 10.dp)
+                                    .fillMaxSize()
+                                    .background(Color(0xFF0F1A35))
+                            )
+                        } else {
+                            ListEpisodes(
+                                modifier = Modifier.layoutId("idListEpisodes"),
+                                episodes = state.value.episodes,
+                                allEpisodes = stateAllEpisodes.value.episodes,
+                                onEpisodeSelected = onEpisodeSelected
+                            )
+                        }
+                    }
             }
         }
     }
@@ -308,8 +309,8 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 fun episodesFilterContraintSet(): ConstraintSet {
     return ConstraintSet() {
         // Creando referencias (ids)
-        val (spinner, listEpisodes, textFieldFilter, columnDate, columnPicker, iconEmptyList, titleEmptyList, subtitleEmptyList) =
-            createRefsFor("idSpinner", "idListEpisodes", "idTextFieldFilter", "idColumnDate", "idColumnPicker", "idIconEmptyList", "idTitleEmptyList", "idSubtitleEmptyList")
+        val (listEpisodes, textFieldFilter, columnDate, columnPicker /*iconEmptyList, titleEmptyList, subtitleEmptyList*/) =
+            createRefsFor( "idListEpisodes", "idTextFieldFilter", "idColumnDate", "idColumnPicker")
 
         // Creamos una cadena vertical para los dos botones
 //        val verticalChain = createVerticalChain(textFieldFilter, columnDate, columnPicker, chainStyle = ChainStyle.Packed)
@@ -355,17 +356,12 @@ fun episodesFilterContraintSet(): ConstraintSet {
             width = Dimension.fillToConstraints
         }
 
-        constrain(spinner) {
-            top.linkTo(columnPicker.bottom)
+        constrain(listEpisodes) {
+            top.linkTo(columnPicker.bottom, margin = 12.dp)
             bottom.linkTo(parent.bottom)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
-        }
-
-        constrain(listEpisodes) {
-            top.linkTo(columnPicker.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
+            height = Dimension.fillToConstraints
         }
     }
 }

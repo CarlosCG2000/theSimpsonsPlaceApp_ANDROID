@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -40,7 +41,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +54,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.MotionScene
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -97,48 +103,80 @@ fun QuotesScreen(
         }
 
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
+        ConstraintLayout(
+            modifier = Modifier.fillMaxSize()
                 .padding(paddingValues)
-                .background(Color.Green),
-            contentAlignment = Alignment.Center
-        ) {
+        )
+//      Box(
+//          modifier = Modifier
+//              .fillMaxSize()
+//              .padding(paddingValues)
+//              .background(Color.Green),
+//          contentAlignment = Alignment.Center
+//       )
+        {
+            val (boton, listado) = createRefs()
+
+            Button(
+                onClick = { generateNewQuotes = !generateNewQuotes },
+                modifier = Modifier
+                    .constrainAs(boton) {
+                        top.linkTo(parent.top, margin = 10.dp)
+                        bottom.linkTo(listado.top, margin = 10.dp) // 🔹 Margen inferior
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        // width = Dimension.value(30.dp)
+                    }
+                    .clip(RoundedCornerShape(12.dp)) // Bordes redondeados
+                    .background(Color.DarkGray) // Degradado de colores
+                    .shadow(8.dp, RoundedCornerShape(12.dp)) // Sombra suave
+            ) {
+                Text(
+                    text = "Nuevas Citas",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                )
+            }
+
+            // ✅ Contenido centrado en el resto de la pantalla
+            Box(
+                modifier = Modifier
+                    .constrainAs(listado) {
+                        top.linkTo(boton.bottom)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        height = Dimension.fillToConstraints
+                    },
+                    //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
+                contentAlignment = Alignment.Center // 🔹 Centra el contenido
+            ) {
                 if (state.value.isLoading) {
-                        CircularProgressIndicator(
-                            color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
-                        )
+                    CircularProgressIndicator(color = Color.Yellow)
                 } else {
-                    generateNewQuotes = listQuotes(state.value.quotes, generateNewQuotes)
+                    listQuotes(
+                        modifier = Modifier.fillMaxSize(),
+                        state.value.quotes
+                    )
                 }
             }
-        }
+
+         }
+      }
     }
 
 @Composable
-fun listQuotes(quotes: List<Quote>,
-               generateNewQuotes: Boolean): Boolean {
+fun listQuotes(modifier: Modifier = Modifier, quotes: List<Quote>) {
 
-    var changeQuotes by remember { mutableStateOf(generateNewQuotes) }
-
-    Column(
-        modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+    LazyColumn( modifier = modifier, // Ocupa toda la pantalla
         verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) { // Centra horizontalmente
-        // LOGO SIMPSONS
-        Button(onClick = { changeQuotes = !generateNewQuotes }) {
-            Text("Nuevos citas")
-        }
-
-        LazyColumn {
-            items(quotes) { quote ->
-                QuoteItem(quote)
-            }
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        items(quotes) { quote ->
+            QuoteItem(quote)
         }
     }
-
-    return changeQuotes
 }
 
 

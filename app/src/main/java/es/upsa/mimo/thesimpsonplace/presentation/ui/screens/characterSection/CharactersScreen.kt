@@ -102,7 +102,7 @@ fun CharactersScreen(
 }
 
 @Composable
-fun CharacterList(modifier: Modifier, character: List<Character>) {
+fun CharacterList(modifier: Modifier = Modifier, character: List<Character>) {
     Column(
         modifier = modifier, // Ocupa toda la pantalla
         // verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
