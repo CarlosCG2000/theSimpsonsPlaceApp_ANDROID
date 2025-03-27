@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection
 
+import android.R.attr.height
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -48,16 +52,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection.DatePickerDialogComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesFilterStateUI
@@ -78,8 +86,6 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                          navigateToFavoriteEpisode: () -> Unit,
                          onEpisodeSelected: (String) -> Unit,
                          navigationArrowBack:() -> Unit) {
-
-    // getEpisodesFilter(title = filterTitle, minDate = filterMinDate, maxDate = filterMaxDate, season = filterSeason, episode = filterEpisode, isView = isViewEnabled, order = isOrder)
 
     var stateAllEpisodes: State<ListEpisodesStateUI> = viewModelAllEpisodes.episodesState.collectAsState()
     var state: State<ListEpisodesFilterStateUI> = viewModel.stateEpisode.collectAsState() // pasa a ser sincrono para manejarlo en la UI
@@ -104,6 +110,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     val uniqueEpisodes =  listOf(0) + stateAllEpisodes.value.episodes.map { it.episodio }.distinct()
 
     var isOrder by remember { mutableStateOf(false) }
+    // ___________________________________________________
 
     LaunchedEffect(Unit) {
         viewModelAllEpisodes.getAllEpisodes() // cargue todos los episodios de primeras
@@ -111,7 +118,24 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 
     LaunchedEffect(stateAllEpisodes.value.episodes) {
         // state.value.episodes = stateAllEpisodes.value.episodes
-        viewModel.updateEpisodes(stateAllEpisodes.value.episodes)// cargue todos los episodios de primeras
+        viewModel.updateEpisodes(episodes = stateAllEpisodes.value.episodes)// cargue todos los episodios de primeras
+    }
+
+    fun logicaFiltrado(title: String = filterTitle.text,
+                      minDate: Date = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
+                      maxDate: Date = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
+                      season: Int = filterSeason,
+                      episode: Int = filterEpisode,
+                      isView: Boolean = isViewEnabled,
+                      order: Boolean = isOrder
+    ){
+        viewModel.getEpisodesFilter(title = title,
+                                    minDate = minDate,
+                                    maxDate = maxDate,
+                                    season = season,
+                                    episode = episode,
+                                    isView = isView,
+                                    order = order)
     }
 
     Scaffold(
@@ -132,15 +156,12 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     ) { paddingValues ->
 
         ConstraintLayout(
-            // contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues))
-            //.background(Color.Blue))
-        {
-
-            val (spinner, listEpisodes, textFieldFilter, columnDate, columnPicker) = createRefs()
-
+            modifier = Modifier.fillMaxSize()
+                              //.background(Color.Blue),
+                               .padding(paddingValues),
+            constraintSet = episodesFilterContraintSet()
+        //  contentAlignment = Alignment.Center,
+        ){
             // DEFINIR TODOS LOS FILTROS
             TextField(
                 value = filterTitle,
@@ -149,13 +170,8 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     debounceJob?.cancel() // Cancelamos la tarea anterior si hay una nueva entrada
                     debounceJob = viewModel.viewModelScope.launch {
                         delay(350) // Esperamos 500 ms antes de ejecutar el filtro
-                        Log.i("EpisodeFilterScreen", newValue.text)
-                        viewModel.getEpisodesFilter(title = newValue.text,
-                                                    minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                                                    maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                                                    season = filterSeason, episode = filterEpisode, isView = isViewEnabled, order = isOrder
-                                                    )
-                        }
+                        logicaFiltrado(title = newValue.text)
+                    }
                 },
                 label = { Text("Titulo del episodio") },
                 placeholder = {Text("Homer, Smithers, Milhouse...")},
@@ -163,110 +179,47 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     if (filterTitle.text.isNotEmpty()) {
                         IconButton(onClick = {
                             filterTitle = TextFieldValue("")
-                            viewModel.getEpisodesFilter(title = "",
-                                minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                                maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                                season = filterSeason, episode = filterEpisode, isView = isViewEnabled, order = isOrder
-                            )
+                            logicaFiltrado(title = "")
                         }) {
                             Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
                         }
                     }
                 },
-                modifier = Modifier
-                    .constrainAs(textFieldFilter) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(columnDate.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                modifier = Modifier.layoutId("idTextFieldFilter")
+                                   .padding(horizontal = 10.dp, vertical = 5.dp)
             )
 
             Row (
-                modifier = Modifier
-                    .constrainAs(columnDate) {
-                        top.linkTo(textFieldFilter.bottom)
-                        bottom.linkTo(columnPicker.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }
-                    .fillMaxWidth(),
+                modifier = Modifier.layoutId("idColumnDate")
+                                   .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 // verticalArrangement = Arrangement.SpaceBetween
             ) {
+
                 // DatePickerDialog solo se muestra cuando showDialogMinDate es true
-                if (showDialogMinDate) {
-                    DatePickerDialog(
-                        onDismissRequest = { showDialogMinDate = false },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                showDialogMinDate = false
-                                viewModel.getEpisodesFilter(title = filterTitle.text,
-                                    minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                                    maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                                    season = filterSeason, episode = filterEpisode, isView = isViewEnabled, order = isOrder
-                                )
-                            }) {
-                                Text("OK")
-                            }
-                        }
-                    ) {
-                        DatePicker(state = filterMinDate)
-                    }
-                }
+                DatePickerDialogComponent(
+                    showDialogDate = showDialogMinDate,
+                    onDismissRequest = { showDialogMinDate = false },
+                    onAdmitRequest = { showDialogMinDate = true },
+                    filterDate = filterMinDate,
+                    onClick = {
+                        showDialogMinDate = false
+                        logicaFiltrado()
+                    },
+                    title = "Start Date"
+                )
 
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Start Date: ", color = Color.Yellow)
-
-                    // Botón para abrir el DatePickerDialog
-                    OutlinedButton(onClick = { showDialogMinDate = true }) {
-                        Text(
-                            SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(
-                                filterMinDate.selectedDateMillis // ✅ Obtener la fecha seleccionada
-                                    ?: defaultMinDate
-                            ),
-                            color = Color.Yellow
-                        )
-                    }
-                }
-
-                if (showDialogMaxDate) {
-                    DatePickerDialog(
-                        onDismissRequest = { showDialogMaxDate = false },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                showDialogMaxDate = false
-                                viewModel.getEpisodesFilter(title = filterTitle.text,
-                                    minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                                    maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                                    season = filterSeason, episode = filterEpisode, isView = isViewEnabled, order = isOrder
-                                )
-                            }) {
-                                Text("OK")
-                            }
-                        }
-                    ) {
-                        DatePicker(state = filterMaxDate)
-                    }
-                }
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("End Date: ", color = Color.Yellow)
-
-                    // Botón para abrir el DatePickerDialog
-                    OutlinedButton(onClick = { showDialogMaxDate = true }) {
-                        Text(
-                            SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(
-                                filterMaxDate.selectedDateMillis // ✅ Obtener la fecha seleccionada
-                                    ?: System.currentTimeMillis()
-                            ),
-                            color = Color.Yellow
-                        )
-                    }
-                }
+                DatePickerDialogComponent(
+                    showDialogDate = showDialogMaxDate,
+                    onDismissRequest = { showDialogMaxDate = false },
+                    onAdmitRequest = { showDialogMaxDate = true },
+                    filterDate = filterMaxDate,
+                    onClick = {
+                        showDialogMaxDate = false
+                        logicaFiltrado()
+                    },
+                    title = "End Date"
+                )
 
                 // Switch para marcar si está visto
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -275,25 +228,19 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                         checked = isViewEnabled,
                         onCheckedChange = {
                             isViewEnabled = !isViewEnabled
-                            viewModel.getEpisodesFilter(title = filterTitle.text,
-                                minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                                maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                                season = filterSeason, episode = filterEpisode, isView = isViewEnabled, order = isOrder
-                            )
-                        }
+                            logicaFiltrado()
+                        },
+                        colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.Yellow,
+                                checkedTrackColor = Color.Yellow.copy(alpha = 0.2f) // Fondo amarillo con transparencia
+                        )
                     )
                 }
             }
 
             Row(
-                modifier = Modifier //.background(Color.Green)
-                    .constrainAs(columnPicker) {
-                        top.linkTo(columnDate.bottom)
-                        bottom.linkTo(listEpisodes.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }
+                modifier = Modifier
+                    .layoutId("idColumnPicker")
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -304,12 +251,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     items = uniqueSeasons,
                     onItemSelected = { filterSeasonItem ->
                         filterSeason = filterSeasonItem
-
-                        viewModel.getEpisodesFilter(title = filterTitle.text,
-                            minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                            maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                            season = filterSeasonItem, episode = filterEpisode, isView = isViewEnabled, order = isOrder
-                        )
+                        logicaFiltrado(season = filterSeasonItem)
                     }
                 )
 
@@ -319,19 +261,15 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     items = uniqueEpisodes,
                     onItemSelected = { filterEpisodeItem ->
                         filterEpisode = filterEpisodeItem
-
-                        viewModel.getEpisodesFilter(title = filterTitle.text,
-                            minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                            maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                            season = filterSeason, episode = filterEpisodeItem, isView = isViewEnabled, order = isOrder
-                        )
+                        logicaFiltrado(episode = filterEpisodeItem)
                     }
                 )
 
                 IconButton(onClick = {
                     isOrder = !isOrder
                     viewModel.getEpisodesOrder(isOrder)
-                }) {
+                })
+                {
                     Icon(
                         imageVector = if (isOrder) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
                         contentDescription = "Sort Order"
@@ -343,67 +281,170 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
             if(state.value.isLoading || stateAllEpisodes.value.isLoading){
                 CircularProgressIndicator(
                     color = Color.Yellow,
-                    modifier = Modifier.constrainAs(spinner) {
-                        top.linkTo(columnPicker.bottom)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
+                    modifier = Modifier.layoutId("idSpinner")
                 )
             }
             else {
                 if (state.value.episodes.isEmpty()) {
-                    Column(
-                        modifier = Modifier
-                            .constrainAs(listEpisodes) {
-                                top.linkTo(columnPicker.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }
-                            .fillMaxSize()
-                            .background(Color(0xFF0F1A35)), // Color de fondo similar al de la imagen
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.FormatListNumbered, // Usa un ícono similar al de la imagen
-                            contentDescription = "No episodes",
-                            tint = Color(0xFFFFC107), // Amarillo similar
-                            modifier = Modifier
-                                .size(64.dp)
-                                .padding(bottom = 20.dp)
-                        )
-                        Text(
-                            text = "No episodes",
-                            color = Color(0xFFFFC107),
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .padding(bottom = 20.dp)
-                        )
-                        Text(
-                            text = "There aren't episodes with that features. Change the episode's features.",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(start = 32.dp, end = 32.dp, top = 4.dp)
-                        )
-                    }
+                    NoContentComponent(Modifier
+                        .layoutId("idListEpisodes")
+                        .padding(top = 10.dp)
+                        .fillMaxSize()
+                        .background(Color(0xFF0F1A35)))
                 }
                 else {
                     ListEpisodes(
-                        modifier = Modifier.constrainAs(listEpisodes) {
-                            top.linkTo(columnPicker.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
+                        modifier = Modifier.layoutId("idListEpisodes"),
                         episodes = state.value.episodes,
                         allEpisodes = stateAllEpisodes.value.episodes,
                         onEpisodeSelected = onEpisodeSelected
                     )
                 }
             }
+        }
+    }
+}
 
+fun episodesFilterContraintSet(): ConstraintSet {
+    return ConstraintSet() {
+        // Creando referencias (ids)
+        val (spinner, listEpisodes, textFieldFilter, columnDate, columnPicker, iconEmptyList, titleEmptyList, subtitleEmptyList) =
+            createRefsFor("idSpinner", "idListEpisodes", "idTextFieldFilter", "idColumnDate", "idColumnPicker", "idIconEmptyList", "idTitleEmptyList", "idSubtitleEmptyList")
+
+        // Creamos una cadena vertical para los dos botones
+//        val verticalChain = createVerticalChain(textFieldFilter, columnDate, columnPicker, chainStyle = ChainStyle.Packed)
+
+//        val horizontalChain = createHorizontalChain(iconEmptyList, titleEmptyList, subtitleEmptyList, chainStyle = ChainStyle.SpreadInside)
+//
+//        constrain(iconEmptyList) {
+//            top.linkTo(parent.top)
+//            bottom.linkTo(parent.bottom)
+//        }
+//
+//        constrain(titleEmptyList) {
+//            top.linkTo(iconEmptyList.bottom)
+//            bottom.linkTo(parent.bottom)
+//        }
+//
+//        constrain(subtitleEmptyList) {
+//            top.linkTo(titleEmptyList.bottom)
+//            bottom.linkTo(parent.bottom)
+//        }
+
+        constrain(textFieldFilter) {
+            top.linkTo(parent.top)
+            bottom.linkTo(columnDate.top)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            width = Dimension.fillToConstraints
+        }
+
+        constrain(columnDate) {
+            top.linkTo(textFieldFilter.bottom)
+            bottom.linkTo(columnPicker.top)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            width = Dimension.fillToConstraints
+        }
+
+        constrain(columnPicker) {
+            top.linkTo(columnDate.bottom)
+            bottom.linkTo(listEpisodes.top)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            width = Dimension.fillToConstraints
+        }
+
+        constrain(spinner) {
+            top.linkTo(columnPicker.bottom)
+            bottom.linkTo(parent.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }
+
+        constrain(listEpisodes) {
+            top.linkTo(columnPicker.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }
+    }
+}
+
+@Composable
+fun NoContentComponent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier, // Color de fondo similar al de la imagen
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.FormatListNumbered, // Usa un ícono similar al de la imagen
+            contentDescription = "No episodes",
+            tint = Color(0xFFFFC107), // Amarillo similar
+            modifier = Modifier
+                // .layoutId("idIconEmptyList")
+                .size(64.dp)
+//                                .padding(bottom = 20.dp)
+
+        )
+        Text(
+            text = "No episodes",
+            color = Color(0xFFFFC107),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+            // .layoutId("idTitleEmptyList")
+//                                .padding(top = 8.dp)
+//                                .padding(bottom = 20.dp)
+        )
+        Text(
+            text = "There aren't episodes with that features. Change the episode's features.",
+            color = Color.White,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                // .layoutId("idSubtitleEmptyList")
+                .padding(start = 32.dp, end = 32.dp, top = 4.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerDialogComponent(modifier: Modifier = Modifier,
+                              showDialogDate: Boolean,
+                              onDismissRequest: () -> Unit,
+                              onAdmitRequest: () -> Unit,
+                              filterDate: DatePickerState,
+                              onClick: () -> Unit,
+                              title: String,
+                              defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 16) }.timeInMillis
+                              ) {
+    if (showDialogDate) {
+        DatePickerDialog(
+            modifier = modifier,
+            onDismissRequest = onDismissRequest,
+            confirmButton = {
+                TextButton(onClick = onClick) {
+                    Text("OK")
+                }
+            }
+        ) {
+            DatePicker(state = filterDate)
+        }
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(title, color = Color.Yellow)
+
+        // Botón para abrir el DatePickerDialog
+        OutlinedButton(onClick = onAdmitRequest) {
+            Text(
+                SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(
+                    filterDate.selectedDateMillis // ✅ Obtener la fecha seleccionada
+                        ?: defaultMinDate
+                ),
+                color = Color.Yellow
+            )
         }
     }
 }

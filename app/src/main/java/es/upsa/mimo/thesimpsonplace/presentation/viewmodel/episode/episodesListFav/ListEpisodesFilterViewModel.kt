@@ -1,21 +1,15 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav
 
-import android.util.Log
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByChapterUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByDateUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeasonUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByViewUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesOrderUseCase
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -60,13 +54,15 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
             _stateEpisode.update {
                 it.copy(episodes = filteredEpisodes, isLoading = false) // Orden inverso, isLoading = false)
             }
+
+            getEpisodesOrder(order)
         }
     }
 
     fun getEpisodesOrder(isAscendent: Boolean) {
         viewModelScope.launch {
             _stateEpisode.update { it.copy(isLoading = true) }
-            val episodesOrder: List<Episode> = getEpisodesOrderUseCase.execute(isAscendent, _stateEpisode.value.episodes)
+            val episodesOrder: List<Episode> = getEpisodesOrderUseCase.execute(!isAscendent, _stateEpisode.value.episodes)
 
             _stateEpisode.update {
                 it.copy(episodes = episodesOrder, isLoading = false)
