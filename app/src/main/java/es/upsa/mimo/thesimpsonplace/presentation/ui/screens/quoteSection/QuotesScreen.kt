@@ -171,7 +171,6 @@ fun listQuotes(modifier: Modifier = Modifier, quotes: List<Quote>) {
     }
 }
 
-
 @Composable
 fun QuoteItem(quote: Quote,
               /** dbQuoteViewModel: DbQuotesViewModel = hiltViewModel() */
