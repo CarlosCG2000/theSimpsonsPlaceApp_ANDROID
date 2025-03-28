@@ -1898,5 +1898,12 @@ class GetAllCharactersUseCase @Inject constructor(private val repository: Charac
 
 Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repository, no en el ViewModel.
 
-#
+# Añadido `DataStore Preferences`
+La base de datos (BD) en el data source generalmente se refiere a la capa donde almacenas y recuperas datos persistentes, como Room Database o DataStore en este caso.
+
+En tu implementación, estás usando DataStore Preferences, que es ideal para almacenar pequeñas configuraciones como estadísticas de juego y preferencias de usuario. La estructura típica sería:
+1.	DataSource: Se encarga de acceder a DataStore y gestionar los datos.
+2.	Repository: Interactúa con el DataSource y proporciona datos a la capa de dominio.
+3.	ViewModel: Recupera los datos del repositorio y los expone a la UI.
+
 

@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,7 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileFormViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.PassVisibleIcon
@@ -29,16 +30,17 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.components.PassVisibleIcon
 @Composable
 fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista */ ,
                       navigationArrowBack:() -> Unit,
-                      viewModel: ProfileFormViewModel = viewModel() /** Lógica de errores en el formulario */
+                      viewModel: ProfileFormViewModel = hiltViewModel()
+                      /** Lógica de errores en el formulario */
 ) {
+    val gameStats by viewModel.userState.collectAsState()
     var user by rememberSaveable { mutableStateOf("") } // Estado del campo usuario
     var password by rememberSaveable { mutableStateOf("") } // Estado del campo contraseña
     var passVisible by rememberSaveable { mutableStateOf(false) } // Estado del mostrar o no el texto del campo contraseña
     // var error by rememberSaveable { mutableStateOf(false) } // -> Realizado ahora en el View Model: LoginFormViewModel
-    var error =
-        viewModel.state.error != null // Obtener el error en caso de que exista (no sea nulo)
+    var error = gameStats.error != null // Obtener el error en caso de que exista (no sea nulo)
 
-    if (viewModel.state.loggedIn) { // Si el valor 'loggedIn' es true se realizará el login
+    if (gameStats.loggedIn) { // Si el valor 'loggedIn' es true se realizará el login
         onLogin() // Se envia la función lambda, para que se ejecute donde tenga que ejecutarse. (navegación a la pantalla del listado)
         viewModel.onLoggedIn() // Si ya esta logeado se vuelve el 'loggedIn' a false y no entre de manera repetida aqui.
     }
@@ -95,7 +97,7 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
             ) { Text("Registrar") }
 
             // En caso de que halla error, se mostrara debajo el error dato en el View Model (estamos en una columna)
-            viewModel.state.error?.let { error ->
+            gameStats.error?.let { error ->
                 Text(error, color = MaterialTheme.colorScheme.error)
             }
         }

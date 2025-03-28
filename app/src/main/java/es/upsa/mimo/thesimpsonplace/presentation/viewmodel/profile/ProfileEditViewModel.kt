@@ -1,25 +1,55 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
+import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileFormViewModel: ViewModel() {
+@HiltViewModel
+class ProfileFormViewModel @Inject constructor( val getUserPreferencesUseCase: GetUserPreferencesUseCase,
+                                                val updateUserUseCase: UpdateUserUseCase
+                                            ): ViewModel() {
 
-    var state by mutableStateOf(ProfileEditStateUI())
-        private set // no se puede modificar la varaible fuera de aquí
+    private val _userState: MutableStateFlow<ProfileEditStateUI> = MutableStateFlow(ProfileEditStateUI()) // Asincrono esta en un hilo secundario
+    val userState = _userState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            getUserPreferencesUseCase.userPreferencesFlow.collect { user ->
+                _userState.update {
+                    it.copy(user)
+                }
+            }
+        }
+    }
+
+    fun updateSUser(user: UserPreference) {
+        viewModelScope.launch {
+            updateUserUseCase.execute(user)
+        }
+    }
 
     fun onLoginClick(user: String, pass: String){
-        state = when {
-            user.contains('@') -> ProfileEditStateUI(error = "User must be a valid name")
-            pass.length < 5 -> ProfileEditStateUI(error = "Password must be at least 5 characters")
-            else -> ProfileEditStateUI(loggedIn = true)
+        _userState.update {
+            when {
+                !user.contains('@') -> it.copy(error = "User must be a valid name")
+                pass.length < 5 -> it.copy(error = "Password must be at least 5 characters")
+                else -> it.copy(loggedIn = true)
+            }
         }
     }
 
      fun onLoggedIn() {
-        state = ProfileEditStateUI(loggedIn = false)
-    }
+         _userState.update {
+             it.copy(loggedIn = false)
+         }
+     }
 
 }

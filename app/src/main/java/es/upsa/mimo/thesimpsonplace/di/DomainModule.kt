@@ -5,7 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.sources.database.GameDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.sources.database.UserDatastoreDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.GameDatastoreDaoImpl
+import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.UserDatastoreDaoImpl
 import es.upsa.mimo.thesimpsonplace.domain.repository.* //CharaterRepository
 import es.upsa.mimo.thesimpsonplace.domain.repository.impl.* //CharaterRepositoryImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.* //FetchAllCharactersDbUseCase
@@ -19,7 +21,11 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.game.GetGameStatsUseCa
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.game.ResetStatsUseCaseImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.game.UpdateStatsUseCaseImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.* //DeleteQuoteDbUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.user.GetUserPreferencesUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.user.UpdateUserUseCaseImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.* // DeleteQuoteDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
 import javax.inject.Singleton
 
 // Un @Module no puede contener métodos abstractos (@Binds) y métodos concretos (@Provides) al mismo tiempo. Por ello se crea una nueva clase.
@@ -113,5 +119,18 @@ abstract class DomainModule {
     abstract fun bindResetStatsUseCase(impl: ResetStatsUseCaseImpl): ResetStatsUseCase
     @Binds
     abstract fun bindGetGameStatsUseCase(impl: GetGameStatsUseCaseImpl): GetGameStatsUseCase
+
+    @Binds
+    @Singleton
+    abstract fun bindUserDatastorePreferencesDao(impl: UserDatastoreDaoImpl): UserDatastoreDao
+
+    @Binds
+    @Singleton
+    abstract fun bindUserDatastorePreferencesRepository(impl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    abstract fun bindGetUserPreferencesUseCase(impl: GetUserPreferencesUseCaseImpl): GetUserPreferencesUseCase
+    @Binds
+    abstract fun bindUpdateUserUseCase(impl: UpdateUserUseCaseImpl): UpdateUserUseCase
 }
 
