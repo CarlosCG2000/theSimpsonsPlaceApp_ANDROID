@@ -1539,6 +1539,10 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 - VER BIEN LOS `COLORES`, `ESTILOS` Y `STRINGS` (RECURSOS) DE LA PANTALLA ⚠️
 - EDITAR LA `INTERFAZ` PARA QUE SEA LA BONITA Y BUENA DE VERDAD ⚠️
 
+
+- HAGO LA LÓGICA AY PANTALLA DEL JUEGO. [ POR ESTE AHORA ] ⚠️
+- DEJO PREPARADA LAS PANTALLAS DE FAVORITOS. ⚠️
+
 - EMPEZAR VIDEO DE: `https://www.youtube.com/watch?v=lX7CeooKCcQ&t=13959s`
 
 # EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA ✅
@@ -1895,5 +1899,3 @@ Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repo
 
 #
 
-HAGO LA LÓGICA AY PANTALLA DEL JUEGO. [ POR ESTE AHORA ]
-DEJO PREPARADA LAS PANTALLAS DE FAVORITOS.
