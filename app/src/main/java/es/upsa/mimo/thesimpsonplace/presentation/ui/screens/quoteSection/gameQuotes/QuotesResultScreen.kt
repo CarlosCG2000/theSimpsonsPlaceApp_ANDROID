@@ -37,7 +37,13 @@ fun QuotesResultScreen(
     navigateToQuotes: () -> Unit
 ) {
 
-    
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text("NÚMERO DE ACIERTOS ES $respuestasAciertos")
+    }
 }
 
 
