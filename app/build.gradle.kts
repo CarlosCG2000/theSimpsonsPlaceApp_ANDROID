@@ -63,6 +63,9 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
+//    implementation(libs.charts)
+//    implementation(libs.mpandroidchart)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
