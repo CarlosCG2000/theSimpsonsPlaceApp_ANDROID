@@ -63,8 +63,9 @@ Añadida las subcarpetas para la sección de personajes. Explicación `1. DUDA.`
 * 5. Coil: `io.coil-kt` y aplicamos la de `coil-compose`. Carga de imágenes de web.
 * 6. Extensión de iconos: buscar `material-icons` obtener `material-icons-extended`.
 * 7. `com.google.code.gson`: `GSON` para obtener del fichero json los personajes (character).
-* 8. `hilt`: para inyección de dependecias
-* 9. `retrofit`: para llamada a red/apis
+* 8. `hilt`: para inyección de dependecias.
+* 9. `retrofit`: para llamada a red/apis.
+* 10. `datastore`: base de datos local para datos simples primitivos.
 
 5. Añadir en el esqueleto (`punto 3.`) a aparte la que esta ya de personajes, las `secciones` de `episodio`, `citas` y `juego`.
 En `1. DUDA`, explicado el esquema que he seguido para app (muy similar en personajes con las demás secciones que ahora implemento).
@@ -1540,7 +1541,7 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 - EDITAR LA `INTERFAZ` PARA QUE SEA LA BONITA Y BUENA DE VERDAD ⚠️
 
 
-- HAGO LA LÓGICA AY PANTALLA DEL JUEGO. [ POR ESTE AHORA ] ⚠️
+- HAGO EL ASPECTO DE LA GRÁFICA DE LA PANTALLA DEL JUEGO FINAL. ⚠️
 - DEJO PREPARADA LAS PANTALLAS DE FAVORITOS. ⚠️
 
 - EMPEZAR VIDEO DE: `https://www.youtube.com/watch?v=lX7CeooKCcQ&t=13959s`

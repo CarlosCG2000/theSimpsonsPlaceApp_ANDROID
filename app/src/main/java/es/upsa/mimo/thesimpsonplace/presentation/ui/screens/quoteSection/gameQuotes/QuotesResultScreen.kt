@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.gameQuotes
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -28,21 +29,33 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import java.time.format.TextStyle
 import kotlin.text.toFloat
+
+
 
 @Composable
 fun QuotesResultScreen(
     respuestasAciertos: Int,
     navigateToQuotes: () -> Unit
 ) {
-
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text("NÚMERO DE ACIERTOS ES $respuestasAciertos")
+        Text("DATOS GUARDADOS EN DATASTORE XXXXXXX")
+
+        Button(onClick = {  navigateToQuotes() }) { Text("NAVEGAR AL MENU")}
+        Button(onClick = {
+            /** BORRAR ALMACENAMIENTO DE LA DATASTORE */
+        }) { Text("BORRAR HISTORIAL DE RESULTADOS")}
     }
 }
 

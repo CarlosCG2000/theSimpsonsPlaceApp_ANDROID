@@ -1,6 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
+import kotlinx.serialization.Serializable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +28,12 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.gameQuo
 // ✅ 1. Crear un sealed class para las rutas: en lugar de escribir las rutas como strings, se pueden definir en una sealed class (con parámetros si es necesario):
 // • Evita errores tipográficos en las rutas.
 // • Permite una navegación más clara y estructurada.
-sealed class Screen(val route: String) {
+sealed class Screen(val route: String) { // Screen es una clase sellada (sealed class), lo que significa que solo puede tener subclases dentro del mismo archivo.
+//    Cada pantalla (Menu, Profile...) es un objeto que hereda de Screen y tiene una ruta (route: String).
+//    📌 ¿Cuándo usar sealed class Screen?
+//    ✅ Cuando necesitas una ruta de tipo String para NavController.
+//    ✅ Si deseas usar argumentos dinámicos en la navegación, por ejemplo:
+
     object Menu : Screen("menu")
 
     object Profile : Screen("profileScreen")
@@ -52,10 +58,13 @@ sealed class Screen(val route: String) {
     object ResultQuotesStatic: Screen("navigateToResultQuotes/{respuestasAciertos}")
 }
 
-// ❌ Definición de destinos a través de objetos o clases (con parámetros que representan propiedades)
+// ✅ 2. Otra opción a 'sealed class Screen(val route: String) { ... }'
+//	Es simplemente un objeto vacío, pero anotado con @Serializable.
+//	No tiene un route: String, lo que indica que probablemente se usa en un sistema de navegación basado en serialización de clases en lugar de String.
+//	Puede usarse con Jetpack Navigation para serializar y guardar estados de pantalla.
 /** @Serializable
-//class EpisodeDetailScreenDestination(val id: Int) // Destino de la vista de una de episodio en detalle
-*/
+ object MenuScreen
+ */
 
 @Composable
 fun NavegacionApp() {
