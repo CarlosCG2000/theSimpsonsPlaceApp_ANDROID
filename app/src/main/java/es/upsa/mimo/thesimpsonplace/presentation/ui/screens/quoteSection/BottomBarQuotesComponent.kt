@@ -54,7 +54,7 @@ fun BottomBarQuoteComponent(selectedBarButtom:Int = 1,
         )
 
         NavigationBarItem( // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
-            selected = selectedBarButtom == 3, // solo marcamos como seleccionada a un tipo (al principio el por defecto)
+            selected = selectedBarButtom == 4, // solo marcamos como seleccionada a un tipo (al principio el por defecto)
             icon = {
                 Icon(   imageVector = Icons.Default.Album,
                     contentDescription = "Icono del Lista Fav")

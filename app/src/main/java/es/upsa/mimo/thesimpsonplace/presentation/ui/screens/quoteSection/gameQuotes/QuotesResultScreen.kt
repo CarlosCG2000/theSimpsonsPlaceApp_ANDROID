@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun QuotesResultScreen(
+    respuestasAciertos: Int,
     navigateToQuotes: () -> Unit
 ) {
     Box(
@@ -35,7 +36,7 @@ fun QuotesResultScreen(
             // LOGO SIMPSONS
             Text("JUEGO CITAS RESULTADO", fontSize = 24.sp, fontWeight = Bold)
             Button(onClick = navigateToQuotes) {
-                Text("BOTON DE VOLVER AL MENU")
+                Text("BOTON DE VOLVER AL MENU, ACIERTOS $respuestasAciertos")
             }
         }
     }
@@ -44,5 +45,5 @@ fun QuotesResultScreen(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun QuotesResultScreenPreview() {
-    QuotesResultScreen({})
+    QuotesResultScreen(3, {})
 }

@@ -90,7 +90,7 @@ import kotlin.String
 @Composable
 fun QuotesQuestionScreen(
     viewModel: QuotesGameViewModel = hiltViewModel(),
-    navigateToResultQuotes: () -> Unit
+    navigateToResultQuotes: (Int) -> Unit
 ) {
     val state: State<QuotesGameUI> = viewModel.stateQuestions.collectAsState() // sincrono para manejarlo en la UI
 
@@ -211,7 +211,7 @@ fun QuotesQuestionScreen(
                                 currentQuestionIndex++
                                 selectedAnswer = null
                             } else {
-                                navigateToResultQuotes() // ENVIAR LAS PREGUNTAS ACERTADAS
+                                navigateToResultQuotes(correctAnswers) // ENVIAR LAS PREGUNTAS ACERTADAS
                             }
                         },
                         modifier = Modifier

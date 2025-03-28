@@ -48,7 +48,8 @@ sealed class Screen(val route: String) {
     object FavoriteQuotes : Screen("navigateToFavoriteQuotes")
     object GameQuotes : Screen("navigateToGameQuotes")
     object QuestionQuotes : Screen("navigateToQuestionQuotes")
-    object ResultQuotes : Screen("navigateToResultQuotes")
+    data class ResultQuotes(val respuestasAciertos: Int): Screen("navigateToResultQuotes/$respuestasAciertos")
+    object ResultQuotesStatic: Screen("navigateToResultQuotes/{respuestasAciertos}")
 }
 
 // ❌ Definición de destinos a través de objetos o clases (con parámetros que representan propiedades)
@@ -206,15 +207,21 @@ fun NavegacionApp() {
 
         composable( Screen.QuestionQuotes.route) {
             QuotesQuestionScreen(
-                navigateToResultQuotes = { navController.navigate(Screen.ResultQuotes.route) }
+                navigateToResultQuotes = { repuestasAciertos -> navController.navigate(Screen.ResultQuotes(repuestasAciertos).route) }
             )
         }
 
-        composable(Screen.ResultQuotes.route) {
+        composable( route = Screen.ResultQuotesStatic.route,
+                    arguments = listOf(navArgument("respuestasAciertos") { type = NavType.IntType })) {
+
+            val aciertos = it.arguments?.getInt("respuestasAciertos") ?: 0
+
             QuotesResultScreen(
+                respuestasAciertos = aciertos,
                 navigateToQuotes = { navController.navigate(Screen.MainQuotes.route) }
             )
         }
+
     }
 }
 
