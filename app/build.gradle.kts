@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.appcompat) // Agrega esto
     //    implementation(libs.charts)
     //    implementation(libs.mpandroidchart)
 

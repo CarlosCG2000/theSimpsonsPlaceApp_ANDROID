@@ -1,5 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.profileSection.profileEdit
 
+import android.R.attr.enabled
+import android.R.attr.type
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType.Companion.PrimaryEditable
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -17,20 +25,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.data.entities.user.Language
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.PassVisibleIcon
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista */ ,
                       navigationArrowBack:() -> Unit,
@@ -48,6 +61,10 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
         onLogin() // Se envia la función lambda, para que se ejecute donde tenga que ejecutarse. (navegación a la pantalla del listado)
         viewModel.onLoggedIn() // Si ya esta logeado se vuelve el 'loggedIn' a false y no entre de manera repetida aqui.
     }
+
+    var expanded by remember { mutableStateOf(false) }
+    val languages = listOf("es", "en", "fr")
+    val selectedLanguage = userPreference.user.language
 
     LaunchedEffect(userPreference.user.username) {
         user = userPreference.user.username
@@ -122,6 +139,36 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
                     viewModel.updateUser(userNew)
                 }
             )
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it }
+            ) {
+                OutlinedTextField(
+                    value = TextFieldValue(selectedLanguage.code), // Corregido: usar TextFieldValue
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { "Idioma" },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                    modifier = Modifier.menuAnchor(PrimaryEditable, true) // Modificador correcto
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    languages.forEach { languageItem ->
+                        DropdownMenuItem(
+                            text = { Text(languageItem) },
+                            onClick = {
+                                val userNew = userPreference.user.copy(language = Language.fromCode(languageItem))
+                                viewModel.updateUser(userNew) // Guardar el idioma en el ViewModel
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }

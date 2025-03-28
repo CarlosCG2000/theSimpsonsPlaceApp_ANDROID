@@ -47,7 +47,7 @@ fun ProfileScreen(onNavigationProfileForm:() -> Unit,
                 horizontalAlignment = Alignment.CenterHorizontally){ // Centra horizontalmente
 
                 Text("Tema aplicacion ${if (userPreference.user.darkMode) "Oscuro" else "Claro"}", fontSize = 24.sp, fontWeight = Bold)
-                
+
             }
         }
     }

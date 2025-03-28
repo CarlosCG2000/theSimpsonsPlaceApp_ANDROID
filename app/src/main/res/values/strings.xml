@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TheSimpsonPlace</string>
-    <string name="title_activity_prueba">PruebaActivity</string>
+    <string name="title_activity_prueba" translatable="false">PruebaActivity</string>
+    <string name="logo_simpsons">LOGO SIMPSONS</string>
 </resources>

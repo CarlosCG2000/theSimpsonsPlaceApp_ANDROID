@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import es.upsa.mimo.thesimpsonplace.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -64,7 +66,7 @@ fun MenuScreen( /** 4 navegaciones */
                     verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
                     horizontalAlignment = Alignment.CenterHorizontally){ // Centra horizontalmente
                     // LOGO SIMPSONS
-                    Text("LOGO SIMPSONS", fontSize = 24.sp, fontWeight = Bold)
+                    Text(stringResource(R.string.logo_simpsons), fontSize = 24.sp, fontWeight = Bold)
 
                     // Spacer(modifier = Modifier.width(200.dp))
 
