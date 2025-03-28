@@ -1,6 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,6 +13,8 @@ import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.data.sources.service.impl.CharacterDaoJson
 import es.upsa.mimo.thesimpsonplace.data.sources.service.impl.EpisodeDaoJson
+import javax.inject.Qualifier
+
 import javax.inject.Singleton
 
 // AppModule maneja repositorios, casos de uso y lógica de negocio.
@@ -61,7 +66,52 @@ object AppModule {
 
     }
 
-    // EpisodeDatabaDao --> DatabaseModule.k
+
+
+// _________________________________________________
+//    Le dice a Hilt cómo proveer el DataStore<Preferences> cuando sea necesario en otra clase.
+//    Como gameDataStore ya es una propiedad de extensión de Context, simplemente la usamos.
+//    Hilt sabe qué DataStore<Preferences> usar gracias a la inyección de dependencias basada en los tipos.
+//    Sin embargo, en este caso, ambos métodos devuelven un DataStore<Preferences>, por lo que Hilt no puede diferenciar entre gameDataStore y userDataStore automáticamente. Para solucionar esto, usamos calificadores (@Qualifier).
+
+//  1️⃣ Definir los Qualifiers
+//  Crea dos @Qualifier para identificar cada DataStore:
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GameDataStore
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class UserDataStore
+
+//  DataStore necesita acceso a un Context para funcionar.
+//  Usar una propiedad de extensión garantiza que cualquier Context tenga acceso al mismo DataStore.
+//  Le pasamos este DataStore por defecto a 'provideGamePreferencesDao'
+    private val Context.gameDataStore: DataStore<Preferences> by preferencesDataStore(name = "game")
+    private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
+
+//  2️⃣ Aplicar los @Qualifier en los Proveedores (@Provides)
+//  Ahora, en AppModule.kt, usa estas anotaciones para que Hilt sepa cuál es cuál:
+    @Provides
+    @Singleton
+    @GameDataStore
+    fun provideGameDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        context.gameDataStore
+
+    @Provides
+    @Singleton
+    @UserDataStore
+    fun provideUserDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        context.userDataStore
+
+//    @Provides
+//    @Singleton
+//    fun provideGamePreferencesDao(gameDataStore: DataStore<Preferences>): GameDatastoreDaoImpl {
+//        return GameDatastoreDaoImpl(gameDataStore)
+//    }
+// _________________________________________________
+
+// EpisodeDatabaDao --> DatabaseModule.k
 
     // Por si quisiera cambiar de API seria aqui simplemente (si quiero pasarselo por parámetro debo de cambiar mi implementación de QuoteDaoApi()
 //    ❌ Problema 2: 'provideQuoteDao' en AppModule es innecesario

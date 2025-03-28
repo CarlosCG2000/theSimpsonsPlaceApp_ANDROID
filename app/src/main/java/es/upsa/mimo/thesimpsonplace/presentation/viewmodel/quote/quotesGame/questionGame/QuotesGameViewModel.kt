@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame
+package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.questionGame
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

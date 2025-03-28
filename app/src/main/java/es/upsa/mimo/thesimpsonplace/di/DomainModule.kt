@@ -4,12 +4,20 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import es.upsa.mimo.thesimpsonplace.data.sources.database.GameDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.GameDatastoreDaoImpl
 import es.upsa.mimo.thesimpsonplace.domain.repository.* //CharaterRepository
 import es.upsa.mimo.thesimpsonplace.domain.repository.impl.* //CharaterRepositoryImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.* //FetchAllCharactersDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.* //GetAllEpisodesDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.game.GetGameStatsUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.game.ResetStatsUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.game.UpdateStatsUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.* //FetchAllCharactersDbUseCaseImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.* //GetAllEpisodesDbUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.game.GetGameStatsUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.game.ResetStatsUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.game.UpdateStatsUseCaseImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.quote.* //DeleteQuoteDbUseCaseImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.* // DeleteQuoteDbUseCase
 import javax.inject.Singleton
@@ -45,50 +53,65 @@ abstract class DomainModule {
 
     @Binds
     @Singleton
-    abstract fun  bindEpisodeRepository(impl: EpisodeRepositoryImpl): EpisodeRepository
+    abstract fun bindEpisodeRepository(impl: EpisodeRepositoryImpl): EpisodeRepository
 
     @Binds
-    abstract fun  bindGetAllEpisodesUseCase(impl: GetAllEpisodesUseCaseImpl): GetAllEpisodesUseCase
+    abstract fun bindGetAllEpisodesUseCase(impl: GetAllEpisodesUseCaseImpl): GetAllEpisodesUseCase
     @Binds
-    abstract fun  bindGetEpisodeByIdUseCase(impl: GetEpisodeByIdUseCaseImpl): GetEpisodeByIdUseCase
+    abstract fun bindGetEpisodeByIdUseCase(impl: GetEpisodeByIdUseCaseImpl): GetEpisodeByIdUseCase
     @Binds
-    abstract fun  bindGetEpisodesByTitleUseCase(impl: GetEpisodesByTitleUseCaseImpl): GetEpisodesByTitleUseCase
+    abstract fun bindGetEpisodesByTitleUseCase(impl: GetEpisodesByTitleUseCaseImpl): GetEpisodesByTitleUseCase
     @Binds
-    abstract fun  bindGetEpisodesByDateUseCase(impl: GetEpisodesByDateUseCaseImpl): GetEpisodesByDateUseCase
+    abstract fun bindGetEpisodesByDateUseCase(impl: GetEpisodesByDateUseCaseImpl): GetEpisodesByDateUseCase
     @Binds
-    abstract fun  bindGetEpisodesBySeasonUseCase(impl: GetEpisodesBySeasonUseCaseImpl): GetEpisodesBySeasonUseCase
+    abstract fun bindGetEpisodesBySeasonUseCase(impl: GetEpisodesBySeasonUseCaseImpl): GetEpisodesBySeasonUseCase
     @Binds
-    abstract fun  bindGetEpisodesByChapterUseCase(impl: GetEpisodesByChapterUseCaseImpl): GetEpisodesByChapterUseCase
+    abstract fun bindGetEpisodesByChapterUseCase(impl: GetEpisodesByChapterUseCaseImpl): GetEpisodesByChapterUseCase
     @Binds
-    abstract fun  bindGetEpisodesByViewUseCase(impl: GetEpisodesByViewUseCaseImpl): GetEpisodesByViewUseCase
+    abstract fun bindGetEpisodesByViewUseCase(impl: GetEpisodesByViewUseCaseImpl): GetEpisodesByViewUseCase
     @Binds
-    abstract fun  bindGetEpisodesOrderUseCase(impl: GetEpisodesOrderUseCaseImpl): GetEpisodesOrderUseCase
+    abstract fun bindGetEpisodesOrderUseCase(impl: GetEpisodesOrderUseCaseImpl): GetEpisodesOrderUseCase
 
     @Binds
-    abstract fun  bindGetAllEpisodesDbUseCase(impl: GetAllEpisodesDbUseCaseImpl): GetAllEpisodesDbUseCase
+    abstract fun bindGetAllEpisodesDbUseCase(impl: GetAllEpisodesDbUseCaseImpl): GetAllEpisodesDbUseCase
     @Binds
-    abstract fun  bindGetEpisodeByIdDbUseCase(impl: GetEpisodeByIdDbUseCaseImpl): GetEpisodeByIdDbUseCase
+    abstract fun bindGetEpisodeByIdDbUseCase(impl: GetEpisodeByIdDbUseCaseImpl): GetEpisodeByIdDbUseCase
     @Binds
-    abstract fun  bindGetEpisodeByIdsDbUseCase(impl: GetEpisodeByIdsDbUseCaseImpl): GetEpisodeByIdsDbUseCase
+    abstract fun bindGetEpisodeByIdsDbUseCase(impl: GetEpisodeByIdsDbUseCaseImpl): GetEpisodeByIdsDbUseCase
     @Binds
-    abstract fun  bindUpdateEpisodeDbUseCase(impl: UpdateEpisodeDbUseCaseImpl): UpdateEpisodeDbUseCase
+    abstract fun bindUpdateEpisodeDbUseCase(impl: UpdateEpisodeDbUseCaseImpl): UpdateEpisodeDbUseCase
     @Binds
-    abstract fun  bindInsertEpisodeDbUseCase(impl: InsertEpisodeDbUseCaseImpl): InsertEpisodeDbUseCase
+    abstract fun bindInsertEpisodeDbUseCase(impl: InsertEpisodeDbUseCaseImpl): InsertEpisodeDbUseCase
 
     @Binds
     @Singleton
-    abstract fun  bindQuoteRepository(impl: QuoteRepositoryImpl): QuoteRepository
+    abstract fun bindQuoteRepository(impl: QuoteRepositoryImpl): QuoteRepository
 
     @Binds
-    abstract fun  bindGetQuotesUseCase(impl: GetQuotesUseCaseImpl): GetQuotesUseCase
+    abstract fun bindGetQuotesUseCase(impl: GetQuotesUseCaseImpl): GetQuotesUseCase
     @Binds
-    abstract fun  bindGetQuestionsUseCase(impl: GetQuestionsUseCaseImpl): GetQuestionsUseCase
+    abstract fun bindGetQuestionsUseCase(impl: GetQuestionsUseCaseImpl): GetQuestionsUseCase
 
     @Binds
-    abstract fun  bindGetAllQuoteDbUseCase(impl: GetAllQuoteDbUseCaseImpl): GetAllQuoteDbUseCase
+    abstract fun bindGetAllQuoteDbUseCase(impl: GetAllQuoteDbUseCaseImpl): GetAllQuoteDbUseCase
     @Binds
-    abstract fun  bindDeleteQuoteDbUseCase(impl: DeleteQuoteDbUseCaseImpl): DeleteQuoteDbUseCase
+    abstract fun bindDeleteQuoteDbUseCase(impl: DeleteQuoteDbUseCaseImpl): DeleteQuoteDbUseCase
     @Binds
-    abstract fun  bindInsertQuoteDbUseCase(impl: InsertQuoteDbUseCaseImpl): InsertQuoteDbUseCase
+    abstract fun bindInsertQuoteDbUseCase(impl: InsertQuoteDbUseCaseImpl): InsertQuoteDbUseCase
+
+    @Binds
+    @Singleton
+    abstract fun bindGameDatastorePreferencesDao(impl: GameDatastoreDaoImpl): GameDatastoreDao
+
+    @Binds
+    @Singleton
+    abstract fun bindGameDatastorePreferencesRepository(impl: GameRepositoryImpl): GameRepository
+
+    @Binds
+    abstract fun bindUpdateStatsUseCase(impl: UpdateStatsUseCaseImpl): UpdateStatsUseCase
+    @Binds
+    abstract fun bindResetStatsUseCase(impl: ResetStatsUseCaseImpl): ResetStatsUseCase
+    @Binds
+    abstract fun bindGetGameStatsUseCase(impl: GetGameStatsUseCaseImpl): GetGameStatsUseCase
 }
 
