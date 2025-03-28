@@ -14,11 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarProfileComponent(onNavigationArrowBack:() -> Unit, onNavigationProfileForm:() -> Unit /**Para el el icono del menú*/) {
+fun TopBarProfileComponent( userName: String = "Desconocido",
+    onNavigationArrowBack:() -> Unit,
+                           onNavigationProfileForm:() -> Unit /**Para el el icono del menú*/) {
 
     TopAppBar( // Puede ser tambien: CenterAlignedTopAppBar, MediumTopAppBar, LargeTopAppBar
 
-        title = { Text("Usuario Carlos C") },
+        title = { Text(userName) },
 
         navigationIcon = { // Icono del menú
             IconButton(onClick = onNavigationArrowBack) {
@@ -44,6 +46,6 @@ fun TopBarProfileComponent(onNavigationArrowBack:() -> Unit, onNavigationProfile
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun TopBarProfileComponentPreview() {
-    TopBarProfileComponent({}, {})
+    TopBarProfileComponent("Pepito ", {}, {})
 }
 

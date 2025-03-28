@@ -96,7 +96,7 @@ fun NavegacionApp() {
         composable(Screen.ProfileEdit.route) {
             ProfileEditScreen(
                 onLogin = { navController.navigate(Screen.Profile.route) },
-                navigationArrowBack = { navigateTo( navController = navController, screen = Screen.Menu ) }
+                navigationArrowBack = { navigateTo( navController = navController, screen = Screen.Profile ) }
             )
         }
 

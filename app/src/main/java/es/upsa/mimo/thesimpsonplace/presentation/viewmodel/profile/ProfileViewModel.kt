@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileFormViewModel @Inject constructor( val getUserPreferencesUseCase: GetUserPreferencesUseCase,
-                                                val updateUserUseCase: UpdateUserUseCase
+class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUserPreferencesUseCase,
+                                           val updateUserUseCase: UpdateUserUseCase
                                             ): ViewModel() {
 
-    private val _userState: MutableStateFlow<ProfileEditStateUI> = MutableStateFlow(ProfileEditStateUI()) // Asincrono esta en un hilo secundario
+    private val _userState: MutableStateFlow<ProfileStateUI> = MutableStateFlow(ProfileStateUI()) // Asincrono esta en un hilo secundario
     val userState = _userState.asStateFlow()
 
     init {
@@ -30,7 +30,7 @@ class ProfileFormViewModel @Inject constructor( val getUserPreferencesUseCase: G
         }
     }
 
-    fun updateSUser(user: UserPreference) {
+    fun updateUser(user: UserPreference) {
         viewModelScope.launch {
             updateUserUseCase.execute(user)
         }
@@ -38,11 +38,12 @@ class ProfileFormViewModel @Inject constructor( val getUserPreferencesUseCase: G
 
     fun onLoginClick(user: String, pass: String){
         _userState.update {
-            when {
-                !user.contains('@') -> it.copy(error = "User must be a valid name")
-                pass.length < 5 -> it.copy(error = "Password must be at least 5 characters")
-                else -> it.copy(loggedIn = true)
-            }
+//            when {
+//                !user.contains('@') -> it.copy(error = "User must be a valid name")
+//                pass.length < 5 -> it.copy(error = "Password must be at least 5 characters")
+//                else -> it.copy(loggedIn = true)
+//            }
+            it.copy(loggedIn = true)
         }
     }
 
