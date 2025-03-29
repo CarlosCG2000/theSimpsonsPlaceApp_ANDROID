@@ -63,10 +63,7 @@ class MainActivity() : ComponentActivity() {
 //        }
 
         setContent {
-            TheSimpsonPlaceTheme {
-                MyApp()
-                // NavegacionApp()
-            }
+            MyApp() // NavegacionApp()
         }
     }
 

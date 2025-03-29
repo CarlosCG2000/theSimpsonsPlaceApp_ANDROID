@@ -1906,4 +1906,4 @@ En tu implementación, estás usando DataStore Preferences, que es ideal para al
 2.	Repository: Interactúa con el DataSource y proporciona datos a la capa de dominio.
 3.	ViewModel: Recupera los datos del repositorio y los expone a la UI.
 
-
+NO ME FUNCIONA PARA EL LENGUAJE DE FORMA AUTOMATICA ME TENGO QUE SALIR DEL ACTIVITY Y VOLVER A ENTRAR PARA QUE SE APLIQUE EL LENGUAJE ❌
