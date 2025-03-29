@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) // Serialization
     kotlin("kapt")
     alias(libs.plugins.hilt)
+    // alias(libs.plugins.ksp)
 }
 
 android {
@@ -60,11 +61,15 @@ dependencies {
     implementation(libs.gson)  // GSON
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
+    implementation(libs.com.google.devtools.ksp.gradle.plugin)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.appcompat) // Agrega esto
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    // ksp(libs.androidx.room.compiler)
     //    implementation(libs.charts)
     //    implementation(libs.mpandroidchart)
 

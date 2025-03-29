@@ -25,7 +25,7 @@ import es.upsa.mimo.thesimpsonplace.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun MenuScreen( /** 4 navegaciones */
+fun MenuScreen(  /** 4 navegaciones */
                 navigateToCharacters: () -> Unit,
                 navigateToEpisodes: () -> Unit,
                 navigateToQuotes: () -> Unit,
@@ -81,5 +81,5 @@ fun MenuScreen( /** 4 navegaciones */
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun MenuScreenPreview() {
-    MenuScreen({},{}, {}, {})
+    MenuScreen( {},{}, {}, {})
 }

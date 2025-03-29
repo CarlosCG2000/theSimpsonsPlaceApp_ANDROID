@@ -1,6 +1,5 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.root
 
-
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
