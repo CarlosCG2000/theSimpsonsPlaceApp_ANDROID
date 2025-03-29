@@ -132,7 +132,7 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
             if(state.value.isLoading){
                 CircularProgressIndicator(color = Color.Yellow)
             } else {
-                CharacterList(character = state.value.characters)
+                // CharacterList(character = state.value.characters)
             }
             }
         }

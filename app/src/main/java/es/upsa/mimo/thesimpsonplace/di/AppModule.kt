@@ -4,11 +4,14 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import es.upsa.mimo.thesimpsonplace.data.CharacterDatabaseRoomDao
+import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.data.sources.service.impl.CharacterDaoJson
@@ -103,6 +106,22 @@ object AppModule {
     @UserDataStore
     fun provideUserDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
         context.userDataStore
+
+    // DE LA BASE DE DATOS
+    @Provides
+    @Singleton
+    fun provideDatabaseRoom(@ApplicationContext context: Context): TheSimpsonsDatabaseRoom {
+        return Room.databaseBuilder(
+            context,
+            TheSimpsonsDatabaseRoom::class.java,
+            "the_simpsons_database"
+        ).build()
+    }
+
+    @Provides
+    fun provideCharacterDatabaseRoomDao(database: TheSimpsonsDatabaseRoom): CharacterDatabaseRoomDao {
+        return database.characterDbDao()
+    }
 
 //    @Provides
 //    @Singleton

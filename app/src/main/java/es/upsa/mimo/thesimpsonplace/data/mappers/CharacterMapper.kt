@@ -1,6 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
-// import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
+import androidx.compose.runtime.traceEventEnd
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
 import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
@@ -23,6 +23,16 @@ fun Character.toCharacterDb(): CharacterDb {
                         genero = genero,
                         imagen = imagen)
 }
+
+fun CharacterDb.toCharacter(): Character {
+    return Character( id = id,
+        nombre = nombre,
+        genero = genero,
+        imagen = imagen,
+        esFavorito = true
+    )
+}
+
 /**
     // Mapper: Convertir CharacterEntity a Character
     fun CharacterEntity.toCharacter(): Character {

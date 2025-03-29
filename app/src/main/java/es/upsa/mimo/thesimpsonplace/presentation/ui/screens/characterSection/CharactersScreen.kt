@@ -42,7 +42,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import es.upsa.mimo.thesimpsonplace.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -50,27 +52,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.data.CharacterDatabaseRoomDao
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
+import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacterDb
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.database
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun CharactersScreen(
     viewModel: ListCharactersViewModel = hiltViewModel(), // = viewModel(factory = ListCharactersViewModel.factory()
+    viewModelDB: ListCharactersDBViewModel = hiltViewModel(),
     navigateToFilterCharacters: () -> Unit,
     navigateToFavoriteCharacters: () -> Unit,
     navigationArrowBack:() -> Unit
 ) {
-
-    
-    
-    
-    
-
-
-
     val state: State<ListCharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
 
+    val favoriteCharacters by viewModelDB.favoriteCharacters.collectAsState()
+
+    val context = LocalContext.current
+    val characterDao = remember { context.database.characterDbDao() } // recuperamos durectamente el 'abstract fun todoDao(): TodoDao'
+
+
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
-    LaunchedEffect(Unit /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
+    LaunchedEffect(Unit, /* state.value.characters */ /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
         viewModel.getAllCharacters()
     }
 
@@ -102,58 +110,59 @@ fun CharactersScreen(
                     color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                 )
             } else {
-                CharacterList(Modifier.fillMaxSize(), state.value.characters)
+                CharacterList(modifier = Modifier.fillMaxSize(),
+                    characters = state.value.characters,
+                    favoriteCharacters = favoriteCharacters,
+                    onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
             }
         }
     }
 }
 
 @Composable
-fun CharacterList(modifier: Modifier = Modifier, character: List<Character>) {
-    Column(
-        modifier = modifier, // Ocupa toda la pantalla
-        // verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) { // Centra horizontalmente
+fun CharacterList(modifier: Modifier = Modifier,
+                  characters: List<Character>,
+                  favoriteCharacters: Set<Int>,
+                  onToggleFavorite: (Character) -> Unit) {
 
-        LazyColumn {
-            items(character) { character ->
-                CharacterItem(character)
-            }
+        val scope =  rememberCoroutineScope() // como vamos a utilizar funciones Sunspend, esto en verdad habria que hacerlo desde un View Model que accediera a la capa de datos.
+
+    // val characters by characterDao.getAllCharactersDb().collectAsState(emptyList<CharacterDb>())
+    LazyColumn( modifier = modifier,  horizontalAlignment = Alignment.CenterHorizontally) {
+        items(characters) { character ->
+            val isFavorite = character.id in favoriteCharacters
+            CharacterItem(
+                character,
+                isFavorite = isFavorite,
+                onToggleFavorite = {
+                    onToggleFavorite(character)
+                })
         }
     }
 }
 
-@SuppressLint("DiscouragedApi")
 @Composable
-fun CharacterItem(character: Character) {
+fun CharacterItem( character: Character,
+                   isFavorite: Boolean,
+                   onToggleFavorite: () -> Unit) {
     val context = LocalContext.current
 
-    var isFavorite by remember { mutableStateOf(character.esFavorito) }
-
-    // Motivo no puedo pasar las 2000 personajes uno por uno dando su R.drawable: "homer" to R.drawable.homer, "bart" to R.drawable.bart...
     val imageResId = remember(character.imagen) {
-
         val id = context.resources.getIdentifier(
             character.imagen?.lowercase(),
             "drawable",
             context.packageName
         )
-
         if (id == 0) R.drawable.not_specified else id
     }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+        modifier = Modifier.fillMaxWidth().padding(8.dp)
     ) {
         Image(
             painter = painterResource(id = imageResId),
             contentDescription = character.nombre,
-            modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape)
+            modifier = Modifier.size(80.dp).clip(CircleShape)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -162,21 +171,12 @@ fun CharacterItem(character: Character) {
             Text(text = character.nombre, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Text(text = character.genero.toString(), fontSize = 16.sp)
 
-
-            IconButton(onClick = {
-                isFavorite = !isFavorite
-                // funcion de cambio en la BD
-                /** if (isFavorite){
-                dbCharacterViewModel.insert(quote)
-                } else {
-                dbCharacterViewModel.delete(quote)
-                } */
-            }) {
+            IconButton(onClick = { onToggleFavorite() }) {
                 Icon(
-                    imageVector = Icons.Filled.Star, // Usa el ícono de estrella
+                    imageVector = Icons.Filled.Star,
                     contentDescription = "Favorito",
-                    tint = if (isFavorite) Color.Yellow else Color.Red, // Amarillo si es favorito, rojo si no
-                    modifier = Modifier.size(38.dp) // Tamaño del icono
+                    tint = if (isFavorite) Color.Yellow else Color.Gray,
+                    modifier = Modifier.size(38.dp)
                 )
             }
         }

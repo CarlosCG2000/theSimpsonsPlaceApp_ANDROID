@@ -26,6 +26,9 @@ interface CharacterDatabaseRoomDao {
     @Query("SELECT * FROM characters ORDER BY id ASC")
     fun getAllCharactersDb(): Flow<List<CharacterDb>>
 
+    @Query("SELECT * FROM characters WHERE id = :id LIMIT 1")
+    suspend fun getCharacterById(id: Int): CharacterDb?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterDb(character: CharacterDb)
 
