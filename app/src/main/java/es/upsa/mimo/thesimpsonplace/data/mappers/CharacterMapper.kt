@@ -1,5 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
+// import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
 import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
@@ -15,6 +17,12 @@ fun CharacterDto.toCharacter()
     )
 
 // ROOM
+fun Character.toCharacterDb(): CharacterDb {
+    return CharacterDb( id = id,
+                        nombre = nombre,
+                        genero = genero,
+                        imagen = imagen)
+}
 /**
     // Mapper: Convertir CharacterEntity a Character
     fun CharacterEntity.toCharacter(): Character {

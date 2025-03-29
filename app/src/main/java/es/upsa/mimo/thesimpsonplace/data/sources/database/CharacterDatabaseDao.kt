@@ -8,3 +8,8 @@ interface CharacterDatabaseDao {
     suspend fun deleteCharacterDb(id: Int): Unit // Borrar personaje en la base de datos
 }
 
+//interface CharacterDatabaseDao {
+//    fun getAllCharactersDb(): Flow<List<CharacterDb>>
+//    suspend fun insertCharacterDb(character: CharacterDb): Unit
+//    suspend fun deleteCharacterDb(character: CharacterDb): Unit
+//}

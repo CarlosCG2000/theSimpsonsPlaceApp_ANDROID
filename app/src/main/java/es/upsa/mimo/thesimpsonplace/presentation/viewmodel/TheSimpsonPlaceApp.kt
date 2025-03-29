@@ -2,57 +2,37 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel
 
 import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import dagger.hilt.android.HiltAndroidApp
-import es.upsa.mimo.thesimpsonplace.data.sources.database.CharacterDatabaseDao
-import es.upsa.mimo.thesimpsonplace.data.sources.database.EpisodeDatabaseDao
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.EpisodeDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
-import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
-import es.upsa.mimo.thesimpsonplace.data.sources.service.impl.CharacterDaoJson
-import es.upsa.mimo.thesimpsonplace.data.sources.service.impl.EpisodeDaoJson
-import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
-import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
-import es.upsa.mimo.thesimpsonplace.domain.repository.impl.CharaterRepositoryImpl
-import es.upsa.mimo.thesimpsonplace.domain.repository.impl.EpisodeRepositoryImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.FetchAllCharactersDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetFilterNameCharactersUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.UpdateCharacterDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdsDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByChapterUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByDateUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeasonUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.InsertEpisodeDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.UpdateEpisodeDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.FetchAllCharactersDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.GetAllCharactersUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.GetFilterNameCharactersUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.InsertCharacterDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.character.UpdateCharacterDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetAllEpisodesDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetAllEpisodesUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodeByIdDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodeByIdUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodeByIdsDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesByChapterUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesByDateUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesBySeasonUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.GetEpisodesByTitleUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.InsertEpisodeDbUseCaseImpl
-import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.episode.UpdateEpisodeDbUseCaseImpl
+import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
+
+val Context.database
+    get() = (applicationContext as TheSimpsonPlaceApp).database // llamamos al contexto de la App donde hemos definido la BD, para pasarlelo al compose
 
 // _____________ Instanciando automaticamente las dependencias con Hilt que lo maneje en toda la app. _____________
 @HiltAndroidApp
-class TheSimpsonPlaceApp : Application()
+class TheSimpsonPlaceApp : Application(){
+    lateinit var database: TheSimpsonsDatabaseRoom // CREAMOS LA DEFINICION DE LA BASE DE DATOS
+        private set // DECIMOS QUE DESDE FUERA SOLO SE PUEDA LEER
 
-// _____________ Instanciando manualmente las dependencias (de personajes y episodios, falta la de citas).  _____________
+    override fun onCreate() {
+        super.onCreate()
+
+        initDatabase() // INICIALIZAMOS LA CREACION DE NUESTRA BASE DE DATOS
+    }
+
+    // CREAMOS NUESTRA BASE DE DATOS
+    private fun initDatabase() {
+        database = Room.databaseBuilder(
+            this, // EL CONTEXTO DE LA APP
+            TheSimpsonsDatabaseRoom::class.java,  // LA BASE DE DATOS QUE QUEREMOS CREAR
+            "TheSimpsonsDatabaseRoom" // NOMBRE QUE QUERAMOS DARLE
+        ).build()
+    }
+}
+
+
+// _____________ Instanciando manualmente las dependencias (de personajes y episodios, falta la de citas con 'Factory').  _____________
 //class TheSimpsonPlaceApp : Application() {
 //
 //    // Primero obtenemos el context de la aplicación

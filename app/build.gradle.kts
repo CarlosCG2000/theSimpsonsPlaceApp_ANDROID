@@ -61,7 +61,7 @@ dependencies {
     implementation(libs.gson)  // GSON
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
-    implementation(libs.com.google.devtools.ksp.gradle.plugin)
+    // implementation(libs.com.google.devtools.ksp.gradle.plugin)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.appcompat) // Agrega esto
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
     // ksp(libs.androidx.room.compiler)
     //    implementation(libs.charts)
     //    implementation(libs.mpandroidchart)

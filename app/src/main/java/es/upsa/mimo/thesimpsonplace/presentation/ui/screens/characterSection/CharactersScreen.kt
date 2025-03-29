@@ -60,6 +60,13 @@ fun CharactersScreen(
     navigationArrowBack:() -> Unit
 ) {
 
+    
+    
+    
+    
+
+
+
     val state: State<ListCharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
