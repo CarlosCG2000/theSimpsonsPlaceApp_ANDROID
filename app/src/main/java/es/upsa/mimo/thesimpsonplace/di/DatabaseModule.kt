@@ -4,10 +4,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.sources.database.CharacterDatabaseDao
+import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.database.EpisodeDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.QuoteDatabaseDao
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseRoomDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.EpisodeDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.QuoteDatabaseDaoRoom
 import javax.inject.Singleton
@@ -25,9 +25,8 @@ object DatabaseModule {
 //    }
 
     @Provides
-    @Singleton
-    fun provideCharacterDatabaseDao(): CharacterDatabaseDao {
-        return CharacterDatabaseDaoRoom()
+    fun provideCharacterDao(database: TheSimpsonsDatabaseRoom): CharacterDatabaseRoomDao {
+        return database.characterDbDao()
     }
 
     @Provides

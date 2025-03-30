@@ -10,7 +10,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.CharacterDatabaseRoomDao
 import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
@@ -118,10 +117,6 @@ object AppModule {
         ).build()
     }
 
-    @Provides
-    fun provideCharacterDatabaseRoomDao(database: TheSimpsonsDatabaseRoom): CharacterDatabaseRoomDao {
-        return database.characterDbDao()
-    }
 
 //    @Provides
 //    @Singleton

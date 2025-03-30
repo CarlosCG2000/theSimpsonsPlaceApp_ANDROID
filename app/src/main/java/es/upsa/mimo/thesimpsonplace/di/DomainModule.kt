@@ -51,11 +51,13 @@ abstract class DomainModule {
     abstract fun bindGetFilterNameCharactersUseCase( useCaseImpl: GetFilterNameCharactersUseCaseImpl ): GetFilterNameCharactersUseCase
 
     @Binds
-    abstract fun bindFetchAllCharactersDbUseCase( useCaseImpl: FetchAllCharactersDbUseCaseImpl ): FetchAllCharactersDbUseCase
+    abstract fun bindGetAllCharactersDbUseCase(impl: GetAllCharactersDbUseCaseImpl): GetAllCharactersDbUseCase
     @Binds
-    abstract fun bindInsertCharacterDbUseCase( useCaseImpl: InsertCharacterDbUseCaseImpl ): InsertCharacterDbUseCase
+    abstract fun bindGetCharacterDbByIdUseCase(impl: GetCharacterDbByIdUseCaseImpl): GetCharacterDbByIdUseCase
     @Binds
-    abstract fun bindUpdateCharacterDbUseCase( useCaseImpl: UpdateCharacterDbUseCaseImpl ): UpdateCharacterDbUseCase
+    abstract fun bindInsertCharacterUseCase(impl: InsertCharacterDbUseCaseImpl): InsertCharacterDbUseCase
+    @Binds
+    abstract fun bindDeleteCharacterUseCase(impl: DeleteCharacterDbUseCaseImpl): DeleteCharacterDbUseCase
 
     @Binds
     @Singleton

@@ -1,12 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersViewModel
@@ -40,26 +36,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.rememberUpdatedState
 import es.upsa.mimo.thesimpsonplace.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import es.upsa.mimo.thesimpsonplace.data.CharacterDatabaseRoomDao
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
-import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacterDb
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.ListCharactersDBViewModel
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.database
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun CharactersScreen(
@@ -71,11 +58,10 @@ fun CharactersScreen(
 ) {
     val state: State<ListCharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
 
-    val favoriteCharacters by viewModelDB.favoriteCharacters.collectAsState()
+    val favoriteCharactersSet by viewModelDB.favoriteCharacters.collectAsState()
 
-    val context = LocalContext.current
-    val characterDao = remember { context.database.characterDbDao() } // recuperamos durectamente el 'abstract fun todoDao(): TodoDao'
-
+//    val context = LocalContext.current
+//    val characterDao = remember { context.database.characterDbDao() } // recuperamos durectamente el 'abstract fun todoDao(): TodoDao'
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
     LaunchedEffect(Unit, /* state.value.characters */ /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
@@ -112,7 +98,7 @@ fun CharactersScreen(
             } else {
                 CharacterList(modifier = Modifier.fillMaxSize(),
                     characters = state.value.characters,
-                    favoriteCharacters = favoriteCharacters,
+                    favoriteCharacters = favoriteCharactersSet,
                     onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
             }
         }
@@ -130,10 +116,11 @@ fun CharacterList(modifier: Modifier = Modifier,
     // val characters by characterDao.getAllCharactersDb().collectAsState(emptyList<CharacterDb>())
     LazyColumn( modifier = modifier,  horizontalAlignment = Alignment.CenterHorizontally) {
         items(characters) { character ->
-            val isFavorite = character.id in favoriteCharacters
+            // val isFavorite = character.id in favoriteCharacters
+            val isFavorite = rememberUpdatedState(character.id in favoriteCharacters)
             CharacterItem(
                 character,
-                isFavorite = isFavorite,
+                isFavorite = isFavorite.value,
                 onToggleFavorite = {
                     onToggleFavorite(character)
                 })
@@ -168,7 +155,7 @@ fun CharacterItem( character: Character,
         Spacer(modifier = Modifier.width(16.dp))
 
         Column {
-            Text(text = character.nombre, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(text = character.nombre, fontWeight = Bold, fontSize = 20.sp)
             Text(text = character.genero.toString(), fontSize = 16.sp)
 
             IconButton(onClick = { onToggleFavorite() }) {

@@ -3,54 +3,62 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.upsa.mimo.thesimpsonplace.data.CharacterDatabaseRoomDao
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
-import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
-import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacterDb
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
-import kotlinx.coroutines.flow.Flow
+import es.upsa.mimo.thesimpsonplace.domain.usescases.character.DeleteCharacterDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersDbUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetCharacterDbByIdUseCase
+import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDbUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toSet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ListCharactersDBViewModel @Inject constructor(
-    private val characterDao: CharacterDatabaseRoomDao
+    private val getAllCharactersUseCase: GetAllCharactersDbUseCase,
+    private val getCharacterByIdUseCase: GetCharacterDbByIdUseCase,
+    private val insertCharacterUseCase: InsertCharacterDbUseCase,
+    private val deleteCharacterUseCase: DeleteCharacterDbUseCase
 ) : ViewModel() {
 
     private val _favoriteCharacters = MutableStateFlow<Set<Int>>(emptySet())
-    val favoriteCharacters: StateFlow<Set<Int>> = _favoriteCharacters
+    val favoriteCharacters: StateFlow<Set<Int>> = _favoriteCharacters.asStateFlow()
 
     // Estado reactivo que almacena los personajes favoritos en Room
-    val characters: StateFlow<List<Character>> =
-        characterDao.getAllCharactersDb().map { list -> list.map { it.toCharacter() } }
-            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    private val _characters = MutableStateFlow<List<Character>>(emptyList())
+    val characters: StateFlow<List<Character>> = _characters.asStateFlow()
+
 
     init {
         loadFavorites()
     }
 
+    // 🔹 Cargar personajes y marcar favoritos
     private fun loadFavorites() {
         viewModelScope.launch {
-            characterDao.getAllCharactersDb().collect { characters ->
-                _favoriteCharacters.value = characters.map { it.id }.toSet()
+            getAllCharactersUseCase.execute().collect { charactersList ->
+                _characters.value = charactersList
+                _favoriteCharacters.value = charactersList.mapNotNull {
+                    if (it.esFavorito) it.id else null
+                }.toSet()
             }
         }
     }
 
     fun toggleFavorite(character: Character) {
         viewModelScope.launch {
-            val exists = characterDao.getCharacterById(character.id)
-            if (exists == null) {
-                characterDao.insertCharacterDb(character.toCharacterDb())
+            val existsCharacter = getCharacterByIdUseCase.execute(character.id)
+
+            if (existsCharacter == null) {
+                insertCharacterUseCase.execute(character)
             } else {
-                characterDao.deleteCharacterDb(exists)
+                deleteCharacterUseCase.execute(existsCharacter)
             }
-           // loadFavorites() // 🔄 Actualiza la lista de favoritos
+           loadFavorites() // 🔄 Actualiza la lista de favoritos
         }
     }
 }
