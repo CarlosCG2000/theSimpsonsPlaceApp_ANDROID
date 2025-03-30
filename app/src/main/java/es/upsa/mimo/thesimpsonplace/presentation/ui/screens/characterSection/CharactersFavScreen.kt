@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,8 +23,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersFilterName.ListCharactersFilterViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 import kotlin.Int
 
 @Composable
@@ -31,8 +34,7 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
                         navigateToFilterCharacters: () -> Unit,
                         navigationArrowBack:() -> Unit
 ) {
-    val favorites = viewModel.favoriteCharacters.collectAsState()
-    val characters = viewModel.characters.collectAsState()
+    val stateFav: State<ListCharactersDbStateUI> = viewModel.stateCharacterFav.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -55,13 +57,13 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
                 .padding(paddingValues)
         ) {
 
-            if (characters.value.isEmpty()) {
+            if (stateFav.value.characters.isEmpty()) {
                 Text(text = "No tienes personajes favoritos", fontSize = 20.sp)
             } else {
                 CharacterList(
                     modifier = Modifier.fillMaxSize(),
-                    characters = characters.value,
-                    favoriteCharacters = favorites.value,
+                    characters = stateFav.value.characters, // todos los personajes en la Base datos (ya van a ser favoritos)
+                    favoriteCharacters = stateFav.value.charactersSet,
                     onToggleFavorite = { character -> viewModel.toggleFavorite(character) }
                 )
             }

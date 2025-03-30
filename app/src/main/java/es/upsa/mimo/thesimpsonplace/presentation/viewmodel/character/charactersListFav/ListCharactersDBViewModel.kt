@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character
+package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,11 +9,9 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersD
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetCharacterDbByIdUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDbUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toSet
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,13 +23,15 @@ class ListCharactersDBViewModel @Inject constructor(
     private val deleteCharacterUseCase: DeleteCharacterDbUseCase
 ) : ViewModel() {
 
-    private val _favoriteCharacters = MutableStateFlow<Set<Int>>(emptySet())
-    val favoriteCharacters: StateFlow<Set<Int>> = _favoriteCharacters.asStateFlow()
+    private val _stateCharacterFav = MutableStateFlow<ListCharactersDbStateUI>(ListCharactersDbStateUI())
+    val stateCharacterFav: StateFlow<ListCharactersDbStateUI> = _stateCharacterFav.asStateFlow()
 
-    // Estado reactivo que almacena los personajes favoritos en Room
-    private val _characters = MutableStateFlow<List<Character>>(emptyList())
-    val characters: StateFlow<List<Character>> = _characters.asStateFlow()
-
+//    private val _charactersSet = MutableStateFlow<Set<Int>>(emptySet())
+//    val charactersSet: StateFlow<Set<Int>> = _charactersSet.asStateFlow()
+//
+//    // Estado reactivo que almacena los personajes favoritos en Room
+//    private val _characters = MutableStateFlow<List<Character>>(emptyList())
+//    val characters: StateFlow<List<Character>> = _characters.asStateFlow()
 
     init {
         loadFavorites()
@@ -41,23 +41,29 @@ class ListCharactersDBViewModel @Inject constructor(
     private fun loadFavorites() {
         viewModelScope.launch {
             getAllCharactersUseCase.execute().collect { charactersList ->
-                _characters.value = charactersList
-                _favoriteCharacters.value = charactersList.mapNotNull {
-                    if (it.esFavorito) it.id else null
-                }.toSet()
+
+                _stateCharacterFav.update {
+                    it.copy(charactersSet = charactersList.mapNotNull { it.id }.toSet(),  // todos los personajes de la BD que son favoritos (en este caso siempre van a ser todos)
+                            characters = charactersList) // todos los personajes de la BD
+                }
+
+//                _charactersSet.value = charactersList.mapNotNull {
+//                    if (it.esFavorito) it.id else null
+//                }.toSet()
             }
         }
     }
 
     fun toggleFavorite(character: Character) {
         viewModelScope.launch {
-            val existsCharacter = getCharacterByIdUseCase.execute(character.id)
+            val existsCharacter = getCharacterByIdUseCase.execute(character.id) // se comprueba si existe el personaje en la BD
 
             if (existsCharacter == null) {
                 insertCharacterUseCase.execute(character)
             } else {
                 deleteCharacterUseCase.execute(existsCharacter)
             }
+
            loadFavorites() // 🔄 Actualiza la lista de favoritos
         }
     }

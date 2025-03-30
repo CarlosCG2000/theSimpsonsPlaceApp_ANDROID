@@ -34,20 +34,27 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersFilterName.ListCharactersFilterStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersFilterName.ListCharactersFilterViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewModel(),
+                          viewModelDB: ListCharactersDBViewModel = hiltViewModel(),
                           navigateToAllCharacters: () -> Unit,
                           navigateToFavoriteCharacters: () -> Unit,
                           navigationArrowBack:() -> Unit
 ) {
 
     val state: State<ListCharactersFilterStateUI> = viewModel.stateCharacterFilter.collectAsState() // sincrono para manejarlo en la UI
+
+    val stateFav: State<ListCharactersDbStateUI> = viewModelDB.stateCharacterFav.collectAsState()
 
     var filtroNombre by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
     var debounceJob by remember { mutableStateOf<Job?>(null) } // Para cancelar el debounce
@@ -132,7 +139,11 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
             if(state.value.isLoading){
                 CircularProgressIndicator(color = Color.Yellow)
             } else {
-                // CharacterList(character = state.value.characters)
+                CharacterList(
+                    modifier = Modifier.fillMaxSize(),
+                    characters = state.value.characters,
+                    favoriteCharacters = stateFav.value.charactersSet, // personajes favoritos
+                    onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
             }
             }
         }

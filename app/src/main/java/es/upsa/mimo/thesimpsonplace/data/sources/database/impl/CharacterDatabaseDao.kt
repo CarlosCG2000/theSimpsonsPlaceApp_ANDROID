@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CharacterDatabaseRoomDao {
 
-    @Query("SELECT * FROM characters ORDER BY id ASC")
+    @Query("SELECT * FROM characters ORDER BY nombre ASC") // ORDER BY id ASC
     fun getAllCharactersDb(): Flow<List<CharacterDb>>
 
     @Query("SELECT * FROM characters WHERE id = :id LIMIT 1")

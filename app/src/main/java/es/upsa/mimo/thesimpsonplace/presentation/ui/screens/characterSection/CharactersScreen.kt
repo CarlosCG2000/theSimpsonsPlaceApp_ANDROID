@@ -46,7 +46,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 
 @Composable
 fun CharactersScreen(
@@ -57,14 +58,10 @@ fun CharactersScreen(
     navigationArrowBack:() -> Unit
 ) {
     val state: State<ListCharactersStateUI> = viewModel.stateCharacter.collectAsState() // sincrono para manejarlo en la UI
-
-    val favoriteCharactersSet by viewModelDB.favoriteCharacters.collectAsState()
-
-//    val context = LocalContext.current
-//    val characterDao = remember { context.database.characterDbDao() } // recuperamos durectamente el 'abstract fun todoDao(): TodoDao'
+    val stateFav: State<ListCharactersDbStateUI> = viewModelDB.stateCharacterFav.collectAsState()
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
-    LaunchedEffect(Unit, /* state.value.characters */ /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
+    LaunchedEffect(Unit /*Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
         viewModel.getAllCharacters()
     }
 
@@ -95,10 +92,12 @@ fun CharactersScreen(
                 CircularProgressIndicator(
                     color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                 )
-            } else {
-                CharacterList(modifier = Modifier.fillMaxSize(),
-                    characters = state.value.characters,
-                    favoriteCharacters = favoriteCharactersSet,
+            }
+            else {
+                CharacterList(
+                    modifier = Modifier.fillMaxSize(),
+                    characters = state.value.characters, // se muestran todos los personajes (indepen de que sean de la BD o no)
+                    favoriteCharacters =  stateFav.value.charactersSet, // saber que personajes son favoritos
                     onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
             }
         }
