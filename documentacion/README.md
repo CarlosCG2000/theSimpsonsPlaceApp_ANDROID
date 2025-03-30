@@ -1917,3 +1917,20 @@ NO ME FUNCIONA PARA EL LENGUAJE DE FORMA AUTOMATICA ME TENGO QUE SALIR DEL ACTIV
 - Casos de usos: todos interfaces e implementaciones de las funciones de forma individual como casos de uso. Tanto del json/api como base de datos.
 - di: `DatabaseModule.kt` añado la inyección de dependencias de los daos de la base de datos. `DomainModule.kt` añado la conexión de la interfaz de los repositorios y los casos de uso con su implementaciones por defecto para tambien la inyección de dependencias.
 - viewmodel: 
+
+
+* Conversión de los datos fundamentales para las entidades de la BD a los datos que de verdad quiero utilizar para la aplicación.
+Es la clase `Converters` definida dentro del fichero `TheSimpsonsDatabaseRoom.kt`.
+La anotación `@TypeConverters(Converters::class)` le dice a Room que use la clase `Converters` para convertir tipos de datos que `no son compatibles de manera nativa`, como `List<String>`, en un formato que sí puede almacenar en la base de datos (por ejemplo, String en formato JSON).
+
+¿Por qué es necesario?
+Room no sabe cómo guardar una `List<String>`, `URL`, `Date`, ... en la base de datos porque `SQLite` solo soporta tipos básicos como `String`, `Int`, `Boolean`, etc.
+Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`:
+1. Convierta una `List<String>` en un `String` (para guardarla en `SQLite`).
+2. Convierta un `String` de vuelta a una `List<String>` (cuando lo leamos desde la BD).
+
+* Ejemplo de migración de BD para añadir nuevas tablas `episodes`y `quotes` a la base de datos que solo contenia `characters`.
+    ✨ Pasos para la migración en Room
+    1. Aumenta la versión de la base de datos (de version = 1 a version = 2). En 'TheSimpsonsDatabaseRoom'.
+    2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
+    3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').

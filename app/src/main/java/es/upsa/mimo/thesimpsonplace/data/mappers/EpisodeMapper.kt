@@ -33,9 +33,6 @@ fun EpisodeDto.toEpisode(): Episode{
 }
 
 // ROOM
-fun toTimestamp(date: Date): Long {
-    return date.time
-}
 
 // Lo pasamos de la fuente de información a la BD siendo (ambos falsos, uno de ello verdadero o ambos verdaderos). Ya que no es como en 'Character' y 'Quote' que si estaban en la BD es porque es favorito aqui pueden estar los episodios en la BD y luego no estar ni en favoritos ni en vistos o estar solo en una de las dos cosas.
 fun Episode.toEpisodeDb(isFav: Boolean = false,
@@ -44,7 +41,7 @@ fun Episode.toEpisodeDb(isFav: Boolean = false,
         titulo =  titulo,
         temporada = temporada,
         episodio = episodio,
-        lanzamiento = toTimestamp(lanzamiento), // Se convierte de Date a Long,
+        lanzamiento = lanzamiento, // Se convierte de Date a Long,
         directores = directores,
         escritores = escritores,
         descripcion = descripcion,
@@ -54,20 +51,16 @@ fun Episode.toEpisodeDb(isFav: Boolean = false,
         esVisto = isView)
 }
 
-fun toDate(timestamp: Long): Date {
-    return Date(timestamp)
-}
-
 fun EpisodeDb.toEpisode(): Episode {
     return Episode( id = id,
         titulo =  titulo,
         temporada = temporada ,
         episodio = episodio,
-        lanzamiento = toDate(lanzamiento), // Se convierte de String a Date,
-        directores = directores ,
-        escritores = escritores ,
-        descripcion = descripcion ,
-        valoracion = valoracion ,
+        lanzamiento = lanzamiento, // Se convierte de String a Date,
+        directores = directores,
+        escritores = escritores,
+        descripcion = descripcion,
+        valoracion = valoracion,
         invitados = invitados,
         esFavorito = esFavorito,
         esVisto = esVisto)
