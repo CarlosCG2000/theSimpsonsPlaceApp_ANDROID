@@ -6,11 +6,5 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.InsertEpisodeDbUseC
 import javax.inject.Inject
 
 class InsertEpisodeDbUseCaseImpl  @Inject constructor(val repository: EpisodeRepository): InsertEpisodeDbUseCase {
-
-    override suspend fun execute(
-        episode: Episode,
-        esView: Boolean,
-        isFav: Boolean
-    ) = repository.insertEpisodeDb(episode, esView, isFav)
-
+    override suspend fun execute(episode: Episode) = repository.insertEpisodeDb(episode)
 }

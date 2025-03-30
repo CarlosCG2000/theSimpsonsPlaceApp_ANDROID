@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav
+package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

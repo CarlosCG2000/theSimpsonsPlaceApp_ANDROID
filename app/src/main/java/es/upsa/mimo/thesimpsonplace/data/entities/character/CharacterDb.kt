@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class CharacterDb(
     @PrimaryKey(autoGenerate = false) // importante poner clave primaria
     val id: Int,
-    @ColumnInfo(name = "nombre") // Para que coincida con el JSON
+    // @ColumnInfo(name = "nombre") // Para que coincida con el JSON
     val nombre: String,
     val genero: Gender, // Contiene el género como Gender
     val imagen: String? = null

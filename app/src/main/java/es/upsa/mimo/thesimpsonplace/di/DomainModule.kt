@@ -8,6 +8,8 @@ import es.upsa.mimo.thesimpsonplace.data.sources.database.GameDatastoreDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.UserDatastoreDao
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.GameDatastoreDaoImpl
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.UserDatastoreDaoImpl
+import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 import es.upsa.mimo.thesimpsonplace.domain.repository.* //CharaterRepository
 import es.upsa.mimo.thesimpsonplace.domain.repository.impl.* //CharaterRepositoryImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.* //FetchAllCharactersDbUseCase
@@ -26,6 +28,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.user.UpdateUserUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.* // DeleteQuoteDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
 // Un @Module no puede contener métodos abstractos (@Binds) y métodos concretos (@Provides) al mismo tiempo. Por ello se crea una nueva clase.
@@ -83,11 +86,15 @@ abstract class DomainModule {
     @Binds
     abstract fun bindGetAllEpisodesDbUseCase(impl: GetAllEpisodesDbUseCaseImpl): GetAllEpisodesDbUseCase
     @Binds
-    abstract fun bindGetEpisodeByIdDbUseCase(impl: GetEpisodeByIdDbUseCaseImpl): GetEpisodeByIdDbUseCase
+    abstract fun bindGetEpisodeByIdDbUseCase(impl: GetEpisodeDbByIdUseCaseImpl): GetEpisodeDbByIdUseCase
     @Binds
-    abstract fun bindGetEpisodeByIdsDbUseCase(impl: GetEpisodeByIdsDbUseCaseImpl): GetEpisodeByIdsDbUseCase
+    abstract fun bindGetWatchedEpisodesUseCase(impl: GetWatchedEpisodesUseCaseImpl): GetWatchedEpisodesUseCase
     @Binds
-    abstract fun bindUpdateEpisodeDbUseCase(impl: UpdateEpisodeDbUseCaseImpl): UpdateEpisodeDbUseCase
+    abstract fun bindIsEpisodeDbWatchedDbUseCase(impl: IsEpisodeDbWatchedUseCaseImpl): IsEpisodeDbWatchedUseCase
+    @Binds
+    abstract fun bindIsEpisodeDbFavoriteUseCase(impl: IsEpisodeDbFavoriteUseCaseImpl): IsEpisodeDbFavoriteUseCase
+    @Binds
+    abstract fun bindUpdateEpisodeDbUseCase(impl: UpdateEpisodeDbStatusUseCaseImpl): UpdateEpisodeDbStatusUseCase
     @Binds
     abstract fun bindInsertEpisodeDbUseCase(impl: InsertEpisodeDbUseCaseImpl): InsertEpisodeDbUseCase
 
@@ -102,6 +109,8 @@ abstract class DomainModule {
 
     @Binds
     abstract fun bindGetAllQuoteDbUseCase(impl: GetAllQuoteDbUseCaseImpl): GetAllQuoteDbUseCase
+    @Binds
+    abstract fun bindGetQuoteDbByCitaUseCase(impl: GetQuoteDbByCitaUseCaseImpl): GetQuoteDbByCitaUseCase
     @Binds
     abstract fun bindDeleteQuoteDbUseCase(impl: DeleteQuoteDbUseCaseImpl): DeleteQuoteDbUseCase
     @Binds

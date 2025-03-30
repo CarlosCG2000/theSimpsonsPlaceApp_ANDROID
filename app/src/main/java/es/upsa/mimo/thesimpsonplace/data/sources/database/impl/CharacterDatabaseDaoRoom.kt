@@ -22,13 +22,12 @@ import kotlinx.coroutines.flow.Flow
 
 // Las operaciones para la Base de datos de la entidad de Character
 @Dao
-interface CharacterDatabaseRoomDao {
-
+interface CharacterDatabaseDaoRoom {
     @Query("SELECT * FROM characters ORDER BY nombre ASC") // ORDER BY id ASC
     fun getAllCharactersDb(): Flow<List<CharacterDb>>
 
     @Query("SELECT * FROM characters WHERE id = :id LIMIT 1")
-    suspend fun getCharacterById(id: Int): CharacterDb?
+    suspend fun getCharacterDbById(id: Int): CharacterDb?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterDb(character: CharacterDb)

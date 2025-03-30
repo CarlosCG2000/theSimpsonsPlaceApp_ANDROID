@@ -1,19 +1,27 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
+import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
 import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisode
-import es.upsa.mimo.thesimpsonplace.data.sources.database.EpisodeDatabaseDao
+import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisodeDb
+import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.EpisodeDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
+import kotlin.collections.map
 
 class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
-                                                val databaseDao: EpisodeDatabaseDao): EpisodeRepository {
+                                                private val databaseDao: EpisodeDatabaseDaoRoom): EpisodeRepository {
 
+/**
     suspend fun fusionSourceDB(episodesSource: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
             val ids: List<String> = episodesSource.map { it.id } // Se optienen los ids de todos los episodios
@@ -37,38 +45,35 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
             }
         }
     }
+*/
 
     // _____________________________ DEL MOCK JSON O API _____________________________
     override suspend fun getAllEpisodes(): List<Episode> {
         return withContext(Dispatchers.IO) {
             // 🚀 1️⃣ Cargar datos del JSON/API
-            val allEpisodesDto: List<EpisodeDto> =
-                dao.getAllEpisodes() // Se obtienen todos los episodios de la funete de datos (mock Json, Api, etc)
-            val allEpisodes: List<Episode> =
-                allEpisodesDto.map { it.toEpisode() } // Se mapean a episodios para utilizar en las vistas
+            dao.getAllEpisodes().map { it.toEpisode() } // Se mapean a episodios para utilizar en las vistas
 
-            fusionSourceDB(allEpisodes)
+            // fusionSourceDB(allEpisodes)
         }
     }
 
     override suspend fun getEpisodeById(id: String): Episode? {
         return withContext(Dispatchers.IO) {
             // 🚀 1️⃣ Cargar datos del JSON/API
-            val episodeDto: EpisodeDto? = dao.getEpisodeById(id = id)
-            val episode: Episode? = episodeDto?.toEpisode()
+            dao.getEpisodeById(id = id)?.toEpisode()
 
-            // 🚀 2️⃣ Cargar datos de la BD
-            val episodeDB: Episode? = databaseDao.getEpisodeByIdDb(id)
-
-            // 🚀 3️⃣️ Resultado final de los datos
-            if (episode != null && episodeDB != null){
-                  episode.copy(
-                    esFavorito = episodeDB.esFavorito,
-                    esVisto = episodeDB.esVisto
-                )
-            } else{
-                episode
-            }
+//            // 🚀 2️⃣ Cargar datos de la BD
+//            val episodeDB: Episode? = databaseDao.getEpisodeByIdDb(id)
+//
+//            // 🚀 3️⃣️ Resultado final de los datos
+//            if (episode != null && episodeDB != null){
+//                  episode.copy(
+//                    esFavorito = episodeDB.esFavorito,
+//                    esVisto = episodeDB.esVisto
+//                )
+//            } else{
+//                episode
+//            }
 
         }
     }
@@ -78,48 +83,68 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
         return withContext(Dispatchers.IO) {
 
             // 🚀 1️⃣ Cargar datos del JSON/API
-            val episodesDtoByTitle: List<EpisodeDto> = dao.getEpisodesByTitle(title)
-            val episodesByTitle: List<Episode> = episodesDtoByTitle.map { it.toEpisode() }
+            val episodesFilter: List<Episode> = dao.getEpisodesByTitle(title).map { it.toEpisode() }
 
-            // 🚀 2️⃣ Filtrar solo los episodios que están en ambas listas
-            val filteredEpisodes = episodesByTitle.filter { it in episodes }
-
-            fusionSourceDB(if(episodes.isEmpty()) episodesByTitle else filteredEpisodes)
+            if (episodesFilter == emptyList<Episode>()){
+                episodes
+            } else {
+                val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
+                episodes.filter { episodeIdsFilter.contains(it.id) == true }
+            }
+//            // 🚀 2️⃣ Filtrar solo los episodios que están en ambas listas
+//            val filteredEpisodes = episodesByTitle.filter { it in episodes }
+//
+//            fusionSourceDB(if(episodes.isEmpty()) episodesByTitle else filteredEpisodes)
         }
     }
 
     override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?,
                                            episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
-            val episodesDtoByDate: List<EpisodeDto> = dao.getEpisodesByDate(minDate, maxDate)
-            val episodesByDate: List<Episode> = episodesDtoByDate.map { it.toEpisode() }
+            val episodesFilter: List<Episode> = dao.getEpisodesByDate(minDate, maxDate).map { it.toEpisode() }
 
-            // 🚀 2️⃣ Filtrar solo los episodios que están en ambas listas
-            val filteredEpisodes = episodesByDate.filter { it in episodes }
-
-            fusionSourceDB(if(episodes.isEmpty()) episodesByDate else filteredEpisodes)
+            if (episodesFilter == emptyList<Episode>()){
+                episodes
+            } else {
+                val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
+                episodes.filter { episodeIdsFilter.contains(it.id) == true }
+            }
+//            // 🚀 2️⃣ Filtrar solo los episodios que están en ambas listas
+//            val filteredEpisodes = episodesByDate.filter { it in episodes }
+//
+//            fusionSourceDB(if(episodes.isEmpty()) episodesByDate else filteredEpisodes)
         }
     }
 
     override suspend fun getEpisodesBySeason(season: Int,
                                              episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
-            val episodesDtoBySeason: List<EpisodeDto> = dao.getEpisodesBySeason(season)
-            val episodesBySeason: List<Episode> = episodesDtoBySeason.map { it.toEpisode() }
-            val filteredEpisodes = episodesBySeason.filter { it in episodes }
+            val episodesFilter: List<Episode> = dao.getEpisodesBySeason(season).map { it.toEpisode() }
+            // val filteredEpisodes = episodesBySeason.filter { it in episodes }
 
-            fusionSourceDB(if(episodes.isEmpty()) episodesBySeason else filteredEpisodes)
+            if (episodesFilter == emptyList<Episode>()){
+                episodes
+            } else {
+                val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
+                episodes.filter { episodeIdsFilter.contains(it.id) == true }
+            }
+            // fusionSourceDB(if(episodes.isEmpty()) episodesBySeason else filteredEpisodes)
         }
     }
 
     override suspend fun getEpisodesByChapter(chapter: Int,
                                               episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
-            val episodesDtoByChapter: List<EpisodeDto> = dao.getEpisodesByChapter(chapter)
-            val episodesByChapter: List<Episode> = episodesDtoByChapter.map { it.toEpisode() }
-            val filteredEpisodes = episodesByChapter.filter { it in episodes }
+            val episodesFilter: List<Episode> = dao.getEpisodesByChapter(chapter).map { it.toEpisode() }
 
-            fusionSourceDB(if(episodes.isEmpty()) episodesByChapter else filteredEpisodes)
+            if (episodesFilter == emptyList<Episode>()){
+                episodes
+            } else {
+                val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
+                episodes.filter { episodeIdsFilter.contains(it.id) == true }
+            }
+
+            // fusionSourceDB(if(episodes.isEmpty()) episodesByChapter else filteredEpisodes)
         }
     }
 
@@ -128,9 +153,17 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
                                            episodes: List<Episode>): List<Episode> {
         return withContext(Dispatchers.IO) {
 
-            val episodesMapper = fusionSourceDB(episodes)
+            val listEpisodeFav = getWatchedEpisodes().firstOrNull()
 
-            episodesMapper.filter { it.esVisto == isView }
+            if (listEpisodeFav != null) {
+                val episodeIdsInDB = listEpisodeFav.map { it.id }.toSet()
+                if (isView) episodes.filter { episodeIdsInDB.contains(it.id) == true }
+                else        episodes.filter { episodeIdsInDB.contains(it.id) == false }
+            } else {
+                if (isView) emptyList()
+                else        episodes
+            }
+
         }
     }
 
@@ -140,37 +173,41 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
                else episodes.sortedByDescending { it.lanzamiento }
     }
 
-    // _____________________________ DE LA BASE DE DATOS _____________________________
-    override suspend fun getAllEpisodesDb(): List<Episode> {
-        return withContext(Dispatchers.IO) {
-            val episodesDb: List<Episode> = databaseDao.getAllEpisodesDb()
-            episodesDb
+    // _____________________________ ROOM - BASE DE DATOS _____________________________
+    override fun getAllEpisodesDb(): Flow<List<Episode>> {
+        return databaseDao.getAllEpisodesDb().map { list ->
+            list.map { it.toEpisode() }
         }
     }
 
-    override suspend fun getEpisodeByIdDb(id: String): Episode? {
-        return withContext(Dispatchers.IO) {
-            val episodeDb: Episode? = databaseDao.getEpisodeByIdDb(id)
-            episodeDb
+    override suspend fun getEpisodeDbById(episodeId: String): Episode? {
+        return databaseDao.getEpisodeDbById(episodeId)?.toEpisode()
+    }
+
+    override fun getWatchedEpisodes(): Flow<List<Episode>> {
+        return databaseDao.getWatchedEpisodes().map { list ->
+            list.map { it.toEpisode() }
         }
     }
 
-    override suspend fun getEpisodeByIdsDb(ids: List<String>): List<Episode>? {
-        return withContext(Dispatchers.IO) {
-            val episodesDb: List<Episode>? = databaseDao.getEpisodeByIdsDb(ids)
-            episodesDb
-        }
+    override suspend fun isEpisodeDbWatched(episodeId: String): Boolean? {
+        return databaseDao.isEpisodeDbWatched(episodeId)
     }
 
-    override suspend fun updateEpisodeDb(id: String, isView: Boolean, isFav: Boolean) {
-        return withContext(Dispatchers.IO) {
-            databaseDao.updateEpisodeDb(id, isView, isFav)
-        }
+    override suspend fun isEpisodeDbFavorite(episodeId: String): Boolean? {
+        return databaseDao.isEpisodeDbFavorite(episodeId)
     }
 
-    override suspend fun insertEpisodeDb(episode: Episode, isView: Boolean, isFav: Boolean) {
-        return withContext(Dispatchers.IO) {
-            databaseDao.insertEpisodeDb(episode, isView, isFav)
-        }
+    override suspend fun insertEpisodeDb(episode: Episode) { // OJO MODIFCAR EL EPISODIO QUE SE PASE CON SU VIEW Y FAVBORITE CORRESPONDIENTE AL AÑADIRSE
+         databaseDao.insertEpisodeDb(episode.toEpisodeDb(isFav = episode.esFavorito, isView = episode.esVisto))
     }
+
+    override suspend fun updateEpisodeDbStatus(
+        episodeId: String,
+        esVisto: Boolean, // SU NUEVO 'esVisto'
+        esFavorito: Boolean // SU NUEVO 'esFavorito'
+    ) {
+        databaseDao.updateEpisodeDbStatus(episodeId = episodeId, esVisto = esVisto, esFavorito = esFavorito)
+    }
+
 }

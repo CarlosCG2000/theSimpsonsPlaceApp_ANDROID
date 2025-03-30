@@ -1540,9 +1540,9 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 - VER BIEN LOS `COLORES`, `ESTILOS` Y `STRINGS` (RECURSOS) DE LA PANTALLA ⚠️
 - EDITAR LA `INTERFAZ` PARA QUE SEA LA BONITA Y BUENA DE VERDAD ⚠️
 
-
 - HAGO EL ASPECTO DE LA GRÁFICA DE LA PANTALLA DEL JUEGO FINAL. ⚠️
 - DEJO PREPARADA LAS PANTALLAS DE FAVORITOS. ⚠️
+- ERRORES SON LAS DEPENDENCIAS QUE NO ME FUNCIONA EN KPT Y EL IDIOMA DEL DATASTORE POR DEFECTO ❌
 
 - EMPEZAR VIDEO DE: `https://www.youtube.com/watch?v=lX7CeooKCcQ&t=13959s`
 
@@ -1898,14 +1898,22 @@ class GetAllCharactersUseCase @Inject constructor(private val repository: Charac
 
 Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repository, no en el ViewModel.
 
-# Añadido `DataStore Preferences`
+# Añadido `DataStore Preferences` ✅
 La base de datos (BD) en el data source generalmente se refiere a la capa donde almacenas y recuperas datos persistentes, como Room Database o DataStore en este caso.
 
-En tu implementación, estás usando DataStore Preferences, que es ideal para almacenar pequeñas configuraciones como estadísticas de juego y preferencias de usuario. La estructura típica sería:
-1.	DataSource: Se encarga de acceder a DataStore y gestionar los datos.
-2.	Repository: Interactúa con el DataSource y proporciona datos a la capa de dominio.
-3.	ViewModel: Recupera los datos del repositorio y los expone a la UI.
+En tu implementación, estás usando `DataStore Preferences`, que es ideal para almacenar pequeñas configuraciones como `estadísticas de juego y preferencias de usuario`. La estructura típica sería:
+1.	`DataSource`: Se encarga de acceder a DataStore y gestionar los datos.
+2.	`Repository`: Interactúa con el DataSource y proporciona datos a la capa de dominio.
+3.	`ViewModel`: Recupera los datos del repositorio y los expone a la UI.
 
 NO ME FUNCIONA PARA EL LENGUAJE DE FORMA AUTOMATICA ME TENGO QUE SALIR DEL ACTIVITY Y VOLVER A ENTRAR PARA QUE SE APLIQUE EL LENGUAJE ❌
 
 # Añadido `Room`
+- Entities: creamos las entidades (tablas) para la BD (las columnas para la BD) --> `CharacterDb.kt`, `EpisodeDb.kt`, `QuoteDb.kt`.
+- Implementacion directa de los Daos (la propia interfaz es la iomplementación) --> `CharacterDatabaseDaoRoom.kt`, `EpisodeDatabaseDaoRoom.kt`, `QuoteDatabaseDaoRoom.kt`
+- Mapeo de las entidades de la aplicacion (domain) a las de la base de datos (las entidades (tablas)) y viceversa --> `CharacterMapper.kt`, `EpisodeMapper.kt`, `QuoteMapper.kt`
+- `TheSimpsonsDatabaseRoom.kt`: definimos la base de datos con las tablas (entidades) y los daos.
+- Repositorio: con sus interfaces `CharaterRepository.kt`, `EpisodeRepository.kt`, `EpisodeRepository.kt` (que cuentan con las operaciones del json/api y de la base de datos) y sus implementaciones unicas `CharaterRepositoryImpl.kt`, `EpisodeRepositoryImpl.kt`, `EpisodeRepositoryImpl.kt`
+- Casos de usos: todos interfaces e implementaciones de las funciones de forma individual como casos de uso. Tanto del json/api como base de datos.
+- di: `DatabaseModule.kt` añado la inyección de dependencias de los daos de la base de datos. `DomainModule.kt` añado la conexión de la interfaz de los repositorios y los casos de uso con su implementaciones por defecto para tambien la inyección de dependencias.
+- viewmodel: 

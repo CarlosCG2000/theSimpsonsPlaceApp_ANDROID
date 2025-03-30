@@ -1,7 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.domain.usescases.quote
 
+import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+
 
 interface DeleteQuoteDbUseCase {
-    suspend fun execute(cita: String)
-    // operator fun invoke(cita: String) --> OTRA OPCIÓN DE DEFINIRLO
+    suspend fun execute(quote: Quote)
+    // operator fun invoke(quote: Quote) --> OTRA OPCIÓN DE DEFINIRLO
 }

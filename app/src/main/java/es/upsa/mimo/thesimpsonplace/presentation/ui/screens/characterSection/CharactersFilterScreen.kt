@@ -136,15 +136,15 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
                 //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
                 contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
-            if(state.value.isLoading){
-                CircularProgressIndicator(color = Color.Yellow)
-            } else {
-                CharacterList(
-                    modifier = Modifier.fillMaxSize(),
-                    characters = state.value.characters,
-                    favoriteCharacters = stateFav.value.charactersSet, // personajes favoritos
-                    onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
-            }
+                if(state.value.isLoading){
+                    CircularProgressIndicator(color = Color.Yellow)
+                } else {
+                    CharacterList(
+                        modifier = Modifier.fillMaxSize(),
+                        characters = state.value.characters,
+                        favoriteCharacters = stateFav.value.charactersSet, // personajes favoritos
+                        onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
+                }
             }
         }
     }

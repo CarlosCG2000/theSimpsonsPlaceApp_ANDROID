@@ -1,7 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 interface EpisodeRepository {
@@ -22,9 +24,12 @@ interface EpisodeRepository {
                                  episodes: List<Episode> = emptyList()): List<Episode>
 
     // Casos de uso de la datos de la base de datos
-    suspend fun getAllEpisodesDb(): List<Episode>
-    suspend fun getEpisodeByIdDb(id: String): Episode?
-    suspend fun getEpisodeByIdsDb(ids: List<String>): List<Episode>?
-    suspend fun updateEpisodeDb(id: String, esView: Boolean, isFav: Boolean): Unit
-    suspend fun insertEpisodeDb(episode: Episode, esView: Boolean, isFav: Boolean): Unit
+    fun getAllEpisodesDb(): Flow<List<Episode>>
+    suspend fun getEpisodeDbById(episodeId: String): Episode?
+    fun getWatchedEpisodes(): Flow<List<Episode>>
+    suspend fun isEpisodeDbWatched(episodeId: String): Boolean?
+    suspend fun isEpisodeDbFavorite(episodeId: String): Boolean?
+    suspend fun insertEpisodeDb(episode: Episode)
+    suspend fun updateEpisodeDbStatus(episodeId: String, esVisto: Boolean, esFavorito: Boolean)
 }
+

@@ -54,7 +54,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -62,11 +61,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection.DatePickerDialogComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesFilterStateUI
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesFilterViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters.ListEpisodesFilterStateUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters.ListEpisodesFilterViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -1,10 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
-import android.content.Context
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
 import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
 import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacterDb
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseRoomDao
+import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 // 	@Inject constructor(...): Hilt puede inyectarlo directamente sin necesidad de un @Provides en el AppModule.
 class CharaterRepositoryImpl @Inject constructor(val dao: CharacterDao,
-                                                 private val databaseDao: CharacterDatabaseRoomDao): CharaterRepository {
+                                                 private val databaseDao: CharacterDatabaseDaoRoom): CharaterRepository {
 
     override suspend fun getAllCharacters(): List<Character> {
         return withContext(Dispatchers.IO) { // withContext cambia el contexto de ejecución de la corrutina sin crear una nueva
@@ -66,7 +65,7 @@ class CharaterRepositoryImpl @Inject constructor(val dao: CharacterDao,
     }
 
     override suspend fun getCharacterDbById(id: Int): Character? {
-        return databaseDao.getCharacterById(id)?.toCharacter()
+        return databaseDao.getCharacterDbById(id)?.toCharacter()
     }
 
     override suspend fun insertCharacterDb(character: Character) {
