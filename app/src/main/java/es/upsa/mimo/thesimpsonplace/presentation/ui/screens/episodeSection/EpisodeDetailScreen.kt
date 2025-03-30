@@ -53,6 +53,8 @@ import es.upsa.mimo.thesimpsonplace.domain.mappers.toFormattedString
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
 
 @Composable
 fun EpisodeDetailScreen(
@@ -87,17 +89,24 @@ fun EpisodeDetailScreen(
                     color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                 )
             } else {
-                CharacterDetails( state.value.episode)
+               // CharacterDetails( state.value.episode )
+                state.value.episode?.let { episode ->
+                    CharacterDetails(episode)
+                }
             }
         }
     }
 }
 
 @Composable
-fun CharacterDetails(episode: Episode?) {
-    var isFavorite by remember { mutableStateOf(episode?.esFavorito == true) }
-    var isView by remember { mutableStateOf(episode?.esVisto == true) }
+fun CharacterDetails(episode: Episode,
+                     viewModelDB: ListEpisodesDBViewModel = hiltViewModel()) {
 
+    val stateFavOrView: State<ListEpisodesDbStateUI> = viewModelDB.stateEpisodesFavOrView.collectAsState()
+
+    // Verificar si el episodio es favorito o visto en la BD
+    val isFavorite = stateFavOrView.value.episodesFavSet.contains(episode.id)
+    val isView = stateFavOrView.value.episodesViewSet.contains(episode.id)
 
     Column(
         modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
@@ -156,7 +165,9 @@ fun CharacterDetails(episode: Episode?) {
 
                 Switch(
                     checked = isFavorite == true,
-                    onCheckedChange = { isFavorite = !isFavorite },
+                    onCheckedChange = {
+                        viewModelDB.toggleFavoriteOrView(episode = episode, fav = !isFavorite, view = isView)
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Yellow,
                         checkedTrackColor = Color.Yellow.copy(alpha = 0.2f) // Fondo amarillo con transparencia
@@ -172,7 +183,9 @@ fun CharacterDetails(episode: Episode?) {
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                IconButton(onClick = { isView = !isView }) {
+                IconButton(onClick = {
+                    viewModelDB.toggleFavoriteOrView(episode = episode, fav = isFavorite == true, view = !isView)
+                }) {
                     Icon(
                         imageVector = if (isView == true) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = "Visto",

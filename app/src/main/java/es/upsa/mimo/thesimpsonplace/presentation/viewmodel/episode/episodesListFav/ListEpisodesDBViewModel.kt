@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,9 +23,9 @@ import javax.inject.Inject
 class ListEpisodesDBViewModel @Inject constructor(
     private val getAllEpisodesDbUseCase: GetAllEpisodesDbUseCase,
     private val getEpisodeDbByIdUseCase: GetEpisodeDbByIdUseCase,
-//    private val getWatchedEpisodesUseCase: GetWatchedEpisodesUseCase, // NO SE NECESITA AQUÍ, PERO SE UTILIZAR EN OTRO CASO DE USO DE FILTROS DE EPISODIOS POR VIEWS
-//    private val isEpisodeDbWatchedUseCase: IsEpisodeDbWatchedUseCase, // NO SE NECESITA
-//    private val isEpisodeDbFavoriteUseCase: IsEpisodeDbFavoriteUseCase, // NO SE NECECITA
+//    private val getWatchedEpisodesUseCase: GetWatchedEpisodesUseCase,     // NO SE NECESITA AQUÍ, PERO SE UTILIZAR EN OTRO CASO DE USO DE FILTROS DE EPISODIOS POR VIEWS
+//    private val isEpisodeDbWatchedUseCase: IsEpisodeDbWatchedUseCase,     // NO SE NECESITA
+//    private val isEpisodeDbFavoriteUseCase: IsEpisodeDbFavoriteUseCase,   // NO SE NECECITA
     private val insertEpisodeDbUseCase: InsertEpisodeDbUseCase,
     private val updateEpisodeDbStatusUseCase: UpdateEpisodeDbStatusUseCase
 ) : ViewModel() {
@@ -39,36 +40,52 @@ class ListEpisodesDBViewModel @Inject constructor(
     // 🔹 Cargar personajes y marcar favoritos
     private fun loadFavoritesOrViews() {
         viewModelScope.launch {
+
             getAllEpisodesDbUseCase.execute().collect { episodesList ->
+                Log.i("EpisodesDB", "Episodios obtenidos: ${episodesList.size}")
+                _stateEpisodesFavOrView.update { it.copy(isLoading = true) }
 
                 _stateEpisodesFavOrView.update {
+
                     it.copy( episodes = episodesList,
-                             episodesView = episodesList.filter { it.esVisto },
-                             episodesFav = episodesList.filter { it.esFavorito },
-                             episodesSet = episodesList.mapNotNull { it.id }.toSet(),  // todos los personajes de la BD que son favoritos (en este caso siempre van a ser todos)
-                            episodesViewSet = episodesList.mapNotNull {
+                             episodesView = episodesList.filter { it.esVisto },         // CREO QUE NO LO USO
+                             episodesFav = episodesList.filter { it.esFavorito },       // CREO QUE NO LO USO
+                             episodesSet = episodesList.mapNotNull { it.id }.toSet(),   // CREO QUE NO LO USO
+                             episodesViewSet = episodesList.mapNotNull {
                                if (it.esVisto) it.id else null
-                           }.toSet(),
+                            }.toSet(),
                             episodesFavSet = episodesList.mapNotNull {
                                 if (it.esFavorito) it.id else null
-                            }.toSet()
+                            }.toSet(),
+                            isLoading = false
                         )
                 }
             }
         }
     }
 
-    fun toggleFavoriteOrView(episode: Episode) {
+    fun toggleFavoriteOrView(episode: Episode, fav: Boolean, view: Boolean) {
         viewModelScope.launch {
-            val existsEpisode: Episode? = getEpisodeDbByIdUseCase.execute(episode.id) // se comprueba si existe el personaje en la BD
+            val existsEpisode = getEpisodeDbByIdUseCase.execute(episode.id)// se comprueba si existe el personaje en la BD
 
             if (existsEpisode == null) {
-                insertEpisodeDbUseCase.execute(episode)
+                insertEpisodeDbUseCase.execute(episode.copy(esFavorito = fav, esVisto = view))
             } else {
-                updateEpisodeDbStatusUseCase.execute(episodeId = episode.id, esFavorito = episode.esFavorito, esVisto = episode.esVisto)
+                updateEpisodeDbStatusUseCase.execute(episode.id, esFavorito = fav, esVisto = view)
             }
 
-            loadFavoritesOrViews() // 🔄 Actualiza la lista de favoritos
+            // 🔄 Actualizar el estado después de modificar la BD
+            _stateEpisodesFavOrView.update { currentState ->
+                val updatedEpisodes = currentState.episodes.map {
+                    if (it.id == episode.id) it.copy(esFavorito = fav, esVisto = view) else it
+                }
+
+                currentState.copy(
+                    episodes = updatedEpisodes,
+                    episodesFavSet = updatedEpisodes.filter { it.esFavorito }.map { it.id }.toSet(),
+                    episodesViewSet = updatedEpisodes.filter { it.esVisto }.map { it.id }.toSet()
+                )
+            }
         }
     }
 

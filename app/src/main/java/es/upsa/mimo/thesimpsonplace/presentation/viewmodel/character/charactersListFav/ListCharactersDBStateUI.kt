@@ -3,4 +3,5 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.characters
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 
 data class ListCharactersDbStateUI (val charactersSet:Set<Int> = emptySet(),
-                                    val characters:List<Character> = emptyList<Character>())
+                                    val characters:List<Character> = emptyList<Character>(),
+                                    val isLoading: Boolean = false)

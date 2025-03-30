@@ -49,7 +49,7 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
             if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase.execute(minDate, maxDate, filteredEpisodes)
             if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
             if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByChapterUseCase.execute(episode, filteredEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByViewUseCase.execute(isView, filteredEpisodes)
+            if (filteredEpisodes.isNotEmpty() && isView /** solo quiero que se filtre cuando sea true */) filteredEpisodes = getEpisodesByViewUseCase.execute(isView, filteredEpisodes)
 
             _stateEpisode.update {
                 it.copy(episodes = filteredEpisodes, isLoading = false) // Orden inverso, isLoading = false)

@@ -109,13 +109,12 @@ fun CharacterList(modifier: Modifier = Modifier,
                   favoriteCharacters: Set<Int>,
                   onToggleFavorite: (Character) -> Unit) {
 
-        val scope =  rememberCoroutineScope() // como vamos a utilizar funciones Sunspend, esto en verdad habria que hacerlo desde un View Model que accediera a la capa de datos.
-
     // val characters by characterDao.getAllCharactersDb().collectAsState(emptyList<CharacterDb>())
     LazyColumn( modifier = modifier,  horizontalAlignment = Alignment.CenterHorizontally) {
         items(characters) { character ->
-            // val isFavorite = character.id in favoriteCharacters
+
             val isFavorite = rememberUpdatedState(character.id in favoriteCharacters)
+
             CharacterItem(
                 character,
                 isFavorite = isFavorite.value,

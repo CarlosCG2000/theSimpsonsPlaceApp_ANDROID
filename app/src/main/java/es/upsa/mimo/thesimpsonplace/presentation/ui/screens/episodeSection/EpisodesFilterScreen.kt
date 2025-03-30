@@ -65,6 +65,8 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters.ListEpisodesFilterStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters.ListEpisodesFilterViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -77,6 +79,7 @@ import java.util.Locale
 @Composable
 fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewModel(),
                          viewModel: ListEpisodesFilterViewModel = hiltViewModel(),
+                         viewModelDB: ListEpisodesDBViewModel = hiltViewModel(),
                          navigateToAllEpisodes: () -> Unit,
                          navigateToFavoriteEpisode: () -> Unit,
                          onEpisodeSelected: (String) -> Unit,
@@ -84,6 +87,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 
     var stateAllEpisodes: State<ListEpisodesStateUI> = viewModelAllEpisodes.episodesState.collectAsState()
     var state: State<ListEpisodesFilterStateUI> = viewModel.stateEpisode.collectAsState() // pasa a ser sincrono para manejarlo en la UI
+    val stateFavOrView: State<ListEpisodesDbStateUI> = viewModelDB.stateEpisodesFavOrView.collectAsState()
 
     // _____________________ FILTROS _____________________
     var filterTitle by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
@@ -295,7 +299,9 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                                 modifier = Modifier.layoutId("idListEpisodes"),
                                 episodes = state.value.episodes,
                                 allEpisodes = stateAllEpisodes.value.episodes,
-                                onEpisodeSelected = onEpisodeSelected
+                                onEpisodeSelected = onEpisodeSelected,
+                                episodesFavDbSet = stateFavOrView.value.episodesFavSet,
+                                episodesViewDbSet = stateFavOrView.value.episodesViewSet
                             )
                         }
                     }

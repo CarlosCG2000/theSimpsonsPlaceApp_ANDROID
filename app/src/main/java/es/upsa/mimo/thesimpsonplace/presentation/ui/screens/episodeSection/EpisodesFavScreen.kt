@@ -10,25 +10,41 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
 
 @Composable
 fun EpisodesFavScreen(
+    viewModelAllEpisodes: ListEpisodesViewModel = hiltViewModel(),
+    viewModelDB: ListEpisodesDBViewModel = hiltViewModel(),
     navigateToAllEpisodes: () -> Unit,
     navigateToFilterEpisode: () -> Unit,
     onEpisodeSelected: (String) -> Unit,
     navigationArrowBack:() -> Unit
 ) {
-    val listItems: List<String> = (1..50).map { "Item $it" }
+    var stateAllEpisodes: State<ListEpisodesStateUI> = viewModelAllEpisodes.episodesState.collectAsState()
+    val stateFavOrView: State<ListEpisodesDbStateUI> = viewModelDB.stateEpisodesFavOrView.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModelAllEpisodes.getAllEpisodes() // cargue todos los episodios de primeras
+    }
 
     Scaffold(
         bottomBar = {
@@ -45,39 +61,34 @@ fun EpisodesFavScreen(
             )
         }
     ) { paddingValues ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .background(Color.Blue),
-            contentAlignment = Alignment.Center) {
 
-            Column(modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
-                verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
-                horizontalAlignment = Alignment.CenterHorizontally){ // Centra horizontalmente
-                // LOGO SIMPSONS
-                // Text("NavegacionEpisodios", fontSize = 24.sp, fontWeight = Bold)
-
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    itemsIndexed(listItems) { index, item ->
-                        Text(
-                            text = item,
-                            modifier = Modifier
-                                .clickable {
-                                    onEpisodeSelected("${ index + 1 }") // Ahora puedes obtener la posición del item
-                                }
-                                .padding(20.dp)
-                        )
-                    }
-                }
+        Box(
+            contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+            // .background(Color.Primary) // ✅ Fondo blanco para mejor visibilidad,
+        ) {
+            if (stateFavOrView.value.isLoading) {
+                CircularProgressIndicator(
+                    color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                )
+            } else {
+                ListEpisodes(modifier = Modifier.fillMaxSize(),
+                    episodes = stateFavOrView.value.episodesFav,
+                    allEpisodes = stateAllEpisodes.value.episodes,
+                    onEpisodeSelected = onEpisodeSelected,
+                    episodesFavDbSet = stateFavOrView.value.episodesFavSet,
+                    episodesViewDbSet = stateFavOrView.value.episodesViewSet)
             }
         }
     }
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
-@Composable
-fun EpisodesFavScreenPreview() {
-    Column {
-        EpisodesFavScreen( {}, {},{},{})
-    }
-}
+//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
+//@Composable
+//fun EpisodesFavScreenPreview() {
+//    Column {
+//        EpisodesFavScreen( {}, {},{},{})
+//    }
+//}
