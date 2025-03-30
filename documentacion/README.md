@@ -1908,7 +1908,7 @@ En tu implementación, estás usando `DataStore Preferences`, que es ideal para 
 
 NO ME FUNCIONA PARA EL LENGUAJE DE FORMA AUTOMATICA ME TENGO QUE SALIR DEL ACTIVITY Y VOLVER A ENTRAR PARA QUE SE APLIQUE EL LENGUAJE ❌
 
-# Añadido `Room`
+# Añadido `Room` ✅
 - Entities: creamos las entidades (tablas) para la BD (las columnas para la BD) --> `CharacterDb.kt`, `EpisodeDb.kt`, `QuoteDb.kt`.
 - Implementacion directa de los Daos (la propia interfaz es la iomplementación) --> `CharacterDatabaseDaoRoom.kt`, `EpisodeDatabaseDaoRoom.kt`, `QuoteDatabaseDaoRoom.kt`
 - Mapeo de las entidades de la aplicacion (domain) a las de la base de datos (las entidades (tablas)) y viceversa --> `CharacterMapper.kt`, `EpisodeMapper.kt`, `QuoteMapper.kt`
@@ -1935,3 +1935,4 @@ Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`
     2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
     3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').
 
+# 
