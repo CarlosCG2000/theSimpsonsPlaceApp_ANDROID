@@ -39,8 +39,9 @@ class ListCharactersDBViewModel @Inject constructor(
 
     // 🔹 Cargar personajes y marcar favoritos
     private fun loadFavorites() {
+        _stateCharacterFav.update { it.copy(isLoading = true) }
+
         viewModelScope.launch {
-            _stateCharacterFav.update { it.copy(isLoading = true) }
 
             getAllCharactersUseCase.execute().collect { charactersList ->
 
@@ -50,9 +51,6 @@ class ListCharactersDBViewModel @Inject constructor(
                             isLoading = false) // todos los personajes de la BD
                 }
 
-//                _charactersSet.value = charactersList.mapNotNull {
-//                    if (it.esFavorito) it.id else null
-//                }.toSet()
             }
         }
     }

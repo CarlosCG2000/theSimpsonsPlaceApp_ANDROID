@@ -44,8 +44,12 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,6 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun QuotesFilterScreen(
     viewModel: ListQuotesViewModel = hiltViewModel(),
+    viewModelDB: ListQuotesDBViewModel = hiltViewModel(),
     navigateToQuotes: () -> Unit,
     navigateToFavoriteQuotes: () -> Unit,
     navigateToGameQuotes: () -> Unit,
@@ -60,6 +65,8 @@ fun QuotesFilterScreen(
 ) {
 
     val state: State<ListQuotesStateUI> = viewModel.stateQuotes.collectAsState() // sincrono para manejarlo en la UI
+
+    val stateFav: State<ListQuotesDbStateUI> = viewModelDB.stateQuotesFav.collectAsState()
 
     var filterName by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
     var debounceJob by remember { mutableStateOf<Job?>(null) } // Para cancelar el debounce
@@ -163,7 +170,9 @@ fun QuotesFilterScreen(
                 } else {
                     listQuotes(
                         modifier = Modifier.fillMaxSize(),
-                        state.value.quotes
+                        quotes = state.value.quotes,
+                        favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
+                        onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
                     )
                 }
             }

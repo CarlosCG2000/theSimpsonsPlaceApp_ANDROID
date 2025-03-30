@@ -1916,8 +1916,8 @@ NO ME FUNCIONA PARA EL LENGUAJE DE FORMA AUTOMATICA ME TENGO QUE SALIR DEL ACTIV
 - Repositorio: con sus interfaces `CharaterRepository.kt`, `EpisodeRepository.kt`, `EpisodeRepository.kt` (que cuentan con las operaciones del json/api y de la base de datos) y sus implementaciones unicas `CharaterRepositoryImpl.kt`, `EpisodeRepositoryImpl.kt`, `EpisodeRepositoryImpl.kt`
 - Casos de usos: todos interfaces e implementaciones de las funciones de forma individual como casos de uso. Tanto del json/api como base de datos.
 - di: `DatabaseModule.kt` añado la inyección de dependencias de los daos de la base de datos. `DomainModule.kt` añado la conexión de la interfaz de los repositorios y los casos de uso con su implementaciones por defecto para tambien la inyección de dependencias.
-- viewmodel: 
-
+- viewmodel: ...
+- screens: ...
 
 * Conversión de los datos fundamentales para las entidades de la BD a los datos que de verdad quiero utilizar para la aplicación.
 Es la clase `Converters` definida dentro del fichero `TheSimpsonsDatabaseRoom.kt`.
@@ -1934,3 +1934,4 @@ Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`
     1. Aumenta la versión de la base de datos (de version = 1 a version = 2). En 'TheSimpsonsDatabaseRoom'.
     2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
     3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').
+

@@ -96,7 +96,7 @@ fun CharactersScreen(
                 CharacterList(
                     modifier = Modifier.fillMaxSize(),
                     characters = state.value.characters, // se muestran todos los personajes (indepen de que sean de la BD o no)
-                    favoriteCharacters =  stateFav.value.charactersSet, // saber que personajes son favoritos
+                    favoriteCharacters = stateFav.value.charactersSet, // saber que personajes son favoritos
                     onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })
             }
         }
@@ -116,7 +116,7 @@ fun CharacterList(modifier: Modifier = Modifier,
             val isFavorite = rememberUpdatedState(character.id in favoriteCharacters)
 
             CharacterItem(
-                character,
+                character = character,
                 isFavorite = isFavorite.value,
                 onToggleFavorite = {
                     onToggleFavorite(character)

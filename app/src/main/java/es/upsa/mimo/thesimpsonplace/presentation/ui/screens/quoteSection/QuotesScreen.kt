@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,12 +66,17 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.components.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection.CharacterItem
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
 
 @Composable
 fun QuotesScreen(
     viewModel: ListQuotesViewModel = hiltViewModel(),
+    viewModelDB: ListQuotesDBViewModel = hiltViewModel(),
     navigateToFilterQuotes: () -> Unit,
     navigateToFavoriteQuotes: () -> Unit,
     navigateToGameQuotes: () -> Unit,
@@ -79,6 +85,8 @@ fun QuotesScreen(
 
     val state: State<ListQuotesStateUI> = viewModel.stateQuotes.collectAsState() // sincrono para manejarlo en la UI
     var generateNewQuotes by remember { mutableStateOf(true) }
+
+    val stateFav: State<ListQuotesDbStateUI> = viewModelDB.stateQuotesFav.collectAsState()
 
     //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
     LaunchedEffect(generateNewQuotes /**Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
@@ -150,7 +158,9 @@ fun QuotesScreen(
                 } else {
                     listQuotes(
                         modifier = Modifier.fillMaxSize(),
-                        state.value.quotes
+                        quotes = state.value.quotes,
+                        favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
+                        onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
                     )
                 }
             }
@@ -160,24 +170,35 @@ fun QuotesScreen(
     }
 
 @Composable
-fun listQuotes(modifier: Modifier = Modifier, quotes: List<Quote>) {
+fun listQuotes(modifier: Modifier = Modifier,
+               quotes: List<Quote>,
+               favoriteQuotes: Set<String>,
+               onToggleFavorite: (Quote) -> Unit
+               ) {
 
     LazyColumn( modifier = modifier, // Ocupa toda la pantalla
         verticalArrangement = Arrangement.Top, // Centra verticalmente dentro de Column
         horizontalAlignment = Alignment.CenterHorizontally) {
+
         items(quotes) { quote ->
-            QuoteItem(quote)
+
+            val isFavorite = rememberUpdatedState(quote.cita in favoriteQuotes)
+
+            QuoteItem(quote = quote,
+                        isFavorite = isFavorite.value,
+                        onToggleFavorite = {
+                            onToggleFavorite(quote)
+                        })
         }
     }
 }
 
 @Composable
 fun QuoteItem(quote: Quote,
+              isFavorite: Boolean,
+              onToggleFavorite: () -> Unit
               /** dbQuoteViewModel: DbQuotesViewModel = hiltViewModel() */
               ) {
-
-    // Crear boton de estrella, (cada vez que se de se cambia de valor), modificar de estado en la BD
-    var isFavorite by remember { mutableStateOf(quote.esFavorito) }
 
         Card(
             modifier = Modifier
@@ -209,15 +230,7 @@ fun QuoteItem(quote: Quote,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    IconButton(onClick = {
-                        isFavorite = !isFavorite
-                        // funcion de cambio en la BD
-                        /** if (isFavorite){
-                            dbQuoteViewModel.insert(quote)
-                        } else {
-                            dbQuoteViewModel.delete(quote)
-                        } */
-                    }) {
+                    IconButton(onClick = { onToggleFavorite() }) {
                         Icon(
                             imageVector = Icons.Filled.Star, // Usa el ícono de estrella
                             contentDescription = "Favorito",
@@ -227,7 +240,6 @@ fun QuoteItem(quote: Quote,
                     }
                 }
 
-                Log.i("image","${quote.imagen.toString()}")
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(quote.imagen.toString())
