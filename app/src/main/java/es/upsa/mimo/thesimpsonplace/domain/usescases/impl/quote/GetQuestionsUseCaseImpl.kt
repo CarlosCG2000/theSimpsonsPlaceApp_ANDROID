@@ -6,10 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuestionsUseCase
 import javax.inject.Inject
 
-class GetQuestionsUseCaseImpl  @Inject constructor(val repository: QuoteRepository): GetQuestionsUseCase {
-
-    override suspend fun execute(): List<Question> {
-        return repository.getQuotes().map { it.toQuestion() }
-    }
-
+class GetQuestionsUseCaseImpl @Inject constructor(val repository: QuoteRepository): GetQuestionsUseCase {
+    override suspend operator fun invoke(): List<Question> =
+         repository.getQuotes().map { it.toQuestion() }
 }

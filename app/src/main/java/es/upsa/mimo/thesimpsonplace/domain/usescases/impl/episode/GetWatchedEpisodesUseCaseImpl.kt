@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetWatchedEpisodesUseCaseImpl @Inject constructor(val repository: EpisodeRepository): GetWatchedEpisodesUseCase {
-    override suspend fun execute(): Flow<List<Episode>> = repository.getWatchedEpisodes()
+    override suspend operator fun invoke(): Flow<List<Episode>> =
+        repository.getWatchedEpisodes()
 }

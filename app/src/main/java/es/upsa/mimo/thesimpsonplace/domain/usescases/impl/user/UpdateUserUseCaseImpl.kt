@@ -6,7 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
 import javax.inject.Inject
 
 class UpdateUserUseCaseImpl @Inject constructor(val repository: UserRepository): UpdateUserUseCase {
-    override suspend fun execute(user: UserPreference) {
+    override suspend operator fun invoke(user: UserPreference) =
         repository.updateUser(user)
-    }
 }

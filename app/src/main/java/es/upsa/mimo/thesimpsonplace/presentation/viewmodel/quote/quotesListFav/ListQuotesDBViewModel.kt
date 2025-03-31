@@ -37,7 +37,7 @@ class ListQuotesDBViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            getAllQuotesDbUseCase.execute().collect { quotesList ->
+            getAllQuotesDbUseCase().collect { quotesList ->
 
                 _stateQuotesFav.update {
                     it.copy(quotesSet = quotesList.mapNotNull { it.cita }.toSet(),
@@ -50,12 +50,12 @@ class ListQuotesDBViewModel @Inject constructor(
 
     fun toggleFavorite(quote: Quote) {
         viewModelScope.launch {
-            val existsCharacter = getQuoteDbByCitaUseCase.execute(quote.cita) // se comprueba si existe el personaje en la BD
+            val existsCharacter = getQuoteDbByCitaUseCase(quote.cita) // se comprueba si existe el personaje en la BD
 
             if (existsCharacter == null) {
-                insertQuoteDbUseCase.execute(quote)
+                insertQuoteDbUseCase(quote)
             } else {
-                deleteQuoteDbUseCase.execute(quote)
+                deleteQuoteDbUseCase(quote)
             }
 
             loadFavorites() // 🔄 Actualiza la lista de favoritos

@@ -6,5 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDb
 import javax.inject.Inject
 
 class InsertCharacterDbUseCaseImpl  @Inject constructor(val repository: CharaterRepository): InsertCharacterDbUseCase {
-    override suspend fun execute(character: Character) = repository.insertCharacterDb(character)
+    override suspend operator fun invoke(character: Character) =
+        repository.insertCharacterDb(character)
 }

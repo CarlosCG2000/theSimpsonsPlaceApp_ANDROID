@@ -5,6 +5,7 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuoteDbByCitaUseCase
 import javax.inject.Inject
 
-class GetQuoteDbByCitaUseCaseImpl  @Inject constructor(val repository: QuoteRepository): GetQuoteDbByCitaUseCase {
-    override suspend fun execute(cita: String): Quote? = repository.getQuoteDbByCita(cita)
+class GetQuoteDbByCitaUseCaseImpl @Inject constructor(val repository: QuoteRepository): GetQuoteDbByCitaUseCase {
+    override suspend operator fun invoke(cita: String): Quote? =
+        repository.getQuoteDbByCita(cita)
 }

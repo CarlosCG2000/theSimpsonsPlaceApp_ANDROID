@@ -38,7 +38,7 @@ class ListEpisodesDBViewModel @Inject constructor(
     private fun loadFavoritesOrViews() {
         viewModelScope.launch {
 
-            getAllEpisodesDbUseCase.execute().collect { episodesList ->
+            getAllEpisodesDbUseCase().collect { episodesList ->
                 Log.i("EpisodesDB", "Episodios obtenidos: ${episodesList.size}")
                 _stateEpisodesFavOrView.update { it.copy(isLoading = true) }
 
@@ -47,7 +47,7 @@ class ListEpisodesDBViewModel @Inject constructor(
                     it.copy( episodes = episodesList,
                              episodesView = episodesList.filter { it.esVisto },         // CREO QUE NO LO USO
                              episodesFav = episodesList.filter { it.esFavorito },       // CREO QUE NO LO USO
-                             episodesSet = episodesList.mapNotNull { it.id }.toSet(),   // CREO QUE NO LO USO
+                             episodesSet = episodesList.map { it.id }.toSet(),   // CREO QUE NO LO USO
                              episodesViewSet = episodesList.mapNotNull {
                                if (it.esVisto) it.id else null
                             }.toSet(),
@@ -63,12 +63,12 @@ class ListEpisodesDBViewModel @Inject constructor(
 
     fun toggleFavoriteOrView(episode: Episode, fav: Boolean, view: Boolean) {
         viewModelScope.launch {
-            val existsEpisode = getEpisodeDbByIdUseCase.execute(episode.id)// se comprueba si existe el personaje en la BD
+            val existsEpisode = getEpisodeDbByIdUseCase(episode.id)// se comprueba si existe el personaje en la BD
 
             if (existsEpisode == null) {
-                insertEpisodeDbUseCase.execute(episode.copy(esFavorito = fav, esVisto = view))
+                insertEpisodeDbUseCase(episode.copy(esFavorito = fav, esVisto = view))
             } else {
-                updateEpisodeDbStatusUseCase.execute(episode.id, esFavorito = fav, esVisto = view)
+                updateEpisodeDbStatusUseCase(episode.id, esFavorito = fav, esVisto = view)
             }
 
             // 🔄 Actualizar el estado después de modificar la BD

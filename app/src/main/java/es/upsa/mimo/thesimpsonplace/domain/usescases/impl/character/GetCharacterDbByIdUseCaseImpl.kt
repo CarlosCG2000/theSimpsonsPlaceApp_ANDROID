@@ -6,5 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetCharacterDbByI
 import javax.inject.Inject
 
 class GetCharacterDbByIdUseCaseImpl @Inject constructor(val repository: CharaterRepository): GetCharacterDbByIdUseCase {
-    override suspend fun execute(id: Int): Character? = repository.getCharacterDbById(id)
+    override suspend operator fun invoke(id: Int): Character? =
+        repository.getCharacterDbById(id)
 }

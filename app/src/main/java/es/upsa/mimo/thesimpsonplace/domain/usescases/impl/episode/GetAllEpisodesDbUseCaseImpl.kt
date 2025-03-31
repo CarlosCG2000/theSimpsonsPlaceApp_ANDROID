@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAllEpisodesDbUseCaseImpl  @Inject constructor(val repository: EpisodeRepository): GetAllEpisodesDbUseCase{
-    override suspend fun execute(): Flow<List<Episode>> = repository.getAllEpisodesDb()
+    override suspend operator fun invoke(): Flow<List<Episode>> =
+                repository.getAllEpisodesDb()
 }

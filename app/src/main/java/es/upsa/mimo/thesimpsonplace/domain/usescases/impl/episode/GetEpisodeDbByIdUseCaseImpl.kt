@@ -5,6 +5,7 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeDbByIdUseCase
 import javax.inject.Inject
 
-class GetEpisodeDbByIdUseCaseImpl  @Inject constructor(val repository: EpisodeRepository): GetEpisodeDbByIdUseCase {
-    override suspend fun execute(episodeId: String): Episode? = repository.getEpisodeDbById(episodeId)
+class GetEpisodeDbByIdUseCaseImpl @Inject constructor(val repository: EpisodeRepository): GetEpisodeDbByIdUseCase {
+    override suspend operator fun invoke(episodeId: String): Episode? =
+        repository.getEpisodeDbById(episodeId)
 }

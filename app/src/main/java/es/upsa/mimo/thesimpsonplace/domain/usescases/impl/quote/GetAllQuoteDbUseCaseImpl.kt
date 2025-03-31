@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAllQuoteDbUseCaseImpl @Inject constructor(val repository: QuoteRepository): GetAllQuoteDbUseCase {
-    override suspend fun execute(): Flow<List<Quote>> = repository.getAllQuotesDb()
+    override suspend operator fun invoke(): Flow<List<Quote>> =
+        repository.getAllQuotesDb()
 }

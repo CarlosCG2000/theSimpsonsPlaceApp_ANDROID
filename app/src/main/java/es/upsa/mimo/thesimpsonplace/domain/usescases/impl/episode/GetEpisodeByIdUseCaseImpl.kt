@@ -6,7 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCa
 import javax.inject.Inject
 
 class GetEpisodeByIdUseCaseImpl  @Inject constructor(val repository: EpisodeRepository):GetEpisodeByIdUseCase {
-
-    override suspend fun execute(id: String): Episode? = repository.getEpisodeById(id)
-
+    override suspend operator fun invoke(id: String): Episode? =
+                repository.getEpisodeById(id)
 }

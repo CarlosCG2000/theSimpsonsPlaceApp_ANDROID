@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.domain.usescases.game
 
 interface UpdateStatsUseCase {
-    suspend fun execute(aciertos: Int, preguntas: Int): Unit
+    suspend operator fun invoke(aciertos: Int,
+                                preguntas: Int)
 }

@@ -43,7 +43,7 @@ class ListCharactersDBViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            getAllCharactersUseCase.execute().collect { charactersList ->
+            getAllCharactersUseCase().collect { charactersList ->
 
                 _stateCharacterFav.update {
                     it.copy(charactersSet = charactersList.mapNotNull { it.id }.toSet(),  // todos los personajes de la BD que son favoritos (en este caso siempre van a ser todos)
@@ -57,12 +57,12 @@ class ListCharactersDBViewModel @Inject constructor(
 
     fun toggleFavorite(character: Character) {
         viewModelScope.launch {
-            val existsCharacter = getCharacterByIdUseCase.execute(character.id) // se comprueba si existe el personaje en la BD
+            val existsCharacter = getCharacterByIdUseCase(character.id) // se comprueba si existe el personaje en la BD
 
             if (existsCharacter == null) {
-                insertCharacterUseCase.execute(character)
+                insertCharacterUseCase(character)
             } else {
-                deleteCharacterUseCase.execute(existsCharacter)
+                deleteCharacterUseCase(existsCharacter)
             }
 
            loadFavorites() // 🔄 Actualiza la lista de favoritos

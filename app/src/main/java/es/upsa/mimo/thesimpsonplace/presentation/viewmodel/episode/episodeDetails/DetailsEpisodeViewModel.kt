@@ -21,7 +21,7 @@ class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: Ge
         viewModelScope.launch {
             _episodeState.update { it.copy(isLoading = true) }
 
-            val getEpisode: Episode? = getEpisodeByIdUseCase.execute(id)
+            val getEpisode: Episode? = getEpisodeByIdUseCase(id)
 
             _episodeState.update {
                 it.copy(episode = getEpisode, isLoading = false)

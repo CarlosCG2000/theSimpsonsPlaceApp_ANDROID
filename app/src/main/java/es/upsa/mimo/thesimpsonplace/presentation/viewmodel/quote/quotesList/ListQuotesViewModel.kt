@@ -20,7 +20,7 @@ class ListQuotesViewModel @Inject constructor( val getQuotesUseCase: GetQuotesUs
         viewModelScope.launch {
             _stateQuotes.update { it.copy( isLoading = true) }
 
-            val quotes = getQuotesUseCase.execute(numElementos, textPersonaje)
+            val quotes = getQuotesUseCase(numElementos, textPersonaje)
 
             _stateQuotes.update {
                 it.copy(quotes = quotes, isLoading = false)

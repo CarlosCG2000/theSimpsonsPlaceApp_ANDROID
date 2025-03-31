@@ -5,7 +5,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.game.ResetStatsUseCase
 import javax.inject.Inject
 
 class ResetStatsUseCaseImpl @Inject constructor(val repository: GameRepository): ResetStatsUseCase{
-    override suspend fun execute() {
+    override suspend operator fun invoke() =
         repository.resetStats()
-    }
 }

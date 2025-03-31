@@ -6,6 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByViewUs
 import javax.inject.Inject
 
 class GetEpisodesByViewUseCaseImpl @Inject constructor(val repository: EpisodeRepository): GetEpisodesByViewUseCase {
-    override suspend fun execute(isView: Boolean, episodes: List<Episode>): List<Episode> =
+    override suspend operator fun invoke(isView: Boolean,
+                                         episodes: List<Episode>): List<Episode> =
         repository.getEpisodesByView(isView, episodes)
 }

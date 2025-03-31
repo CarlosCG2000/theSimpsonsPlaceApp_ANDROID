@@ -28,7 +28,7 @@ class ListCharactersFilterViewModel @Inject constructor(val getFilterNameCharact
             _stateCharacterFilter.update { it.copy(isLoading = true) } // ✅  Activa el spinner
 
             val charactersFilter =
-                getFilterNameCharactersUseCase.execute(name) // ✅ Obtiene los personajes filtrados
+                getFilterNameCharactersUseCase(name) // ✅ Obtiene los personajes filtrados
 
             // it es 'state.value' que es el valor actual de los contactos y lo actualizamos a 'contactsList'
             _stateCharacterFilter.update {

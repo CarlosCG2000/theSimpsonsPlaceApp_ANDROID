@@ -6,9 +6,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleU
 import javax.inject.Inject
 
 class GetEpisodesByTitleUseCaseImpl @Inject constructor(val repository: EpisodeRepository):GetEpisodesByTitleUseCase {
-
-    override suspend fun execute(title: String,
-                                 episodes: List<Episode>): List<Episode>
-    = repository.getEpisodesByTitle(title, episodes)
-
+    override suspend operator fun invoke(title: String,
+                                         episodes: List<Episode>): List<Episode> =
+        repository.getEpisodesByTitle(title, episodes)
 }

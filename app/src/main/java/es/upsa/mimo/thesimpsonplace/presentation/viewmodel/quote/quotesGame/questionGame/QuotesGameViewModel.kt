@@ -20,7 +20,7 @@ class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuest
         viewModelScope.launch {
             _stateQuestions.update { it.copy( isLoading = true) }
 
-            val questions = getQuestionsUseCase.execute()
+            val questions = getQuestionsUseCase()
 
             _stateQuestions.update {
                 it.copy(questions = questions, isLoading = false)

@@ -6,6 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesOrderUse
 import javax.inject.Inject
 
 class GetEpisodesOrderUseCaseImpl @Inject constructor(val repository: EpisodeRepository): GetEpisodesOrderUseCase {
-    override suspend fun execute(isAscendent: Boolean, episodes: List<Episode>): List<Episode>
-                    = repository.getEpisodesOrder( isAscendent, episodes)
+    override suspend operator fun invoke(isAscendent: Boolean, episodes: List<Episode>): List<Episode> =
+        repository.getEpisodesOrder( isAscendent, episodes)
 }

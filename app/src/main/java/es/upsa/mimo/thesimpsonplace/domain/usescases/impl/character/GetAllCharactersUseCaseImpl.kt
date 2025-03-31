@@ -8,9 +8,6 @@ import javax.inject.Inject
 class GetAllCharactersUseCaseImpl @Inject constructor(
                                             private val repository: CharaterRepository
                                             ): GetAllCharactersUseCase {
-
-    override suspend fun execute(): List<Character> {
-        return repository.getAllCharacters()
-    }
-
+    override suspend operator fun invoke(): List<Character> =
+         repository.getAllCharacters()
 }

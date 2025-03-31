@@ -21,7 +21,7 @@ class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAl
         viewModelScope.launch {
             _episodesState.update { it.copy(isLoading = true) }
 
-            val getAllEpisodes: List<Episode> = getAllEpisodesUseCase.execute()
+            val getAllEpisodes: List<Episode> = getAllEpisodesUseCase()
 
             // delay(2000)
 

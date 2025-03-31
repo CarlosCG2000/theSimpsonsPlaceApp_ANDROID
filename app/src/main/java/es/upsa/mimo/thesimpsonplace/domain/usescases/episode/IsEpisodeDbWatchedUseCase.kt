@@ -2,5 +2,5 @@ package es.upsa.mimo.thesimpsonplace.domain.usescases.episode
 
 
 interface IsEpisodeDbWatchedUseCase {
-    suspend fun execute(episodeId: String): Boolean?
+    suspend operator fun invoke(episodeId: String): Boolean?
 }

@@ -45,11 +45,12 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
             _stateEpisode.update { it.copy(isLoading = true) }
 
             // Comenzamos con la lista completa (allEpisodes)
-            var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase.execute(title, allEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase.execute(minDate, maxDate, filteredEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesBySeasonUseCase.execute(season, filteredEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByChapterUseCase.execute(episode, filteredEpisodes)
-            if (filteredEpisodes.isNotEmpty() && isView /** solo quiero que se filtre cuando sea true */) filteredEpisodes = getEpisodesByViewUseCase.execute(isView, filteredEpisodes)
+            var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase(title, allEpisodes)
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase(minDate, maxDate, filteredEpisodes)
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesBySeasonUseCase(season, filteredEpisodes)
+            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByChapterUseCase(episode, filteredEpisodes)
+                                        /** solo quiero que se filtre cuando sea true el 'isView' */
+            if (filteredEpisodes.isNotEmpty() && isView) filteredEpisodes = getEpisodesByViewUseCase(true, filteredEpisodes)
 
             _stateEpisode.update {
                 it.copy(episodes = filteredEpisodes, isLoading = false) // Orden inverso, isLoading = false)
@@ -62,7 +63,7 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
     fun getEpisodesOrder(isAscendent: Boolean) {
         viewModelScope.launch {
             _stateEpisode.update { it.copy(isLoading = true) }
-            val episodesOrder: List<Episode> = getEpisodesOrderUseCase.execute(!isAscendent, _stateEpisode.value.episodes)
+            val episodesOrder: List<Episode> = getEpisodesOrderUseCase(!isAscendent, _stateEpisode.value.episodes)
 
             _stateEpisode.update {
                 it.copy(episodes = episodesOrder, isLoading = false)

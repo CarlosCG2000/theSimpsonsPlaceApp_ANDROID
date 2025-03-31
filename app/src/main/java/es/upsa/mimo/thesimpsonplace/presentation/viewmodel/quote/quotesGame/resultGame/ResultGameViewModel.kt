@@ -35,13 +35,13 @@ class ResultGameViewModel @Inject constructor( val getGameStatsUseCase: GetGameS
 
     fun updateStats(aciertos: Int, preguntas: Int) {
         viewModelScope.launch {
-            updateStatsUseCase.execute(aciertos, preguntas)
+            updateStatsUseCase(aciertos, preguntas)
         }
     }
 
     fun resetStats() {
         viewModelScope.launch {
-            resetStatsUseCase.execute()
+            resetStatsUseCase()
         }
     }
 }

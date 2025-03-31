@@ -6,7 +6,8 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersD
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAllCharactersDbUseCaseImpl  @Inject constructor(val repository: CharaterRepository): GetAllCharactersDbUseCase {
-    override suspend fun execute(): Flow<List<Character>> = repository.getAllCharactersDb()
+class GetAllCharactersDbUseCaseImpl @Inject constructor(val repository: CharaterRepository): GetAllCharactersDbUseCase {
+    override suspend operator fun invoke(): Flow<List<Character>> =
+            repository.getAllCharactersDb()
 }
 

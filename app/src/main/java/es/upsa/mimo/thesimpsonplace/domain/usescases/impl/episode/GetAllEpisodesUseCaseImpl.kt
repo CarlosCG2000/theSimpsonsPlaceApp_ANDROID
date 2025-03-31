@@ -6,7 +6,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCa
 import javax.inject.Inject
 
 class GetAllEpisodesUseCaseImpl  @Inject constructor(val repository: EpisodeRepository) :GetAllEpisodesUseCase {
-
-    override suspend fun execute(): List<Episode> = repository.getAllEpisodes()
-
+    override suspend operator fun invoke(): List<Episode> =
+                repository.getAllEpisodes()
 }

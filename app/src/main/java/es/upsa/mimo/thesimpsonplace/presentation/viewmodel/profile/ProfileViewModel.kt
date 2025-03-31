@@ -32,7 +32,7 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
 
     fun updateUser(user: UserPreference) {
         viewModelScope.launch {
-            updateUserUseCase.execute(user)
+            updateUserUseCase(user)
         }
     }
 

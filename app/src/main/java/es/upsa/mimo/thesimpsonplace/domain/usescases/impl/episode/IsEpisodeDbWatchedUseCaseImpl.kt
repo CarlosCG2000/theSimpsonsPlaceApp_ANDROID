@@ -5,5 +5,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.IsEpisodeDbWatchedU
 import javax.inject.Inject
 
 class IsEpisodeDbWatchedUseCaseImpl @Inject constructor(val repository: EpisodeRepository): IsEpisodeDbWatchedUseCase {
-    override suspend fun execute(episodeId: String): Boolean? = repository.isEpisodeDbWatched(episodeId)
+    override suspend operator fun invoke(episodeId: String): Boolean? =
+        repository.isEpisodeDbWatched(episodeId)
 }

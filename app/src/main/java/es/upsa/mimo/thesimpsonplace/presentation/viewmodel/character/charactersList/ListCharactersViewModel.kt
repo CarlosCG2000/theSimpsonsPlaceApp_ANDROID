@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListCharactersViewModel @Inject constructor(val getAllCharacters: GetAllCharactersUseCase): ViewModel() {
+class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: GetAllCharactersUseCase): ViewModel() {
     private val _stateCharacter: MutableStateFlow<ListCharactersStateUI> = MutableStateFlow(ListCharactersStateUI()) // Asincrono esta en un hilo secundario
     val stateCharacter: StateFlow<ListCharactersStateUI> = _stateCharacter.asStateFlow()
 
@@ -23,7 +23,7 @@ class ListCharactersViewModel @Inject constructor(val getAllCharacters: GetAllCh
             // _stateCharacter.value.isLoading = true ❌ Esto NO actualiza el StateFlow correctamente, porque isLoading es una propiedad mutable dentro de ListCharactersStateUI, pero no estamos emitiendo un nuevo objeto.
             _stateCharacter.update { it.copy(isLoading = true) } // ✅  Activa el spinner
 
-            val charactersList = getAllCharacters.execute() // ✅ Obtiene los personajes
+            val charactersList = getAllCharactersUseCase() // ✅ Obtiene los personajes
 
             // delay(3000) // ✅ prueba del spinnner del 'isLoading' en el Screen
 
@@ -41,7 +41,7 @@ class ListCharactersViewModel @Inject constructor(val getAllCharacters: GetAllCh
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 // Accedemos al objeto Aplication con la implementacion (unica que tenemos)
                 // A través de extras se puede acceder al Aplication (al igual que se podia al Bundle).
-                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
+                val application = extras(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY) as TheSimpsonPlaceApp
 
                 // Puedo acceder a través de 'application' al casos de uso que le pasamos por parámetro.
                 return ListCharactersViewModel (application.getAllCharacters) as T

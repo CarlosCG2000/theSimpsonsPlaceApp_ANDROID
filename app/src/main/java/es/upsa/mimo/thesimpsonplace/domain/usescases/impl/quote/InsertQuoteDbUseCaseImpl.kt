@@ -5,6 +5,7 @@ import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.InsertQuoteDbUseCase
 import javax.inject.Inject
 
-class InsertQuoteDbUseCaseImpl  @Inject constructor(val repository: QuoteRepository): InsertQuoteDbUseCase {
-    override suspend fun execute(quote: Quote) = repository.insertQuoteDb(quote)
+class InsertQuoteDbUseCaseImpl @Inject constructor(val repository: QuoteRepository): InsertQuoteDbUseCase {
+    override suspend operator fun invoke(quote: Quote) =
+        repository.insertQuoteDb(quote)
 }
