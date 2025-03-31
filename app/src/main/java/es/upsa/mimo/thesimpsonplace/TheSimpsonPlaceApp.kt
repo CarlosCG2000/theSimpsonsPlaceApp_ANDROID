@@ -8,26 +8,27 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.hilt.android.HiltAndroidApp
 import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
 
+// Llamo al contexto de la App donde he definido la BD, para pasarlelo al Compose
 val Context.database
-    get() = (applicationContext as TheSimpsonPlaceApp).database // llamamos al contexto de la App donde hemos definido la BD, para pasarlelo al compose
+    get() = (applicationContext as TheSimpsonPlaceApp).database
 
-// _____________ Instanciando automaticamente las dependencias con Hilt que lo maneje en toda la app. _____________
+// _______ Instanciando automaticamente las dependencias con Hilt que lo maneje en toda la app _______
 @HiltAndroidApp
 class TheSimpsonPlaceApp : Application(){
-    lateinit var database: TheSimpsonsDatabaseRoom // CREAMOS LA DEFINICION DE LA BASE DE DATOS
+
+    lateinit var database: TheSimpsonsDatabaseRoom // CREAMOS LA DEFINICIÓN DE LA BASE DE DATOS
         private set // DECIMOS QUE DESDE FUERA SOLO SE PUEDA LEER
 
     override fun onCreate() {
         super.onCreate()
-
-        initDatabase() // INICIALIZAMOS LA CREACION DE NUESTRA BASE DE DATOS
+        initDatabase() // INICIALIZAMOS LA CREACIÓN DE NUESTRA BASE DE DATOS
     }
 
 //    ✨ Pasos para la migración en Room
 //    1. Aumenta la versión de la base de datos (de version = 1 a version = 2). En 'TheSimpsonsDatabaseRoom'.
 //    2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
 //    3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').
-    private val MIGRATION_1_2 = object : Migration(1, 2) {
+    private val migrationVersion1toVersion2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             // 🔥 Crear la tabla episodes
             database.execSQL(
@@ -69,86 +70,87 @@ class TheSimpsonPlaceApp : Application(){
             TheSimpsonsDatabaseRoom::class.java,  // LA BASE DE DATOS QUE QUEREMOS CREAR
             "TheSimpsonsDatabaseRoom" // NOMBRE QUE QUERAMOS DARLE
         )
-        //.fallbackToDestructiveMigration() // 🔥 Borra y recrea la BD
-        .addMigrations(MIGRATION_1_2) // Aplicar migración
+        //.fallbackToDestructiveMigration() // ⚠️ Cuidado - Borra y recrea la BD
+        .addMigrations(migrationVersion1toVersion2) // Aplicar migración
         .build()
     }
 
-
 }
 
-// _____________ Instanciando manualmente las dependencias (de personajes y episodios, falta la de citas con 'Factory').  _____________
-//class TheSimpsonPlaceApp : Application() {
-//
-//    // Primero obtenemos el context de la aplicación
-//    private lateinit var appContext: Context
-//
-//    // La implementacion de Character en producción de Impl.
-//    private lateinit var characterDao: CharacterDao
-//    private lateinit var characterDatabaseDao: CharacterDatabaseDao
-//    private lateinit var characterRepository: CharaterRepository
-//
-//    lateinit var getAllCharacters: GetAllCharactersUseCase
-//    lateinit var getCharactersByName: GetFilterNameCharactersUseCase
-//    lateinit var getAllCharactersDb: FetchAllCharactersDbUseCase
-//    lateinit var insertCharacterDb: InsertCharacterDbUseCase
-//    lateinit var deleteCharacterDb: UpdateCharacterDbUseCase
-//
-//    // La implementacion de Episode en producción de Impl.
-//    private lateinit var episodeDao: EpisodeDao
-//    private lateinit var episodeDatabaseDao: EpisodeDatabaseDao
-//    private lateinit var episodeRepository: EpisodeRepository
-//
-//    // Casos de uso de la datos obtenido de la fuente principal
-//    lateinit var getAllEpisodes: GetAllEpisodesUseCase
-//    lateinit var getEpisodeById: GetEpisodeByIdUseCase
-//    lateinit var getEpisodesByTitle: GetEpisodesByTitleUseCase
-//    lateinit var getEpisodesByDate: GetEpisodesByDateUseCase
-//    lateinit var getEpisodesBySeason: GetEpisodesBySeasonUseCase
-//    lateinit var getEpisodesByChapter: GetEpisodesByChapterUseCase
-//
-//    // Casos de uso de la datos de la base de datos
-//    lateinit var getAllEpisodesDb: GetAllEpisodesDbUseCase
-//    lateinit var  getEpisodeByIdDb: GetEpisodeByIdDbUseCase
-//    lateinit var getEpisodeByIdsDb: GetEpisodeByIdsDbUseCase
-//    lateinit var updateEpisodeDb: UpdateEpisodeDbUseCase
-//    lateinit var insertEpisodeDb: InsertEpisodeDbUseCase
-//
-//    override fun onCreate() {
-//        super.onCreate()
-//
-//        // Ahora puedes asignar el contexto después de llamar a super.onCreate()
-//        appContext = applicationContext
-//
-//        // Luego de inicializar el contexto, puedes proceder con las inicializaciones
-//        characterDao = CharacterDaoJson(appContext, "personajes_data.json", "imagenes_data.json")
-//        characterDatabaseDao = CharacterDatabaseDaoRoom()
-//        characterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
-//
-//        getAllCharacters = GetAllCharactersUseCaseImpl(characterRepository)
-//        getCharactersByName = GetFilterNameCharactersUseCaseImpl(characterRepository)
-//        getAllCharactersDb = FetchAllCharactersDbUseCaseImpl(characterRepository)
-//        insertCharacterDb = InsertCharacterDbUseCaseImpl(characterRepository)
-//        deleteCharacterDb = UpdateCharacterDbUseCaseImpl(characterRepository)
-//
-//        // Luego de inicializar el contexto, puedes proceder con las inicializaciones
-//        episodeDao = EpisodeDaoJson(appContext, "episodios_data.json")
-//        episodeDatabaseDao = EpisodeDatabaseDaoRoom()
-//        episodeRepository = EpisodeRepositoryImpl(episodeDao, episodeDatabaseDao)
-//
-//        getAllEpisodes = GetAllEpisodesUseCaseImpl(episodeRepository)
-//        getEpisodeById = GetEpisodeByIdUseCaseImpl(episodeRepository)
-//        getEpisodesByTitle = GetEpisodesByTitleUseCaseImpl(episodeRepository)
-//        getEpisodesByDate = GetEpisodesByDateUseCaseImpl(episodeRepository)
-//        getEpisodesBySeason = GetEpisodesBySeasonUseCaseImpl(episodeRepository)
-//        getEpisodesByChapter = GetEpisodesByChapterUseCaseImpl(episodeRepository)
-//
-//        // Casos de uso de la datos de la base de datos
-//        getAllEpisodesDb = GetAllEpisodesDbUseCaseImpl(episodeRepository)
-//        getEpisodeByIdDb = GetEpisodeByIdDbUseCaseImpl(episodeRepository)
-//        getEpisodeByIdsDb = GetEpisodeByIdsDbUseCaseImpl(episodeRepository)
-//        updateEpisodeDb = UpdateEpisodeDbUseCaseImpl(episodeRepository)
-//        insertEpisodeDb = InsertEpisodeDbUseCaseImpl(episodeRepository)
-//
-//    }
-//}
+// _______ Instanciando manualmente las dependencias (de personajes y episodios, falta la de citas con 'Factory') _______
+/**
+class TheSimpsonPlaceApp : Application() {
+
+    // Primero obtenemos el context de la aplicación
+    private lateinit var appContext: Context
+
+    // La implementacion de Character en producción de Impl.
+    private lateinit var characterDao: CharacterDao
+    private lateinit var characterDatabaseDao: CharacterDatabaseDao
+    private lateinit var characterRepository: CharaterRepository
+
+    lateinit var getAllCharacters: GetAllCharactersUseCase
+    lateinit var getCharactersByName: GetFilterNameCharactersUseCase
+    lateinit var getAllCharactersDb: FetchAllCharactersDbUseCase
+    lateinit var insertCharacterDb: InsertCharacterDbUseCase
+    lateinit var deleteCharacterDb: UpdateCharacterDbUseCase
+
+    // La implementacion de Episode en producción de Impl.
+    private lateinit var episodeDao: EpisodeDao
+    private lateinit var episodeDatabaseDao: EpisodeDatabaseDao
+    private lateinit var episodeRepository: EpisodeRepository
+
+    // Casos de uso de la datos obtenido de la fuente principal
+    lateinit var getAllEpisodes: GetAllEpisodesUseCase
+    lateinit var getEpisodeById: GetEpisodeByIdUseCase
+    lateinit var getEpisodesByTitle: GetEpisodesByTitleUseCase
+    lateinit var getEpisodesByDate: GetEpisodesByDateUseCase
+    lateinit var getEpisodesBySeason: GetEpisodesBySeasonUseCase
+    lateinit var getEpisodesByChapter: GetEpisodesByChapterUseCase
+
+    // Casos de uso de la datos de la base de datos
+    lateinit var getAllEpisodesDb: GetAllEpisodesDbUseCase
+    lateinit var  getEpisodeByIdDb: GetEpisodeByIdDbUseCase
+    lateinit var getEpisodeByIdsDb: GetEpisodeByIdsDbUseCase
+    lateinit var updateEpisodeDb: UpdateEpisodeDbUseCase
+    lateinit var insertEpisodeDb: InsertEpisodeDbUseCase
+
+    override fun onCreate() {
+        super.onCreate()
+
+        // Ahora puedes asignar el contexto después de llamar a super.onCreate()
+        appContext = applicationContext
+
+        // Luego de inicializar el contexto, puedes proceder con las inicializaciones
+        characterDao = CharacterDaoJson(appContext, "personajes_data.json", "imagenes_data.json")
+        characterDatabaseDao = CharacterDatabaseDaoRoom()
+        characterRepository = CharaterRepositoryImpl(characterDao, characterDatabaseDao)
+
+        getAllCharacters = GetAllCharactersUseCaseImpl(characterRepository)
+        getCharactersByName = GetFilterNameCharactersUseCaseImpl(characterRepository)
+        getAllCharactersDb = FetchAllCharactersDbUseCaseImpl(characterRepository)
+        insertCharacterDb = InsertCharacterDbUseCaseImpl(characterRepository)
+        deleteCharacterDb = UpdateCharacterDbUseCaseImpl(characterRepository)
+
+        // Luego de inicializar el contexto, puedes proceder con las inicializaciones
+        episodeDao = EpisodeDaoJson(appContext, "episodios_data.json")
+        episodeDatabaseDao = EpisodeDatabaseDaoRoom()
+        episodeRepository = EpisodeRepositoryImpl(episodeDao, episodeDatabaseDao)
+
+        getAllEpisodes = GetAllEpisodesUseCaseImpl(episodeRepository)
+        getEpisodeById = GetEpisodeByIdUseCaseImpl(episodeRepository)
+        getEpisodesByTitle = GetEpisodesByTitleUseCaseImpl(episodeRepository)
+        getEpisodesByDate = GetEpisodesByDateUseCaseImpl(episodeRepository)
+        getEpisodesBySeason = GetEpisodesBySeasonUseCaseImpl(episodeRepository)
+        getEpisodesByChapter = GetEpisodesByChapterUseCaseImpl(episodeRepository)
+
+        // Casos de uso de la datos de la base de datos
+        getAllEpisodesDb = GetAllEpisodesDbUseCaseImpl(episodeRepository)
+        getEpisodeByIdDb = GetEpisodeByIdDbUseCaseImpl(episodeRepository)
+        getEpisodeByIdsDb = GetEpisodeByIdsDbUseCaseImpl(episodeRepository)
+        updateEpisodeDb = UpdateEpisodeDbUseCaseImpl(episodeRepository)
+        insertEpisodeDb = InsertEpisodeDbUseCaseImpl(episodeRepository)
+
+    }
+}
+*/

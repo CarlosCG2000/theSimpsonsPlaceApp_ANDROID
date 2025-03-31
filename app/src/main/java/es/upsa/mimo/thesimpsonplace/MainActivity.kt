@@ -7,16 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import es.upsa.mimo.thesimpsonplace.presentation.ui.root.MyApp
 
-@AndroidEntryPoint // Para la inyección de dependecias con Hilt
-class MainActivity() : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity: ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
 
-/**
-        if (savedInstanceState == null) { // ✅ Evita ejecutar en recreaciones
+/**     OBTENER EL LENGUAJE DE LA APP CONFIGURADO POR EL USUARIO EN 'DATASTORE'
+        if (savedInstanceState == null) {
             lifecycleScope.launch {
                 val user = getUserPreferencesUseCase.userPreferencesFlow.firstOrNull()
                 user?.let {
