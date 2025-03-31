@@ -36,5 +36,4 @@ class ListCharactersFilterViewModel @Inject constructor(val getFilterNameCharact
             }
         }
     }
-
 }

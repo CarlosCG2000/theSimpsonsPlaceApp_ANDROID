@@ -2,7 +2,6 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile
 
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
 
-
 data class ProfileStateUI(
     val user: UserPreference = UserPreference(),
     val loggedIn: Boolean = false,

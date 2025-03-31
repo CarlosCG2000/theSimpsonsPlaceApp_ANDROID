@@ -27,7 +27,7 @@ class ResultGameViewModel @Inject constructor( val getGameStatsUseCase: GetGameS
         viewModelScope.launch {
             getGameStatsUseCase.gameStatsFlow.collect { stats ->
                 _gameStats.update {
-                    it.copy(stats)
+                    it.copy(result = stats)
                 }
             }
         }
@@ -36,12 +36,14 @@ class ResultGameViewModel @Inject constructor( val getGameStatsUseCase: GetGameS
     fun updateStats(aciertos: Int, preguntas: Int) {
         viewModelScope.launch {
             updateStatsUseCase(aciertos, preguntas)
+            _gameStats.update { it.copy(result = aciertos to preguntas) } // ✅ Actualiza el estado en la UI
         }
     }
 
     fun resetStats() {
         viewModelScope.launch {
             resetStatsUseCase()
+            _gameStats.update { it.copy(result = 0 to 0) } // ✅ Reinicia la UI
         }
     }
 }

@@ -9,7 +9,6 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.root.MyApp
 
 @AndroidEntryPoint
 class MainActivity: ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -18,7 +17,6 @@ class MainActivity: ComponentActivity() {
             MyApp()
         }
     }
-
 }
 
 

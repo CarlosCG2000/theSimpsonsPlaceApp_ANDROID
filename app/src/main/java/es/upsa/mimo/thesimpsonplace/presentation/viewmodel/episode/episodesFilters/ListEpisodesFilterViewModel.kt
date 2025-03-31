@@ -71,5 +71,4 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
         }
     }
 
-
 }

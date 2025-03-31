@@ -26,7 +26,7 @@ class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAl
             // delay(2000)
 
             _episodesState.update {
-                it.copy(getAllEpisodes, isLoading = false)
+                it.copy(episodes = getAllEpisodes, isLoading = false)
             }
         }
     }

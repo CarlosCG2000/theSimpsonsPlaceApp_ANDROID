@@ -38,9 +38,9 @@ class ListEpisodesDBViewModel @Inject constructor(
     private fun loadFavoritesOrViews() {
         viewModelScope.launch {
 
+            _stateEpisodesFavOrView.update { it.copy(isLoading = true) }
+
             getAllEpisodesDbUseCase().collect { episodesList ->
-                Log.i("EpisodesDB", "Episodios obtenidos: ${episodesList.size}")
-                _stateEpisodesFavOrView.update { it.copy(isLoading = true) }
 
                 _stateEpisodesFavOrView.update {
 
@@ -68,7 +68,7 @@ class ListEpisodesDBViewModel @Inject constructor(
             if (existsEpisode == null) {
                 insertEpisodeDbUseCase(episode.copy(esFavorito = fav, esVisto = view))
             } else {
-                updateEpisodeDbStatusUseCase(episode.id, esFavorito = fav, esVisto = view)
+                updateEpisodeDbStatusUseCase(episodeId = existsEpisode.id, esFavorito = fav, esVisto = view)
             }
 
             // 🔄 Actualizar el estado después de modificar la BD

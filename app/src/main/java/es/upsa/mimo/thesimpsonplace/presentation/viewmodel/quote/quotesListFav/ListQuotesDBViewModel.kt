@@ -27,21 +27,24 @@ class ListQuotesDBViewModel @Inject constructor(
     val stateQuotesFav: StateFlow<ListQuotesDbStateUI> = _stateQuotesFav.asStateFlow()
 
     init {
-        _stateQuotesFav.update { it.copy(isLoading = true) }
-        loadFavorites()
-        _stateQuotesFav.update { it.copy(isLoading = false) }
+        viewModelScope.launch {
+            _stateQuotesFav.update { it.copy(isLoading = true) }
+            loadFavorites()
+            _stateQuotesFav.update { it.copy(isLoading = false) }
+        }
     }
 
     private fun loadFavorites() {
-        _stateQuotesFav.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
+            _stateQuotesFav.update { it.copy(isLoading = true) }
 
             getAllQuotesDbUseCase().collect { quotesList ->
 
                 _stateQuotesFav.update {
                     it.copy(quotesSet = quotesList.mapNotNull { it.cita }.toSet(),
-                            quotes = quotesList)
+                            quotes = quotesList,
+                            isLoading = false)
                 }
 
             }
@@ -58,7 +61,7 @@ class ListQuotesDBViewModel @Inject constructor(
                 deleteQuoteDbUseCase(quote)
             }
 
-            loadFavorites() // 🔄 Actualiza la lista de favoritos
+            // loadFavorites() // 🔄 Actualiza la lista de favoritos
         }
     }
 

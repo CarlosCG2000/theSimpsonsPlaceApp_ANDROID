@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,14 +19,16 @@ class ListQuotesViewModel @Inject constructor( val getQuotesUseCase: GetQuotesUs
 
     fun getQuotes(numElementos: Int = 5, textPersonaje: String = ""){
         viewModelScope.launch {
-            _stateQuotes.update { it.copy( isLoading = true) }
+            _stateQuotes.update { it.copy(isLoading = true) }
 
-            val quotes = getQuotesUseCase(numElementos, textPersonaje)
-
-            _stateQuotes.update {
-                it.copy(quotes = quotes, isLoading = false)
+            try {
+                val quotes = getQuotesUseCase(numElementos, textPersonaje)
+                _stateQuotes.update { it.copy(quotes = quotes) }
+            } catch (e: Exception) {
+                Log.e("ListQuotesViewModel", "Error al obtener frases", e)
+            } finally {
+                _stateQuotes.update { it.copy(isLoading = false) }
             }
         }
     }
-
 }
