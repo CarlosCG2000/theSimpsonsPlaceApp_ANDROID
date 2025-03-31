@@ -1,7 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.domain.mappers
 
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeEntity
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 
 fun Episode.toEpisodeDb(isFav: Boolean = false,
                         isView: Boolean = false): EpisodeEntity {

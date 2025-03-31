@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeDbByIdUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetWatchedEpisodesUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.InsertEpisodeDbUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.IsEpisodeDbFavoriteUseCase
-import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.IsEpisodeDbWatchedUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.UpdateEpisodeDbStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

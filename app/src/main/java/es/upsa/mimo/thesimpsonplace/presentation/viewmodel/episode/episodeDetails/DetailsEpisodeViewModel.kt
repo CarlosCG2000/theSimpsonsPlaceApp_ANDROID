@@ -3,7 +3,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetai
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

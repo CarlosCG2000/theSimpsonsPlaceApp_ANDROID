@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.domain.entities
+package es.upsa.mimo.thesimpsonplace.domain.models
 
 import java.net.URL
 import java.util.UUID

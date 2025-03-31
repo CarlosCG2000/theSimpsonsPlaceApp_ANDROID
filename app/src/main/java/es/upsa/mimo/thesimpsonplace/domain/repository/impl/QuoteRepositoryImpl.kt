@@ -4,7 +4,7 @@ import es.upsa.mimo.thesimpsonplace.data.mappers.toQuote
 import es.upsa.mimo.thesimpsonplace.data.daos.local.room.QuoteDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.QuoteDao
 import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toQuoteDb
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

@@ -50,7 +50,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel

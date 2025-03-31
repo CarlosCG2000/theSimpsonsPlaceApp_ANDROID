@@ -1,7 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.domain.mappers
 
-import es.upsa.mimo.thesimpsonplace.domain.entities.Question
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.domain.models.Question
+import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import java.util.UUID
 
 fun Quote.toQuestion(): Question {

@@ -4,7 +4,7 @@ import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDTO
 import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
 import es.upsa.mimo.thesimpsonplace.data.daos.local.room.CharacterDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
+import es.upsa.mimo.thesimpsonplace.domain.models.Character
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toCharacterDb
 import es.upsa.mimo.thesimpsonplace.domain.repository.CharaterRepository
 import kotlinx.coroutines.Dispatchers

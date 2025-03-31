@@ -1,6 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 

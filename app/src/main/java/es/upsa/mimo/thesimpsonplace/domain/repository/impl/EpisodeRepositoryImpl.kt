@@ -3,7 +3,7 @@ package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisode
 import es.upsa.mimo.thesimpsonplace.data.daos.local.room.EpisodeDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toEpisodeDb
 import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import kotlinx.coroutines.Dispatchers

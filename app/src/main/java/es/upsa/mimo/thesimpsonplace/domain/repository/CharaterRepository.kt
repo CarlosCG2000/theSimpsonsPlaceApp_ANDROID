@@ -1,6 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
+import es.upsa.mimo.thesimpsonplace.domain.models.Character
 import kotlinx.coroutines.flow.Flow
 
 interface CharaterRepository {

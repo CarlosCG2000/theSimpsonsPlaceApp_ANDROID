@@ -3,7 +3,7 @@ package es.upsa.mimo.thesimpsonplace.data.mappers
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterEntity
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDTO
 import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
+import es.upsa.mimo.thesimpsonplace.domain.models.Character
 
 // Función de extensión de 'CharacterDto' para mapear a 'Character'
 fun CharacterDTO.toCharacter()

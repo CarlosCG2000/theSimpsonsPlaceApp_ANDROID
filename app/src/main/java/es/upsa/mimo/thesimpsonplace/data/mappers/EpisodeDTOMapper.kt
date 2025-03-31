@@ -2,7 +2,7 @@ package es.upsa.mimo.thesimpsonplace.data.mappers
 
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeEntity
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDTO
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.utils.toDate
 import java.util.Date
 import kotlin.String

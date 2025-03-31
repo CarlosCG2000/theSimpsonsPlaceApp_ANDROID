@@ -44,7 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeViewModel

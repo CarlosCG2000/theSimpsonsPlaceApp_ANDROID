@@ -3,8 +3,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.DeleteQuoteDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetAllQuoteDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuoteDbByCitaUseCase

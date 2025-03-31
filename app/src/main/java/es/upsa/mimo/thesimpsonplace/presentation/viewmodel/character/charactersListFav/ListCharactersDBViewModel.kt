@@ -3,7 +3,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.characters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
+import es.upsa.mimo.thesimpsonplace.domain.models.Character
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.DeleteCharacterDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetCharacterDbByIdUseCase

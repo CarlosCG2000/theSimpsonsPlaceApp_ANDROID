@@ -1,6 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import kotlinx.coroutines.flow.Flow
 
 interface QuoteRepository {
