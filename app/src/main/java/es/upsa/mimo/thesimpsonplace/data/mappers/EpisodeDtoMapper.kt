@@ -30,7 +30,6 @@ fun EpisodeDto.toEpisode(): Episode{
 }
 
 // ROOM
-
 // Lo pasamos de la fuente de información a la BD siendo (ambos falsos, uno de ello verdadero o ambos verdaderos). Ya que no es como en 'Character' y 'Quote' que si estaban en la BD es porque es favorito aqui pueden estar los episodios en la BD y luego no estar ni en favoritos ni en vistos o estar solo en una de las dos cosas.
 fun EpisodeDb.toEpisode(): Episode {
     return Episode( id = id,
@@ -46,7 +45,6 @@ fun EpisodeDb.toEpisode(): Episode {
         esFavorito = esFavorito,
         esVisto = esVisto)
 }
-
 
 //
 //fun CharacterDb.toCharacter(): es.upsa.mimo.thesimpsonplace.domain.entities.Character {

@@ -1,6 +1,5 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.service
+package es.upsa.mimo.thesimpsonplace.data.sources.remote
 
-import android.content.Context
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
 
 // Toda fuente de datos debe de implementar esta interfaz, con sus correspondientes acciones

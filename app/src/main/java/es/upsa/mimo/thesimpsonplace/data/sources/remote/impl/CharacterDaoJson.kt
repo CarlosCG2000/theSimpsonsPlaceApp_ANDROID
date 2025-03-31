@@ -1,21 +1,13 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.service.impl
+package es.upsa.mimo.thesimpsonplace.data.sources.remote.impl
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
-import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
 import es.upsa.mimo.thesimpsonplace.data.entities.character.ImageDto
-import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
-import es.upsa.mimo.thesimpsonplace.data.sources.service.CharacterDao
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
+import es.upsa.mimo.thesimpsonplace.data.sources.remote.CharacterDao
 import kotlinx.serialization.json.Json
-import java.io.IOException
-import javax.inject.Inject
 import javax.inject.Named
-import kotlin.text.get
 
 // Implementación de 'CharacterDtoDao' (acciones) en testing (y preview) o producción
 // @Inject constructor(...) -> Permite que Hilt maneje la creación de la clase.

@@ -1,12 +1,10 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.database.impl
+package es.upsa.mimo.thesimpsonplace.data.sources.local.impl
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import kotlinx.coroutines.flow.Flow
 
 @Dao

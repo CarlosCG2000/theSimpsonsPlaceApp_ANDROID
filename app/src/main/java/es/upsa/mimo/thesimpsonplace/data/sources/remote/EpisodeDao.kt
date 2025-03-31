@@ -1,7 +1,6 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.service
+package es.upsa.mimo.thesimpsonplace.data.sources.remote
 
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodesDto
 import java.util.Date
 
 // Interfaz con métodos para acceder a episodios desde el servicio.

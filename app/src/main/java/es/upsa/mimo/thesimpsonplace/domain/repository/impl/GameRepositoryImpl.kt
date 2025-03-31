@@ -1,7 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
-import es.upsa.mimo.thesimpsonplace.data.sources.database.GameDatastoreDao
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.GameDatastoreDaoImpl
+import es.upsa.mimo.thesimpsonplace.data.sources.local.GameDatastoreDao
 import es.upsa.mimo.thesimpsonplace.domain.repository.GameRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

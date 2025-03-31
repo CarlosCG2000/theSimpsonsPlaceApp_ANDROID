@@ -1,8 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.service.impl
-
-import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDto
-import es.upsa.mimo.thesimpsonplace.data.sources.service.QuoteDao
-import retrofit2.Retrofit
+package es.upsa.mimo.thesimpsonplace.data.sources.remote.impl
 
 //❌ Problema 1: QuoteDaoApi no es necesario,
 //🔍 Causa:

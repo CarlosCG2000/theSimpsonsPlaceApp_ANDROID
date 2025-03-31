@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.sources.service.QuoteDao
+import es.upsa.mimo.thesimpsonplace.data.sources.remote.QuoteDao
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton

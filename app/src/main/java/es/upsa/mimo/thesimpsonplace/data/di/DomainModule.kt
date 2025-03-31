@@ -4,12 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.sources.database.GameDatastoreDao
-import es.upsa.mimo.thesimpsonplace.data.sources.database.UserDatastoreDao
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.GameDatastoreDaoImpl
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.UserDatastoreDaoImpl
-import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.data.sources.local.GameDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.sources.local.UserDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.GameDatastoreDaoImpl
+import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.UserDatastoreDaoImpl
 import es.upsa.mimo.thesimpsonplace.domain.repository.* //CharaterRepository
 import es.upsa.mimo.thesimpsonplace.domain.repository.impl.* //CharaterRepositoryImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.* //FetchAllCharactersDbUseCase
@@ -28,7 +26,6 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.impl.user.UpdateUserUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.* // DeleteQuoteDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
 // Un @Module no puede contener métodos abstractos (@Binds) y métodos concretos (@Provides) al mismo tiempo. Por ello se crea una nueva clase.

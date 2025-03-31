@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.database
+package es.upsa.mimo.thesimpsonplace.data.sources.local
 
 import kotlinx.coroutines.flow.Flow
 

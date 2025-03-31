@@ -1,7 +1,6 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.service
+package es.upsa.mimo.thesimpsonplace.data.sources.remote
 
 import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDto
-import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 import retrofit2.http.GET
 import retrofit2.http.Query
 

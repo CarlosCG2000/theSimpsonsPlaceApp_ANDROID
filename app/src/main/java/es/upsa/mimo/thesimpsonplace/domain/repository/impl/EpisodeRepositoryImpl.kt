@@ -1,8 +1,8 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisode
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.EpisodeDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
+import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.EpisodeDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.sources.remote.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toEpisodeDb
 import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository

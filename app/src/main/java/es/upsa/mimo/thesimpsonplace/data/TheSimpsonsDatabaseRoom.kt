@@ -9,9 +9,9 @@ import com.google.gson.reflect.TypeToken
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
 import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDb
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.CharacterDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.EpisodeDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.QuoteDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.CharacterDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.EpisodeDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.QuoteDatabaseDaoRoom
 import java.net.URL
 import java.util.Date
 
