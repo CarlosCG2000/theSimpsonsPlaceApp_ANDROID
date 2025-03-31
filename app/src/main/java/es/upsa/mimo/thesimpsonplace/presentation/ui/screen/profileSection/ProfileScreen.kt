@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileViewModel
 
-
 @Composable
 fun ProfileScreen(onNavigationProfileForm:() -> Unit,
                   navigationArrowBack:() -> Unit,
