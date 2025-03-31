@@ -4,10 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.net.URL
 
-@Entity(tableName = "quotes")
+@Entity(tableName = QuoteEntity.TABLE_NAME)
 data class QuoteEntity(
     @PrimaryKey(autoGenerate = false) // importante poner clave primaria
     val cita: String,
     val personaje: String,
     val imagen: URL
-)
+){
+    companion object {
+        const val TABLE_NAME = "quotes"
+    }
+}

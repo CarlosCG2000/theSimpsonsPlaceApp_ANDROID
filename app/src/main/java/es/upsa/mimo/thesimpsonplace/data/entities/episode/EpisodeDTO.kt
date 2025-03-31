@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 // Representa el episodio tal y como se recibe del JSON.
 @Serializable
 data class EpisodeDTO(
-    @SerialName("disneyplus_id")  val id: String?,
+    @SerialName("disneyplus_id") val id: String?,
     @SerialName("title") val titulo: String?,
     @SerialName("season") val temporada: Int?,
     @SerialName("episode") val episodio: Int?,
@@ -17,19 +17,3 @@ data class EpisodeDTO(
     @SerialName("good") val valoracion: Boolean?,
     @SerialName("guest_stars") val invitados: List<String>?
 )
-
-// ROOM
-// 	•	Almacenamos lanzamiento como Long (timestamp) en lugar de Date porque Room no soporta Date directamente.
-/**
-    @Entity(tableName = "episode")
-    data class EpisodeEntity(
-    @PrimaryKey val id: String,
-    val titulo: String,
-    val temporada: Int,
-    val episodio: Int,
-    val lanzamiento: Long, // Guardamos la fecha como timestamp para Room
-    val descripcion: String,
-    val esFavorito: Boolean = false,
-    val esVisto: Boolean = false
-    )
- */

@@ -2,4 +2,5 @@
     <string name="app_name">TheSimpsonPlace</string>
     <string name="title_activity_prueba" translatable="false">PruebaActivity</string>
     <string name="logo_simpsons">LOGO SIMPSONS</string>
+    <string name="anonimo">Anónimo</string>
 </resources>

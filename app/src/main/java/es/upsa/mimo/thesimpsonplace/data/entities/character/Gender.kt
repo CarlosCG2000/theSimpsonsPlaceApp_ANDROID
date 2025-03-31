@@ -9,7 +9,7 @@ enum class Gender(val value: String) { // Enum para representar los géneros.
     Undefined("Not specified");
 
     companion object { // Dentro se encontrarla objetos estáticas
-        // Metodo para transformar "m" -> Male, "f" -> Female, "" -> Undefined.
+        // Método para transformar "m" -> Male, "f" -> Female, "" -> Undefined.
         fun fromAbbreviation(gender: String?): Gender {
             return when (gender?.lowercase()) {
                 "f" -> Female

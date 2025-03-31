@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity(tableName = "episodes")
+@Entity(tableName = EpisodeEntity.TABLE_NAME)
 data class EpisodeEntity (
     @PrimaryKey(autoGenerate = false) // Importante poner clave primaria
     val id: String,
@@ -19,6 +19,10 @@ data class EpisodeEntity (
     val invitados: List<String>, // En la BD  se convierte a 'String' a través de la clase 'Converters'
     var esVisto: Boolean,
     var esFavorito: Boolean
-)
+){
+    companion object {
+        const val TABLE_NAME = "episodes"
+    }
+}
 
 
