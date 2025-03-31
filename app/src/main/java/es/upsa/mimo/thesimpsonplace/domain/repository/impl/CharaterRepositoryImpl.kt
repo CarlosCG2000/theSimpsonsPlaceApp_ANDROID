@@ -2,7 +2,7 @@ package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
 import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
-import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.CharacterDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.sources.local.CharacterDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.remote.CharacterDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toCharacterDb

@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.local.impl
+package es.upsa.mimo.thesimpsonplace.data.sources.local
 
 import androidx.room.Dao
 import androidx.room.Delete
