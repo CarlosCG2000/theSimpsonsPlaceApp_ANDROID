@@ -1,11 +1,11 @@
 package es.upsa.mimo.thesimpsonplace.domain.mappers
 
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeEntity
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 
 fun Episode.toEpisodeDb(isFav: Boolean = false,
-                        isView: Boolean = false): EpisodeDb {
-    return EpisodeDb( id = id,
+                        isView: Boolean = false): EpisodeEntity {
+    return EpisodeEntity( id = id,
         titulo =  titulo,
         temporada = temporada,
         episodio = episodio,

@@ -1,12 +1,12 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
-import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDb
-import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDto
+import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteEntity
+import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDTO
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 import java.net.URL
 
 // Función de Extensión para convertir QuoteDto a Quote
-fun QuoteDto.toQuote(/*esFavorito: Boolean = false*/): Quote {
+fun QuoteDTO.toQuote(/*esFavorito: Boolean = false*/): Quote {
     return Quote(
         cita = cita ?: "Cita desconocida",
         personaje = personaje?: "Personaje desconocida",
@@ -16,7 +16,7 @@ fun QuoteDto.toQuote(/*esFavorito: Boolean = false*/): Quote {
 }
 
 // ROOM
-fun QuoteDb.toQuote(): Quote {
+fun QuoteEntity.toQuote(): Quote {
     return Quote(
         cita = cita,
         personaje = personaje,

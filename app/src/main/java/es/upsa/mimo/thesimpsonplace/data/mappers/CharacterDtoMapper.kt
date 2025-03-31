@@ -1,12 +1,12 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterEntity
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDTO
 import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 
 // Función de extensión de 'CharacterDto' para mapear a 'Character'
-fun CharacterDto.toCharacter()
+fun CharacterDTO.toCharacter()
     = Character (
         id = getIdAsInt() ?: 0, // Convierte id a Int o usa 0 por defecto
         nombre = nombre ?: "Unknown", // Si el nombre es null, usa "Unknown"
@@ -16,7 +16,7 @@ fun CharacterDto.toCharacter()
     )
 
 // ROOM
-fun CharacterDb.toCharacter(): Character {
+fun CharacterEntity.toCharacter(): Character {
     return Character( id = id,
         nombre = nombre,
         genero = genero,

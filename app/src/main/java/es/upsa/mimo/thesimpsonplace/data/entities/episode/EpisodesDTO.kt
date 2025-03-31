@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 // Contenedor de la lista de episodios del JSON.
 @Serializable
-data class EpisodesDto(
-    @SerialName("episodes") val episodios: List<EpisodeDto>?
+data class EpisodesDTO(
+    @SerialName("episodes") val episodios: List<EpisodeDTO>?
 )

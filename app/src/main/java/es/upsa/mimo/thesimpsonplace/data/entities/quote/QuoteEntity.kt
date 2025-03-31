@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.net.URL
 
 @Entity(tableName = "quotes")
-data class QuoteDb(
+data class QuoteEntity(
     @PrimaryKey(autoGenerate = false) // importante poner clave primaria
     val cita: String,
     val personaje: String,

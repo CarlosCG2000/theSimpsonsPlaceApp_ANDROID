@@ -5,33 +5,21 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterEntity
 import kotlinx.coroutines.flow.Flow
-
-//interface CharacterDatabaseDao {
-//    suspend fun getAllCharactersDb(): List<Character> // Obtener todos los personajes de la base de datos
-//    suspend fun insertCharacterDb(character: Character): Unit // Insertar personaje en la base de datos
-//    suspend fun deleteCharacterDb(id: Int): Unit // Borrar personaje en la base de datos
-//}
-
-//interface CharacterDatabaseDao {
-//    fun getAllCharactersDb(): Flow<List<CharacterDb>>
-//    suspend fun insertCharacterDb(character: CharacterDb): Unit
-//    suspend fun deleteCharacterDb(character: CharacterDb): Unit
-//}
 
 // Las operaciones para la Base de datos de la entidad de Character
 @Dao
 interface CharacterDatabaseDaoRoom {
     @Query("SELECT * FROM characters ORDER BY nombre ASC") // ORDER BY id ASC
-    fun getAllCharactersDb(): Flow<List<CharacterDb>>
+    fun getAllCharactersDb(): Flow<List<CharacterEntity>>
 
     @Query("SELECT * FROM characters WHERE id = :id LIMIT 1")
-    suspend fun getCharacterDbById(id: Int): CharacterDb?
+    suspend fun getCharacterDbById(id: Int): CharacterEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacterDb(character: CharacterDb)
+    suspend fun insertCharacterDb(character: CharacterEntity)
 
     @Delete
-    suspend fun deleteCharacterDb(character: CharacterDb)
+    suspend fun deleteCharacterDb(character: CharacterEntity)
 }

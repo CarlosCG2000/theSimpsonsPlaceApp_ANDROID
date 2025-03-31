@@ -1,6 +1,5 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import kotlinx.coroutines.flow.Flow
 

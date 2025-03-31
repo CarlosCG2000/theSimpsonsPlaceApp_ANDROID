@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(tableName = "episodes")
-data class EpisodeDb (
+data class EpisodeEntity (
     @PrimaryKey(autoGenerate = false) // Importante poner clave primaria
     val id: String,
     val titulo: String,

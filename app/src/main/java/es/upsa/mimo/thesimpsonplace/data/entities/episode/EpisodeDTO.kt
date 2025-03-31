@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 // Representa el episodio tal y como se recibe del JSON.
 @Serializable
-data class EpisodeDto(
+data class EpisodeDTO(
     @SerialName("disneyplus_id")  val id: String?,
     @SerialName("title") val titulo: String?,
     @SerialName("season") val temporada: Int?,

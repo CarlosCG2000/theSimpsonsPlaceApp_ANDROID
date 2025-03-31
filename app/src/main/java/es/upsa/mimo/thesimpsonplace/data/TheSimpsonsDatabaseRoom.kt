@@ -6,9 +6,9 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
-import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDb
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterEntity
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeEntity
+import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteEntity
 import es.upsa.mimo.thesimpsonplace.data.sources.local.CharacterDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.local.EpisodeDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.local.QuoteDatabaseDaoRoom
@@ -45,9 +45,9 @@ class Converters {
 
 // DEFINIMOS NUESTRA BASE DE DATOS
 @Database(entities = [
-                        CharacterDb::class,
-                        EpisodeDb::class,
-                        QuoteDb::class
+                        CharacterEntity::class,
+                        EpisodeEntity::class,
+                        QuoteEntity::class
                      ],
           version = 2,  // Versión 2 (cambiar de version 1 (solo tabla de Characters a versión 2 con tabla de Episodes y Quotes)
           exportSchema = false) // Ponerlo a false porque sino al compilar va a dar error.

@@ -3,8 +3,8 @@ package es.upsa.mimo.thesimpsonplace.data.sources.remote.impl
 import android.content.Context
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDto
-import es.upsa.mimo.thesimpsonplace.data.entities.character.ImageDto
+import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDTO
+import es.upsa.mimo.thesimpsonplace.data.entities.character.ImageDTO
 import es.upsa.mimo.thesimpsonplace.data.sources.remote.CharacterDao
 import kotlinx.serialization.json.Json
 import javax.inject.Named
@@ -18,18 +18,18 @@ class CharacterDaoJson /* ❌ @Inject constructor (Usando @Provides) */(@Applica
                                            ): CharacterDao {
 
     // json -> dependiendo del json va a ser para producción o para testing
-    override suspend fun getAllCharacters(): List<CharacterDto> {
+    override suspend fun getAllCharacters(): List<CharacterDTO> {
         // Configurar el deserializador de JSON
         val jsonFormat = Json { ignoreUnknownKeys = true }
 
         try {
             // Abrir el archivo JSON desde los assets
             val jsonPersonajes = context.assets.open(dataJson).bufferedReader().use { it.readText() }
-            val charactersDto = jsonFormat.decodeFromString<List<CharacterDto>>(jsonPersonajes)
+            val charactersDto = jsonFormat.decodeFromString<List<CharacterDTO>>(jsonPersonajes)
 
             // Leer y parsear JSON de imágenes
             val jsonImagenes = context.assets.open(imagJson).bufferedReader().use { it.readText() }
-            val imagenesDto = jsonFormat.decodeFromString<List<ImageDto>>(jsonImagenes)
+            val imagenesDto = jsonFormat.decodeFromString<List<ImageDTO>>(jsonImagenes)
 
             // Crear un mapa {nombre en minúsculas -> imagen}
             val imagesMap = imagenesDto.associateBy(
@@ -43,7 +43,7 @@ class CharacterDaoJson /* ❌ @Inject constructor (Usando @Provides) */(@Applica
             return charactersDto.map { dto ->
                 val imagen = imagesMap[dto.nombre?.lowercase()] ?: "not_specified" // Buscar imagen
 
-                CharacterDto(
+                CharacterDTO(
                     id = dto.id,
                     nombre = dto.nombre,
                     genero = dto.genero,
@@ -56,7 +56,7 @@ class CharacterDaoJson /* ❌ @Inject constructor (Usando @Provides) */(@Applica
         }
     }
 
-    override suspend fun getCharactersByName(name: String): List<CharacterDto> {
+    override suspend fun getCharactersByName(name: String): List<CharacterDTO> {
         return getAllCharacters().filter { it.nombre?.contains(name, ignoreCase = true) == true }
     }
 }

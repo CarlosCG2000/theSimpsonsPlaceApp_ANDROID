@@ -1,14 +1,14 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeEntity
+import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDTO
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.utils.toDate
 import java.util.Date
 import kotlin.String
 
 // Función de Extensión para convertir EpisodeDto a Episode
-fun EpisodeDto.toEpisode(): Episode{
+fun EpisodeDTO.toEpisode(): Episode{
 
     val idOpt: String = ((temporada ?: 0) * 3 + (episodio ?: 0)).toString()
     val lanzamientoDate: Date = lanzamiento?.toDate() ?: Date(0) // '.toDate()' es una extensión personalizada. Si es null, usa fecha 1970
@@ -31,7 +31,7 @@ fun EpisodeDto.toEpisode(): Episode{
 
 // ROOM
 // Lo pasamos de la fuente de información a la BD siendo (ambos falsos, uno de ello verdadero o ambos verdaderos). Ya que no es como en 'Character' y 'Quote' que si estaban en la BD es porque es favorito aqui pueden estar los episodios en la BD y luego no estar ni en favoritos ni en vistos o estar solo en una de las dos cosas.
-fun EpisodeDb.toEpisode(): Episode {
+fun EpisodeEntity.toEpisode(): Episode {
     return Episode( id = id,
         titulo =  titulo,
         temporada = temporada ,
