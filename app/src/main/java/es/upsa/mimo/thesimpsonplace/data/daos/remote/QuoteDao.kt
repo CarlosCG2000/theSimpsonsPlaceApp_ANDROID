@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.remote
+package es.upsa.mimo.thesimpsonplace.data.daos.remote
 
 import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDTO
 import retrofit2.http.GET

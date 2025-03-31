@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.remote.impl
+package es.upsa.mimo.thesimpsonplace.data.daos.remote.impl
 
 //❌ Problema 1: QuoteDaoApi no es necesario,
 //🔍 Causa:

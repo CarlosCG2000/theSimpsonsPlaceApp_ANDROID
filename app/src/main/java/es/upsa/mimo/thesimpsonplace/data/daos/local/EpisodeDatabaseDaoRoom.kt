@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.local
+package es.upsa.mimo.thesimpsonplace.data.daos.local
 
 import androidx.room.Dao
 import androidx.room.Insert

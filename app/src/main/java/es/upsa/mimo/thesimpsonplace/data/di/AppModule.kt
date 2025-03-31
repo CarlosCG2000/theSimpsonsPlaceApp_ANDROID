@@ -11,10 +11,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.CharacterDao
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.EpisodeDao
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.impl.CharacterDaoJson
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.impl.EpisodeDaoJson
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.CharacterDaoJson
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.EpisodeDaoJson
 import javax.inject.Qualifier
 
 import javax.inject.Singleton

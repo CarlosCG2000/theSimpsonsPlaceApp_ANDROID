@@ -15,14 +15,3 @@ data class CharacterDTO(
         return id?.toInt()
     }
 }
-
-// 1️⃣ ROOM: Entidad CharacterEntity
-/**
-@Entity(tableName = "character")
-data class CharacterEntity(
-    @PrimaryKey val id: Int,
-    val nombre: String,
-    val imagen: String,
-    val esFavorito: Boolean = false // Indica si el personaje es favorito
-)
-*/

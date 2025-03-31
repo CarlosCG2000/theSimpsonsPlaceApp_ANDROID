@@ -5,9 +5,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.local.CharacterDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.local.EpisodeDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.local.QuoteDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.CharacterDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.EpisodeDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.QuoteDatabaseDaoRoom
 import javax.inject.Singleton
 
 // DatabaseModule exclusivo para base de datos Room

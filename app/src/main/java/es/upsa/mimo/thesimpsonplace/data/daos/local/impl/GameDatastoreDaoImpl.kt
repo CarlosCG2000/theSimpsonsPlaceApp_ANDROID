@@ -1,10 +1,10 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.local.impl
+package es.upsa.mimo.thesimpsonplace.data.daos.local.impl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import es.upsa.mimo.thesimpsonplace.data.sources.local.GameDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.GameDatastoreDao
 import es.upsa.mimo.thesimpsonplace.data.di.AppModule.GameDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

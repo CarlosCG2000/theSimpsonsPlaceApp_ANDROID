@@ -1,8 +1,8 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.mappers.toQuote
-import es.upsa.mimo.thesimpsonplace.data.sources.local.QuoteDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.QuoteDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.QuoteDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.QuoteDao
 import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toQuoteDb

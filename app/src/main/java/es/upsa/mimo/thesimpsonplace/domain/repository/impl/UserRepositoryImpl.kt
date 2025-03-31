@@ -1,7 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
-import es.upsa.mimo.thesimpsonplace.data.sources.local.UserDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.UserDatastoreDao
 import es.upsa.mimo.thesimpsonplace.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

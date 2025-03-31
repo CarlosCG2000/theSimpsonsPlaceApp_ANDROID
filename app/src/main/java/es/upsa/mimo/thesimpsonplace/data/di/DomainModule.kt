@@ -4,10 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.sources.local.GameDatastoreDao
-import es.upsa.mimo.thesimpsonplace.data.sources.local.UserDatastoreDao
-import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.GameDatastoreDaoImpl
-import es.upsa.mimo.thesimpsonplace.data.sources.local.impl.UserDatastoreDaoImpl
+import es.upsa.mimo.thesimpsonplace.data.daos.local.GameDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.UserDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.impl.GameDatastoreDaoImpl
+import es.upsa.mimo.thesimpsonplace.data.daos.local.impl.UserDatastoreDaoImpl
 import es.upsa.mimo.thesimpsonplace.domain.repository.* //CharaterRepository
 import es.upsa.mimo.thesimpsonplace.domain.repository.impl.* //CharaterRepositoryImpl
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.* //FetchAllCharactersDbUseCase

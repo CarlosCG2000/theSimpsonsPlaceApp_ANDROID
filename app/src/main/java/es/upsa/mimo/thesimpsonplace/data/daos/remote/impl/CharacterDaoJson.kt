@@ -1,11 +1,11 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.remote.impl
+package es.upsa.mimo.thesimpsonplace.data.daos.remote.impl
 
 import android.content.Context
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDTO
 import es.upsa.mimo.thesimpsonplace.data.entities.character.ImageDTO
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.CharacterDao
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
 import kotlinx.serialization.json.Json
 import javax.inject.Named
 

@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.local.impl
+package es.upsa.mimo.thesimpsonplace.data.daos.local.impl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import es.upsa.mimo.thesimpsonplace.data.entities.user.Language
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
-import es.upsa.mimo.thesimpsonplace.data.sources.local.UserDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.UserDatastoreDao
 import es.upsa.mimo.thesimpsonplace.data.di.AppModule.UserDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

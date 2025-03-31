@@ -1,10 +1,10 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.remote.impl
+package es.upsa.mimo.thesimpsonplace.data.daos.remote.impl
 
 import android.content.Context
 import android.util.Log
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDTO
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodesDTO
-import es.upsa.mimo.thesimpsonplace.data.sources.remote.EpisodeDao
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.utils.toDate
 import kotlinx.serialization.json.Json
 import java.util.Date

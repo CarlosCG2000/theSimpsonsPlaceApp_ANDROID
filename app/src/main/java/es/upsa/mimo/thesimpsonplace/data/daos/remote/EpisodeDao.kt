@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.sources.remote
+package es.upsa.mimo.thesimpsonplace.data.daos.remote
 
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDTO
 import java.util.Date
