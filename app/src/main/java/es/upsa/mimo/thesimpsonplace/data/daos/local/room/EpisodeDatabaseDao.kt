@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.daos.local
+package es.upsa.mimo.thesimpsonplace.data.daos.local.room
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -8,7 +8,7 @@ import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface EpisodeDatabaseDaoRoom {
+interface EpisodeDatabaseDao {
     // 1️⃣ Obtener todos los episodios de la BD
     @Query("SELECT * FROM episodes")
     fun getAllEpisodesDb(): Flow<List<EpisodeEntity>>

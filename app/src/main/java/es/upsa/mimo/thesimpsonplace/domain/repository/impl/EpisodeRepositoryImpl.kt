@@ -1,7 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisode
-import es.upsa.mimo.thesimpsonplace.data.daos.local.EpisodeDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.EpisodeDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toEpisodeDb
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.collections.map
 
 class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
-                                                private val databaseDao: EpisodeDatabaseDaoRoom): EpisodeRepository {
+                                                private val databaseDao: EpisodeDatabaseDao): EpisodeRepository {
 
 /**
     suspend fun fusionSourceDB(episodesSource: List<Episode>): List<Episode> {

@@ -1,18 +1,18 @@
-package es.upsa.mimo.thesimpsonplace.data.daos.local.impl
+package es.upsa.mimo.thesimpsonplace.data.daos.local.datastore.impl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import es.upsa.mimo.thesimpsonplace.data.daos.local.GameDatastoreDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.datastore.GameDao
 import es.upsa.mimo.thesimpsonplace.data.di.AppModule.GameDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GameDatastoreDaoImpl @Inject constructor(@GameDataStore private val dataStore: DataStore<Preferences>):
-    GameDatastoreDao {
+class GameDaoImpl @Inject constructor(@GameDataStore private val dataStore: DataStore<Preferences>):
+    GameDao {
 
     private object PreferencesKeys {
         val ACIERTOS = intPreferencesKey("aciertos")

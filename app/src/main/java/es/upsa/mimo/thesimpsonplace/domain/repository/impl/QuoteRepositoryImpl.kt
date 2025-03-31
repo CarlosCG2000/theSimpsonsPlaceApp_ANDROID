@@ -1,7 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.mappers.toQuote
-import es.upsa.mimo.thesimpsonplace.data.daos.local.QuoteDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.QuoteDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.QuoteDao
 import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
@@ -13,7 +13,7 @@ import javax.inject.Inject
 // 'QuoteRepositoryImpl' usa inyección de dependencias (api y db).
 // Separa API y BD, cumpliendo el Principio de Responsabilidad Única (SRP).
 class QuoteRepositoryImpl  @Inject constructor(private val apiDao: QuoteDao,
-                                               private val databaseDao: QuoteDatabaseDaoRoom) : QuoteRepository {
+                                               private val databaseDao: QuoteDatabaseDao) : QuoteRepository {
 
     override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> {
         // return withContext(Dispatchers.IO) { // no es necesario en un repositorio si la función ya es suspend, porque Retrofit maneja el cambio de contexto automáticamente.

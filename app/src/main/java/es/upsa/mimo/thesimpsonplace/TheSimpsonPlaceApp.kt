@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.hilt.android.HiltAndroidApp
-import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.TheSimpsonsDatabaseRoom
 
 // Llamo al contexto de la App donde he definido la BD, para pasarlelo al Compose
 val Context.database

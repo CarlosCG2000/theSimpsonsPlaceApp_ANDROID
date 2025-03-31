@@ -4,10 +4,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.TheSimpsonsDatabaseRoom
-import es.upsa.mimo.thesimpsonplace.data.daos.local.CharacterDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.daos.local.EpisodeDatabaseDaoRoom
-import es.upsa.mimo.thesimpsonplace.data.daos.local.QuoteDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.TheSimpsonsDatabaseRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.CharacterDatabaseDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.EpisodeDatabaseDao
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.QuoteDatabaseDao
 import javax.inject.Singleton
 
 // DatabaseModule exclusivo para base de datos Room
@@ -23,19 +23,19 @@ object DatabaseModule {
 //    }
 
     @Provides
-    fun provideCharacterDao(database: TheSimpsonsDatabaseRoom): CharacterDatabaseDaoRoom {
+    fun provideCharacterDao(database: TheSimpsonsDatabaseRoom): CharacterDatabaseDao {
         return database.characterDbDao()
     }
 
     @Provides
     @Singleton
-    fun provideEpisodeDatabaseDao(database: TheSimpsonsDatabaseRoom): EpisodeDatabaseDaoRoom {
+    fun provideEpisodeDatabaseDao(database: TheSimpsonsDatabaseRoom): EpisodeDatabaseDao {
         return database.episodeDbDao()
     }
 
     @Provides
     @Singleton
-    fun provideQuoteDatabaseDao(database: TheSimpsonsDatabaseRoom): QuoteDatabaseDaoRoom {
+    fun provideQuoteDatabaseDao(database: TheSimpsonsDatabaseRoom): QuoteDatabaseDao {
         return database.quoteDbDao()
     }
 

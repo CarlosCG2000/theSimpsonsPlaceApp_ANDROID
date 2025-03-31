@@ -1,4 +1,4 @@
-package es.upsa.mimo.thesimpsonplace.data.daos.local
+package es.upsa.mimo.thesimpsonplace.data.daos.local.room
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -9,7 +9,7 @@ import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface QuoteDatabaseDaoRoom {
+interface QuoteDatabaseDao {
     @Query("SELECT * FROM quotes ORDER BY personaje ASC") // ORDER BY id ASC
     fun getAllQuotesDb(): Flow<List<QuoteEntity>>
 

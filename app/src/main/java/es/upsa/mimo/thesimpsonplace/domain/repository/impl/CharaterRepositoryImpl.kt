@@ -2,7 +2,7 @@ package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDTO
 import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
-import es.upsa.mimo.thesimpsonplace.data.daos.local.CharacterDatabaseDaoRoom
+import es.upsa.mimo.thesimpsonplace.data.daos.local.room.CharacterDatabaseDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toCharacterDb
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 // 	@Inject constructor(...): Hilt puede inyectarlo directamente sin necesidad de un @Provides en el AppModule.
 class CharaterRepositoryImpl @Inject constructor(val dao: CharacterDao,
-                                                 private val databaseDao: CharacterDatabaseDaoRoom): CharaterRepository {
+                                                 private val databaseDao: CharacterDatabaseDao): CharaterRepository {
 
     override suspend fun getAllCharacters(): List<Character> {
         return withContext(Dispatchers.IO) { // withContext cambia el contexto de ejecución de la corrutina sin crear una nueva
