@@ -2,12 +2,12 @@ package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
 import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisode
 import es.upsa.mimo.thesimpsonplace.data.mappers.toQuote
-import es.upsa.mimo.thesimpsonplace.data.mappers.toQuoteDb
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.QuoteDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.QuoteDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
 import es.upsa.mimo.thesimpsonplace.domain.repository.QuoteRepository
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
+import es.upsa.mimo.thesimpsonplace.domain.mappers.toQuoteDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

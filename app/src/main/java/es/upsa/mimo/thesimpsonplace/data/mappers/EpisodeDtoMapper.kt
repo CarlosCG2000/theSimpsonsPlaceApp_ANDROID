@@ -1,12 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
-import androidx.room.TypeConverter
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
-import es.upsa.mimo.thesimpsonplace.data.utils.toDate
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.utils.toDate
 import java.util.Date
 import kotlin.String
 
@@ -35,22 +32,6 @@ fun EpisodeDto.toEpisode(): Episode{
 // ROOM
 
 // Lo pasamos de la fuente de información a la BD siendo (ambos falsos, uno de ello verdadero o ambos verdaderos). Ya que no es como en 'Character' y 'Quote' que si estaban en la BD es porque es favorito aqui pueden estar los episodios en la BD y luego no estar ni en favoritos ni en vistos o estar solo en una de las dos cosas.
-fun Episode.toEpisodeDb(isFav: Boolean = false,
-                        isView: Boolean = false): EpisodeDb {
-    return EpisodeDb( id = id,
-        titulo =  titulo,
-        temporada = temporada,
-        episodio = episodio,
-        lanzamiento = lanzamiento, // Se convierte de Date a Long,
-        directores = directores,
-        escritores = escritores,
-        descripcion = descripcion,
-        valoracion = valoracion,
-        invitados = invitados,
-        esFavorito = isFav,
-        esVisto = isView)
-}
-
 fun EpisodeDb.toEpisode(): Episode {
     return Episode( id = id,
         titulo =  titulo,
@@ -65,7 +46,6 @@ fun EpisodeDb.toEpisode(): Episode {
         esFavorito = esFavorito,
         esVisto = esVisto)
 }
-
 
 
 //

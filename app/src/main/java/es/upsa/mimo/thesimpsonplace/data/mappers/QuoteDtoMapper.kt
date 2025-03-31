@@ -1,12 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.data.mappers
 
-import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterDb
 import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDb
 import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDto
-import es.upsa.mimo.thesimpsonplace.domain.entities.Character
 import es.upsa.mimo.thesimpsonplace.domain.entities.Quote
 import java.net.URL
-import kotlin.Boolean
 
 // Función de Extensión para convertir QuoteDto a Quote
 fun QuoteDto.toQuote(/*esFavorito: Boolean = false*/): Quote {
@@ -19,14 +16,6 @@ fun QuoteDto.toQuote(/*esFavorito: Boolean = false*/): Quote {
 }
 
 // ROOM
-fun Quote.toQuoteDb(): QuoteDb {
-    return QuoteDb(
-        cita = cita,
-        personaje = personaje,
-        imagen = imagen)
-}
-
-
 fun QuoteDb.toQuote(): Quote {
     return Quote(
         cita = cita,
@@ -34,3 +23,4 @@ fun QuoteDb.toQuote(): Quote {
         imagen = imagen,
         esFavorito = true)
 }
+

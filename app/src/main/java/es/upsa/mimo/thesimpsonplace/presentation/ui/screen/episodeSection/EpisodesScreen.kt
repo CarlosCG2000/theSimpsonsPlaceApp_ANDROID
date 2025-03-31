@@ -36,15 +36,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import es.upsa.mimo.thesimpsonplace.data.utils.LoggerClass
+import es.upsa.mimo.thesimpsonplace.utils.LoggerClass
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
-import es.upsa.mimo.thesimpsonplace.domain.mappers.toFormattedString
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
+import es.upsa.mimo.thesimpsonplace.utils.toFormattedString
 import kotlin.Int
 
 @Composable

@@ -1,13 +1,10 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository.impl
 
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDb
-import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
-import es.upsa.mimo.thesimpsonplace.data.mappers.toCharacter
 import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisode
-import es.upsa.mimo.thesimpsonplace.data.mappers.toEpisodeDb
 import es.upsa.mimo.thesimpsonplace.data.sources.database.impl.EpisodeDatabaseDaoRoom
 import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.domain.entities.Episode
+import es.upsa.mimo.thesimpsonplace.domain.mappers.toEpisodeDb
 import es.upsa.mimo.thesimpsonplace.domain.repository.EpisodeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

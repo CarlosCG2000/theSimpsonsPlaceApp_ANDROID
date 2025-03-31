@@ -5,7 +5,7 @@ import android.util.Log
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodeDto
 import es.upsa.mimo.thesimpsonplace.data.entities.episode.EpisodesDto
 import es.upsa.mimo.thesimpsonplace.data.sources.service.EpisodeDao
-import es.upsa.mimo.thesimpsonplace.data.utils.toDate
+import es.upsa.mimo.thesimpsonplace.utils.toDate
 import kotlinx.serialization.json.Json
 import java.util.Date
 
