@@ -5,7 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import es.upsa.mimo.thesimpsonplace.data.daos.local.datastore.GameDao
-import es.upsa.mimo.thesimpsonplace.data.di.AppModule.GameDataStore
+import es.upsa.mimo.thesimpsonplace.data.di.DatabaseModule.GameDataStore
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

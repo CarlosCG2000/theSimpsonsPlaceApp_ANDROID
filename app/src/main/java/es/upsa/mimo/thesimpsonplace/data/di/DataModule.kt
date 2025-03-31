@@ -1,28 +1,17 @@
 package es.upsa.mimo.thesimpsonplace.data.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import es.upsa.mimo.thesimpsonplace.data.daos.local.room.TheSimpsonsDatabaseRoom
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.CharacterDaoImpl
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.EpisodeDaoImpl
-import javax.inject.Qualifier
-
 import javax.inject.Singleton
 
-// AppModule maneja repositorios, casos de uso y lógica de negocio.
-@Module // Para proporcionar las dependencias
-@InstallIn(SingletonComponent::class)
-object AppModule {
 /**
  * 📌 ¿Por qué te funciona igual con o sin @Inject constructor?
  *
@@ -38,6 +27,11 @@ object AppModule {
  * 	•	Dejar @Provides en AppModule si en el futuro necesitas cambiar la implementación fácilmente.
  * 	•	Eliminar @Provides y solo usar @Inject constructor si la implementación no va a cambiar nunca y prefieres menos código en AppModule.
  */
+
+// AppModule maneja repositorios, casos de uso y lógica de negocio.
+@Module // Para proporcionar las dependencias
+@InstallIn(SingletonComponent::class)
+object DataModule {
 
 //   Ahora Hilt puede inyectarlos automáticamente al detectar @Inject constructor() en sus clases.
     @Provides // Esto hace que Hilt nunca use @Inject constructor de CharacterDaoJson, porque ya le estás diciendo exactamente cómo crear la instancia. Aquí Hilt sabe que cuando alguien necesite CharaterDao, debe proporcionar una instancia de CharaterDaoImpl. Al tener la eleccion de json de test o produccion, lo implementamos manualmente pasandole el @Provides y luego la eplciaicon de dentro
@@ -65,69 +59,20 @@ object AppModule {
         }else {
             EpisodeDaoImpl(context, "episodios_data.json")
         }
-
     }
 
+//  EpisodeDatabaDao --> DatabaseModule.k
 
+    /**
+    DataModule.kt (Fuentes de Datos y DataStore)
 
-// _________________________________________________
-//    Le dice a Hilt cómo proveer el DataStore<Preferences> cuando sea necesario en otra clase.
-//    Como gameDataStore ya es una propiedad de extensión de Context, simplemente la usamos.
-//    Hilt sabe qué DataStore<Preferences> usar gracias a la inyección de dependencias basada en los tipos.
-//    Sin embargo, en este caso, ambos métodos devuelven un DataStore<Preferences>, por lo que Hilt no puede diferenciar entre gameDataStore y userDataStore automáticamente. Para solucionar esto, usamos calificadores (@Qualifier).
+    Este módulo proporciona:
+    ✔ CharacterDao y EpisodeDao, permitiendo elegir entre modo producción o test con archivos JSON.
 
-//  1️⃣ Definir los Qualifiers
-//  Crea dos @Qualifier para identificar cada DataStore:
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class GameDataStore
+    Ventaja: Permite cambiar entre archivos de producción y prueba sin modificar el código en otros lugares.
+     */
 
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class UserDataStore
-
-//  DataStore necesita acceso a un Context para funcionar.
-//  Usar una propiedad de extensión garantiza que cualquier Context tenga acceso al mismo DataStore.
-//  Le pasamos este DataStore por defecto a 'provideGamePreferencesDao'
-    private val Context.gameDataStore: DataStore<Preferences> by preferencesDataStore(name = "game")
-    private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
-
-//  2️⃣ Aplicar los @Qualifier en los Proveedores (@Provides)
-//  Ahora, en AppModule.kt, usa estas anotaciones para que Hilt sepa cuál es cuál:
-    @Provides
-    @Singleton
-    @GameDataStore
-    fun provideGameDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
-        context.gameDataStore
-
-    @Provides
-    @Singleton
-    @UserDataStore
-    fun provideUserDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
-        context.userDataStore
-
-    // DE LA BASE DE DATOS
-    @Provides
-    @Singleton
-    fun provideDatabaseRoom(@ApplicationContext context: Context): TheSimpsonsDatabaseRoom {
-        return Room.databaseBuilder(
-            context,
-            TheSimpsonsDatabaseRoom::class.java,
-            "the_simpsons_database"
-        ).build()
-    }
-
-
-//    @Provides
-//    @Singleton
-//    fun provideGamePreferencesDao(gameDataStore: DataStore<Preferences>): GameDatastoreDaoImpl {
-//        return GameDatastoreDaoImpl(gameDataStore)
-//    }
-// _________________________________________________
-
-// EpisodeDatabaDao --> DatabaseModule.k
-
-    // Por si quisiera cambiar de API seria aqui simplemente (si quiero pasarselo por parámetro debo de cambiar mi implementación de QuoteDaoApi()
+// Por si quisiera cambiar de API seria aqui simplemente (si quiero pasarselo por parámetro debo de cambiar mi implementación de QuoteDaoApi()
 //    ❌ Problema 2: 'provideQuoteDao' en AppModule es innecesario
 //    🔍 Causa: Ya lo estás proveyendo en 'NetworkModule.kt'. Elimínalo de aqui AppModule.
 //    @Provides
@@ -139,7 +84,8 @@ object AppModule {
 
     // QuoteDatabaDao --> DatabaseModule.k
 
-    // provideCharacterRepository  ¿PORQUE No tiene @Provides y no esta declarada aqui? Debido a que CharaterRepositoryImpl es y va a ser la unica implementación de la app (lo que pueden cambiar son sus daos, que son los que si se instancian aqui como 'provideCharacterDao'. Entonces esta implementación si que tiene '@Inject constructor', para que se implemente automaticamente los parametros que se pasan (los daos). Ahora bien se tiene que enlazar la interfaz de 'CharaterRepository' con 'provideCharacterRepository' por ello hay que hacer a través de un '@Bind' una conexión en una clase abstracta.
+    // provideCharacterRepository
+// ¿PORQUE No tiene @Provides y no esta declarada aqui? Debido a que CharaterRepositoryImpl es y va a ser la unica implementación de la app (lo que pueden cambiar son sus daos, que son los que si se instancian aqui como 'provideCharacterDao'. Entonces esta implementación si que tiene '@Inject constructor', para que se implemente automaticamente los parametros que se pasan (los daos). Ahora bien se tiene que enlazar la interfaz de 'CharaterRepository' con 'provideCharacterRepository' por ello hay que hacer a través de un '@Bind' una conexión en una clase abstracta.
 
 //   Ahora Hilt puede inyectarlos automáticamente al detectar '@Inject constructor()' en sus clases.
 // 🛑 Alternativa (opcional): Si eliminas '@Provides' en AppModule, Hilt ya sabrá cómo inyectarlo automáticamente gracias a '@Inject constructor'.
@@ -157,6 +103,7 @@ object AppModule {
 //        return GetAllCharactersUseCaseImpl(repository)
 //    }
 
-    // ...
+// ...
+
 }
 

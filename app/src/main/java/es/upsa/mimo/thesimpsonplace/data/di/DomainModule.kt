@@ -114,7 +114,6 @@ abstract class DomainModule {
     abstract fun bindInsertQuoteDbUseCase(impl: InsertQuoteDbUseCaseImpl): InsertQuoteDbUseCase
 
     @Binds
-    @Singleton
     abstract fun bindGameDatastorePreferencesDao(impl: GameDaoImpl): GameDao
 
     @Binds
@@ -129,7 +128,6 @@ abstract class DomainModule {
     abstract fun bindGetGameStatsUseCase(impl: GetGameStatsUseCaseImpl): GetGameStatsUseCase
 
     @Binds
-    @Singleton
     abstract fun bindUserDatastorePreferencesDao(impl: UserDaoImpl): UserDao
 
     @Binds
@@ -141,4 +139,11 @@ abstract class DomainModule {
     @Binds
     abstract fun bindUpdateUserUseCase(impl: UpdateUserUseCaseImpl): UpdateUserUseCase
 }
+/**
+DomainModule.kt (Casos de Uso y Repositorios)
 
+Este módulo proporciona los repositorios y casos de uso mediante @Binds.
+
+✔ @Binds se usa en lugar de @Provides cuando ya existe una implementación de una interfaz. Separa el acceso a datos del dominio, mejorando la escalabilidad y mantenibilidad.
+✔ @Singleton se usa en los repositorios (repository) para mantener una única instancia de CharacterRepositoryImpl, etc.
+*/

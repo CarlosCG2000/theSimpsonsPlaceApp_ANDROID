@@ -28,3 +28,14 @@ object NetworkModule {
         return retrofit.create(QuoteDao::class.java) // ✅ Retrofit ya implementa la interfaz automáticamente - No añado 'QuoteDaoApi'
     }
 }
+
+/**
+    NetworkModule.kt (Retrofit y API remota)
+    Este módulo gestiona la configuración de Retrofit para interactuar con la API externa.
+
+    ✔ Funciones @Provides
+    •	provideRetrofit() → Instancia única de Retrofit.
+    •	provideQuoteDao() → Crea QuoteDao con retrofit.create(QuoteDao::class.java).
+
+    Nota: No es necesario crear un QuoteDaoImpl, ya que Retrofit implementa la interfaz automáticamente.
+ */

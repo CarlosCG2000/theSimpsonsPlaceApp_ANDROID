@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 // 'QuoteRepositoryImpl' usa inyección de dependencias (api y db).
 // Separa API y BD, cumpliendo el Principio de Responsabilidad Única (SRP).
-class QuoteRepositoryImpl  @Inject constructor(private val apiDao: QuoteDao,
+class QuoteRepositoryImpl @Inject constructor(private val apiDao: QuoteDao,
                                                private val databaseDao: QuoteDatabaseDao) : QuoteRepository {
 
     override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> {
