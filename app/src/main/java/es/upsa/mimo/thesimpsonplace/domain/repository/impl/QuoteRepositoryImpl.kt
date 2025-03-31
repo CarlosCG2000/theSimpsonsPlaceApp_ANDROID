@@ -15,29 +15,23 @@ import javax.inject.Inject
 class QuoteRepositoryImpl @Inject constructor(private val apiDao: QuoteDao,
                                                private val databaseDao: QuoteDatabaseDao) : QuoteRepository {
 
-    override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> {
+    override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> =
         // return withContext(Dispatchers.IO) { // no es necesario en un repositorio si la función ya es suspend, porque Retrofit maneja el cambio de contexto automáticamente.
-             return apiDao.getQuotes(numElementos, textPersonaje).map { quoteDto ->
+              apiDao.getQuotes(numElementos, textPersonaje).map { quoteDto ->
                 quoteDto.toQuote() // Convertimos a Quote
             }
         // }
-    }
 
-    override fun getAllQuotesDb(): Flow<List<Quote>> {
-        return databaseDao.getAllQuotesDb().map { list -> list.map { it.toQuote() } }
-    }
+    override fun getAllQuotesDb(): Flow<List<Quote>> =
+         databaseDao.getAllQuotesDb().map { list -> list.map { it.toQuote() } }
 
-    override suspend fun getQuoteDbByCita(cita: String): Quote? {
-        return databaseDao.getQuoteDbByCita(cita)?.toQuote()
-    }
+    override suspend fun getQuoteDbByCita(cita: String): Quote? =
+         databaseDao.getQuoteDbByCita(cita)?.toQuote()
 
-    override suspend fun insertQuoteDb(quote: Quote) {
+    override suspend fun insertQuoteDb(quote: Quote) =
         databaseDao.insertQuoteDb(quote.toQuoteDb())
-    }
 
-    override suspend fun deleteQuoteDb(quote: Quote) {
+    override suspend fun deleteQuoteDb(quote: Quote) =
         databaseDao.deleteQuoteDb(quote.toQuoteDb())
-    }
-
 
 }

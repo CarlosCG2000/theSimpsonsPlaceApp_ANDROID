@@ -10,7 +10,6 @@ class UserRepositoryImpl @Inject constructor(private val dataSource: UserDao): U
     override val userPreferencesFlow: Flow<UserPreference>
         get() = dataSource.userPreferencesFlow
 
-    override suspend fun updateUser(user: UserPreference) {
+    override suspend fun updateUser(user: UserPreference) =
         dataSource.updateUser(user)
-    }
 }

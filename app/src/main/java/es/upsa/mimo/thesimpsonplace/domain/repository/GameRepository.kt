@@ -1,6 +1,5 @@
 package es.upsa.mimo.thesimpsonplace.domain.repository
 
-
 import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
