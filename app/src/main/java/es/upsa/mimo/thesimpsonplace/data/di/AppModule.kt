@@ -13,8 +13,8 @@ import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.daos.local.room.TheSimpsonsDatabaseRoom
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
-import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.CharacterDaoJson
-import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.EpisodeDaoJson
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.CharacterDaoImpl
+import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.EpisodeDaoImpl
 import javax.inject.Qualifier
 
 import javax.inject.Singleton
@@ -47,9 +47,9 @@ object AppModule {
         val test = false // Cambia a `true` o 'false' para usar d elos json de test a producción
 
         return if (test) {
-            CharacterDaoJson(context, "personajes_test.json", "imagenes_test.json")
+            CharacterDaoImpl(context, "personajes_test.json", "imagenes_test.json")
         } else {
-            CharacterDaoJson(context, "personajes_data.json", "imagenes_data.json")
+            CharacterDaoImpl(context, "personajes_data.json", "imagenes_data.json")
         }
     }
 
@@ -61,9 +61,9 @@ object AppModule {
         val test = false
 
         return if(test) {
-            EpisodeDaoJson(context, "episodios_test.json")
+            EpisodeDaoImpl(context, "episodios_test.json")
         }else {
-            EpisodeDaoJson(context, "episodios_data.json")
+            EpisodeDaoImpl(context, "episodios_data.json")
         }
 
     }

@@ -9,7 +9,7 @@ import es.upsa.mimo.thesimpsonplace.utils.toDate
 import kotlinx.serialization.json.Json
 import java.util.Date
 
-class EpisodeDaoJson(val context: Context,
+class EpisodeDaoImpl(val context: Context,
                      val dataJson: String /** el json puede ser de produccíon o de testing */): EpisodeDao {
 
     override suspend fun getAllEpisodes(): List<EpisodeDTO> {

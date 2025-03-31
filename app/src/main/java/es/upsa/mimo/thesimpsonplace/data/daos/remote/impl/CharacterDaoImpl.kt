@@ -12,9 +12,9 @@ import javax.inject.Named
 // Implementación de 'CharacterDtoDao' (acciones) en testing (y preview) o producción
 // @Inject constructor(...) -> Permite que Hilt maneje la creación de la clase.
 //@Singleton
-class CharacterDaoJson /* ❌ @Inject constructor (Usando @Provides) */(@ApplicationContext private val context: Context, // Evita la necesidad de pasar manualmente el contexto.
-                                           @Named("dataJson") private val dataJson: String,
-                                           @Named("imageJson") private val imagJson: String
+class CharacterDaoImpl /* ❌ @Inject constructor (Usando @Provides) */(@ApplicationContext private val context: Context, // Evita la necesidad de pasar manualmente el contexto.
+                                                                      @Named("dataJson") private val dataJson: String,
+                                                                      @Named("imageJson") private val imagJson: String
                                            ): CharacterDao {
 
     // json -> dependiendo del json va a ser para producción o para testing
