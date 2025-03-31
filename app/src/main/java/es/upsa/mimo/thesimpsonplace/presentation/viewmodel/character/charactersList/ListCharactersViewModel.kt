@@ -1,14 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.TheSimpsonPlaceApp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

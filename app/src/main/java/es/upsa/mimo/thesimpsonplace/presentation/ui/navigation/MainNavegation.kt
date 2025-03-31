@@ -1,29 +1,28 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
-import kotlinx.serialization.Serializable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection.CharacterFilterScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection.CharactersFavScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.menuSection.MenuScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.QuotesScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection.EpisodesFilterScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection.EpisodesFavScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.characterSection.CharactersScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection.EpisodeDetailScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.profileSection.ProfileScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.episodeSection.EpisodesScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.profileSection.profileEdit.ProfileEditScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.QuotesFavScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.QuotesFilterScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.gameQuotes.QuotesGameScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.characterSection.CharacterFilterScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.characterSection.CharactersFavScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.menuSection.MenuScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.QuotesScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection.EpisodesFilterScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection.EpisodesFavScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.characterSection.CharactersScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection.EpisodeDetailScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.profileSection.ProfileScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection.EpisodesScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.profileSection.profileEdit.ProfileEditScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.QuotesFavScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.QuotesFilterScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuotes.QuotesGameScreen
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.gameQuotes.QuotesQuestionScreen
-import es.upsa.mimo.thesimpsonplace.presentation.ui.screens.quoteSection.gameQuotes.QuotesResultScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuotes.QuotesQuestionScreen
+import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuotes.QuotesResultScreen
 
 // ✅ 1. Crear un sealed class para las rutas: en lugar de escribir las rutas como strings, se pueden definir en una sealed class (con parámetros si es necesario):
 // • Evita errores tipográficos en las rutas.

@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import es.upsa.mimo.thesimpsonplace.data.entities.user.Language
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
 import es.upsa.mimo.thesimpsonplace.data.sources.database.UserDatastoreDao
-import es.upsa.mimo.thesimpsonplace.di.AppModule.UserDataStore
+import es.upsa.mimo.thesimpsonplace.data.di.AppModule.UserDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

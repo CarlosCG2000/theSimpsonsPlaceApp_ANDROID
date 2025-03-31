@@ -1935,4 +1935,12 @@ Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`
     2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
     3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').
 
-# 
+# EXPLICACIONES DUDAS IMPORTANTES --> CHAT GPT
+
+
+
+#
+
+
+
+
