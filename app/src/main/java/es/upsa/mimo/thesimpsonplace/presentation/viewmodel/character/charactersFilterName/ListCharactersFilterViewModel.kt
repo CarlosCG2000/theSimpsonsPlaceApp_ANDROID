@@ -3,9 +3,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.characters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetFilterNameCharactersUseCase
-import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,20 +13,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListCharactersFilterViewModel @Inject constructor(val getFilterNameCharactersUseCase: GetFilterNameCharactersUseCase): ViewModel() {
-    private val _stateCharacterFilter: MutableStateFlow<ListCharactersFilterStateUI> =
-        MutableStateFlow(ListCharactersFilterStateUI()) // Asincrono esta en un hilo secundario
-    val stateCharacterFilter: StateFlow<ListCharactersFilterStateUI> =
-        _stateCharacterFilter.asStateFlow()
+    private val _stateCharacterFilter: MutableStateFlow<ListCharactersFilterStateUI> = MutableStateFlow(ListCharactersFilterStateUI()) // Asincrono esta en un hilo secundario
+    val stateCharacterFilter: StateFlow<ListCharactersFilterStateUI> = _stateCharacterFilter.asStateFlow()
 
     // Hay que llamar a los casos de uso
     // Debería ejecutarse dentro de 'viewModelScope.launch' para evitar bloqueos y manejar la asincronía correctamente:
     fun getFilterNameCharacters(name: String) {
         viewModelScope.launch {
 
-            _stateCharacterFilter.update { it.copy(isLoading = true) } // ✅  Activa el spinner
+            _stateCharacterFilter.update { it.copy(isLoading = true) } // Activa el spinner
 
-            val charactersFilter =
-                getFilterNameCharactersUseCase(name) // ✅ Obtiene los personajes filtrados
+            val charactersFilter = getFilterNameCharactersUseCase(name) // Obtiene los personajes filtrados
 
             // it es 'state.value' que es el valor actual de los contactos y lo actualizamos a 'contactsList'
             _stateCharacterFilter.update {

@@ -10,4 +10,11 @@
     <string name="juego">Juego</string>
     <string name="todos_los_personajes">Todos los personajes</string>
     <string name="favorito">Favorito</string>
+    <string name="filtro_de_personajes">Filtro de personajes</string>
+    <string name="nombre_del_personaje">Nombre del personaje</string>
+    <string name="ejemplos_personajes" translatable="false">Homer, Smithers, Milhouse...</string>
+    <string name="personajes_favoritos">Personajes favoritos</string>
+    <string name="titulo_no_contenido_filtro_pers">titulo no contenido filtro pers</string>
+    <string name="detalles_no_contenido_filtro_pers">detalles no contenido filtro pers</string>
+    <string name="detalles_no_contenido_fav_pers">detalles_no_contenido_filtro_pers</string>
 </resources>

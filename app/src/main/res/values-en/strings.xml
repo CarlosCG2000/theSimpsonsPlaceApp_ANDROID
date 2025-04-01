@@ -10,4 +10,10 @@
     <string name="juego">Game</string>
     <string name="todos_los_personajes">All characters</string>
     <string name="favorito">Favorite</string>
+    <string name="filtro_de_personajes">Character filter</string>
+    <string name="nombre_del_personaje">Character name</string>
+    <string name="personajes_favoritos">Favorite characters</string>
+    <string name="titulo_no_contenido_filtro_pers">No characters</string>
+    <string name="detalles_no_contenido_filtro_pers">There aren\'t characters with that name. Change the character\'s name in the search engine.</string>
+    <string name="detalles_no_contenido_fav_pers">There aren\'t favorite characters yet. Please add your favorite characters to the general character list so you can view here.</string>
 </resources>

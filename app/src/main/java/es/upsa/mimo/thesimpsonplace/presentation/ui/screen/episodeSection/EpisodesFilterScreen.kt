@@ -61,6 +61,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
@@ -156,8 +157,9 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     ) { paddingValues ->
 
         ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
-                              //.background(Color.Blue),
+            modifier = Modifier
+                .fillMaxSize()
+                //.background(Color.Blue),
                                .padding(paddingValues),
             constraintSet = episodesFilterContraintSet()
         //  contentAlignment = Alignment.Center,
@@ -185,13 +187,15 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                         }
                     }
                 },
-                modifier = Modifier.layoutId("idTextFieldFilter")
-                                   .padding(horizontal = 10.dp, vertical = 5.dp)
+                modifier = Modifier
+                    .layoutId("idTextFieldFilter")
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
             )
 
             Row (
-                modifier = Modifier.layoutId("idColumnDate")
-                                   .fillMaxWidth(),
+                modifier = Modifier
+                    .layoutId("idColumnDate")
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 // verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -289,11 +293,13 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 else {
                         if (state.value.episodes.isEmpty()) {
                             NoContentComponent(
-                                Modifier
+                                modifier = Modifier
                                     .layoutId("idListEpisodes")
                                     //.padding(top = 10.dp)
                                     .fillMaxSize()
-                                    .background(Color(0xFF0F1A35))
+                                    .background(Color(0xFF0F1A35)),
+                                titleText = "No episodes",
+                                infoText = "There aren't episodes with that features. Change the episode's features."
                             )
                         } else {
                             ListEpisodes(
@@ -368,44 +374,6 @@ fun episodesFilterContraintSet(): ConstraintSet {
             end.linkTo(parent.end)
             height = Dimension.fillToConstraints
         }
-    }
-}
-
-@Composable
-fun NoContentComponent(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier, // Color de fondo similar al de la imagen
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.FormatListNumbered, // Usa un ícono similar al de la imagen
-            contentDescription = "No episodes",
-            tint = Color(0xFFFFC107), // Amarillo similar
-            modifier = Modifier
-                // .layoutId("idIconEmptyList")
-                .size(64.dp)
-//                                .padding(bottom = 20.dp)
-
-        )
-        Text(
-            text = "No episodes",
-            color = Color(0xFFFFC107),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-            // .layoutId("idTitleEmptyList")
-//                                .padding(top = 8.dp)
-//                                .padding(bottom = 20.dp)
-        )
-        Text(
-            text = "There aren't episodes with that features. Change the episode's features.",
-            color = Color.White,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                // .layoutId("idSubtitleEmptyList")
-                .padding(start = 32.dp, end = 32.dp, top = 4.dp)
-        )
     }
 }
 
@@ -495,13 +463,16 @@ fun DropdownMenuComponent(
     }
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
-@Composable
-fun EpisodesFilterScreenPreview() {
-    Column {
-        EpisodesFilterScreen( navigateToAllEpisodes = {},
-                              navigateToFavoriteEpisode = {},
-                              onEpisodeSelected= {},
-                              navigationArrowBack = {})
-    }
-}
+
+
+
+//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
+//@Composable
+//fun EpisodesFilterScreenPreview() {
+//    Column {
+//        EpisodesFilterScreen( navigateToAllEpisodes = {},
+//                              navigateToFavoriteEpisode = {},
+//                              onEpisodeSelected= {},
+//                              navigationArrowBack = {})
+//    }
+//}

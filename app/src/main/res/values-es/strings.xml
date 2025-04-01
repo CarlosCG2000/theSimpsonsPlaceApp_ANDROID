@@ -10,4 +10,10 @@
     <string name="juego">Juego</string>
     <string name="todos_los_personajes">Todos los personajes</string>
     <string name="favorito">Favorito</string>
+    <string name="filtro_de_personajes">Filtro de personajes</string>
+    <string name="nombre_del_personaje">Nombre del personaje</string>
+    <string name="personajes_favoritos">Personajes favoritos</string>
+    <string name="titulo_no_contenido_filtro_pers">No existen personajes</string>
+    <string name="detalles_no_contenido_filtro_pers">No existen personajes con ese nombre. Cambia el nombre del personaje en el buscador.</string>
+    <string name="detalles_no_contenido_fav_pers">Aún no hay personajes favoritos. Agrega tus personajes favoritos a la lista general de personajes para que puedas verlos aquí.</string>
 </resources>

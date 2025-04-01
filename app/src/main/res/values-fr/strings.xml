@@ -10,4 +10,10 @@
     <string name="juego">Jeu</string>
     <string name="todos_los_personajes">Tous les personnages</string>
     <string name="favorito">Préféré</string>
+    <string name="filtro_de_personajes">Filtre de personnages</string>
+    <string name="nombre_del_personaje">Nom du personnage</string>
+    <string name="personajes_favoritos">Personnages préférés</string>
+    <string name="titulo_no_contenido_filtro_pers">Aucun personnage</string>
+    <string name="detalles_no_contenido_filtro_pers">Il n\'y a pas de personnages portant ce nom. Modifiez le nom du personnage dans le moteur de recherche.</string>
+    <string name="detalles_no_contenido_fav_pers">Il n\'y a pas encore de personnages favoris. Veuillez ajouter vos personnages favoris à la liste générale des personnages afin de pouvoir les voir ici.</string>
 </resources>

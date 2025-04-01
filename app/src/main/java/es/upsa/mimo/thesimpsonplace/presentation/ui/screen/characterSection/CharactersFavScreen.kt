@@ -1,8 +1,11 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.characterSection
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,10 +13,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
@@ -35,7 +41,7 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
             ) { }
         }, topBar = {
             TopBarComponent(
-                title = "Listado de Personajes Fav",
+                title = stringResource(R.string.personajes_favoritos),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
@@ -46,12 +52,21 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-
-            if (stateFav.value.characters.isEmpty()) {
-                Text(text = "No tienes personajes favoritos", fontSize = 20.sp)
+            if (stateFav.value.isLoading) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+            } else if (stateFav.value.characters.isEmpty()) {
+                NoContentComponent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.primary),
+                    titleText = stringResource(R.string.titulo_no_contenido_filtro_pers),
+                    infoText = stringResource(R.string.detalles_no_contenido_fav_pers)
+                )
             } else {
                 CharacterList(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.primary),
                     characters = stateFav.value.characters, // todos los personajes en la Base datos (ya van a ser favoritos)
                     favoriteCharacters = stateFav.value.charactersSet,
                     onToggleFavorite = { character -> viewModel.toggleFavorite(character) }

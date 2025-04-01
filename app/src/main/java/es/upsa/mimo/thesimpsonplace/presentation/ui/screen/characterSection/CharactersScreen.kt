@@ -81,16 +81,15 @@ fun CharactersScreen (
         • Si no usamos el if, se vuelve a llamar a getAllCharacters(), aunque la lista ya estaba cargada.
         • Si usamos el if, la llamada solo se hace si la lista está vacía, evitando carga innecesaria.
          */
-        if (state.value.characters.isEmpty()) { // Llamar solo si el estado inicial está vacío.
+        if (state.value.characters.isEmpty())  // Llamar solo si el estado inicial está vacío.
             viewModel.getAllCharacters()
-        }
     }
 
     Scaffold(
         bottomBar = {
             BottomBarComponent(
                 BottomNavItem.ALL,
-                { /** es esta pantalla, no necesita navegar */},
+                { /** es esta pantalla, no necesita navegar */ },
                 navigateToFilterCharacters,
                 navigateToFavoriteCharacters
             )
@@ -102,25 +101,23 @@ fun CharactersScreen (
             )
         }
     ) { paddingValues ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-                                .padding(paddingValues)
-                                .background(MaterialTheme.colorScheme.primary)
-        ) {
-            if(state.value.isLoading){
+        if(state.value.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator(
                     color = MaterialTheme.colorScheme.onPrimary // ✅ ¿Como le pongo el color de mi tema 'TheSimpsonPlaceTheme' de la variable 'onPrimary'?
                 )
             }
-            else {
-                CharacterList(
-                    modifier = Modifier.fillMaxSize()
-                                       .background(MaterialTheme.colorScheme.primary),
-                    characters = state.value.characters, // se muestran todos los personajes (independiente de que sean de la BD o no, se obtienen del Json)
-                    favoriteCharacters = stateFav.value.charactersSet, // saber que personajes son favoritos
-                    onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) }) // acción de actualizar personajes (a favorito o no) en la base de datos
-            }
+        }
+        else {
+            CharacterList(
+                modifier = Modifier.fillMaxSize().padding(paddingValues)
+                                   .background(MaterialTheme.colorScheme.primary),
+                characters = state.value.characters, // se muestran todos los personajes (independiente de que sean de la BD o no, se obtienen del Json)
+                favoriteCharacters = stateFav.value.charactersSet, // saber que personajes son favoritos
+                onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) }) // acción de actualizar personajes (a favorito o no) en la base de datos
         }
     }
 }
@@ -132,7 +129,7 @@ fun CharacterList(modifier: Modifier = Modifier,
                   onToggleFavorite: (Character) -> Unit) {
 
     LazyColumn( modifier = modifier,
-                horizontalAlignment = Alignment.CenterHorizontally,) {
+                horizontalAlignment = Alignment.CenterHorizontally) {
         items(characters) { character ->
 
             // val isFavorite = rememberUpdatedState(character.id in favoriteCharacters) // ✅ ¿que es 'rememberUpdatedState' y porque este tipo y no otro?
