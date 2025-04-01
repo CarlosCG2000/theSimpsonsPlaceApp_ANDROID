@@ -12,7 +12,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
@@ -47,31 +49,30 @@ fun EpisodesFavScreen(
         },
         topBar = {
             TopBarComponent(
-                title = "Listado de Episodios Fav",
+                title = stringResource(R.string.episodios_favoritos),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
     ) { paddingValues ->
 
-        Box(
-            contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-            // .background(Color.Primary) // ✅ Fondo blanco para mejor visibilidad,
-        ) {
-            if (stateFavOrView.value.isLoading) {
+        if (stateFavOrView.value.isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+                    .padding(paddingValues)
+            ) {
                 CircularProgressIndicator(
                     color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
                 )
-            } else {
-                ListEpisodes(modifier = Modifier.fillMaxSize(),
-                    episodes = stateFavOrView.value.episodesFav,
-                    allEpisodes = stateAllEpisodes.value.episodes,
-                    onEpisodeSelected = onEpisodeSelected,
-                    episodesFavDbSet = stateFavOrView.value.episodesFavSet,
-                    episodesViewDbSet = stateFavOrView.value.episodesViewSet)
             }
+        } else {
+            ListEpisodes(modifier = Modifier.fillMaxSize()
+                                            .padding(paddingValues),
+                episodes = stateFavOrView.value.episodesFav,
+                allEpisodes = stateAllEpisodes.value.episodes,
+                onEpisodeSelected = onEpisodeSelected,
+                episodesFavDbSet = stateFavOrView.value.episodesFavSet,
+                episodesViewDbSet = stateFavOrView.value.episodesViewSet)
         }
     }
 }

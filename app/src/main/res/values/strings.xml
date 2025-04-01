@@ -42,4 +42,5 @@
     <string name="recomendado">Recomendado</string>
     <string name="no_recomendado">No recomendado</string>
     <string name="sin_datos">Sin datos</string>
+    <string name="episodios_favoritos">Episodios favoritos</string>
 </resources>
