@@ -16,4 +16,15 @@
     <string name="titulo_no_contenido_filtro_pers">No characters</string>
     <string name="detalles_no_contenido_filtro_pers">There aren\'t characters with that name. Change the character\'s name in the search engine.</string>
     <string name="detalles_no_contenido_fav_pers">There aren\'t favorite characters yet. Please add your favorite characters to the general character list so you can view here.</string>
+    <string name="todos_los_episodios">All episodes</string>
+    <string name="filtro_de_episodios">Episode filter</string>
+    <string name="fecha_inicial">Start Date</string>
+    <string name="fechan_fin">End Date</string>
+    <string name="visto">View?</string>
+    <string name="temporada">Season</string>
+    <string name="capitulo">Chapter</string>
+    <string name="ordenar">Order</string>
+    <string name="title_episodes">No episodes</string>
+    <string name="details_episodes">There aren\'t favorite characters yet. Please add your favorite characters to the general character list so you can view here.</string>
+    <string name="todos">All</string>
 </resources>

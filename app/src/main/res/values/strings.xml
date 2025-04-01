@@ -17,4 +17,16 @@
     <string name="titulo_no_contenido_filtro_pers">titulo no contenido filtro pers</string>
     <string name="detalles_no_contenido_filtro_pers">detalles no contenido filtro pers</string>
     <string name="detalles_no_contenido_fav_pers">detalles_no_contenido_filtro_pers</string>
+    <string name="todos_los_episodios">todos los episodios</string>
+    <string name="filtro_de_episodios">filtro_de_personajes</string>
+    <string name="fecha_inicial">Fecha inicial</string>
+    <string name="fechan_fin">Fecha Fin</string>
+    <string name="visto">¿Visto?</string>
+    <string name="temporada">Temporada</string>
+    <string name="capitulo">Capitulo</string>
+    <string name="ordenar">Ordenar</string>
+    <string name="title_episodes">title_episodes</string>
+    <string name="details_episodes">details_episodes</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="todos">Todos</string>
 </resources>

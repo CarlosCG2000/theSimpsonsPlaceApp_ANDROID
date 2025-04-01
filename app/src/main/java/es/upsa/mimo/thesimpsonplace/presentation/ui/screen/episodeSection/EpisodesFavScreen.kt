@@ -40,7 +40,7 @@ fun EpisodesFavScreen(
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                BottomNavItem.ALL,
+                BottomNavItem.FAVORITES,
                 navigateToAllEpisodes,
                 navigateToFilterEpisode
             ) { }

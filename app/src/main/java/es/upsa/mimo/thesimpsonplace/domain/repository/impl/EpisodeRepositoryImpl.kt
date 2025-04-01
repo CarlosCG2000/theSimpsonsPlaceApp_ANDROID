@@ -63,9 +63,9 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
             // Cargar datos del JSON/API
             val episodesFilter: List<Episode> = dao.getEpisodesByTitle(title).map { it.toEpisode() }
 
-            if (episodesFilter == emptyList<Episode>()){
-                episodes
-            } else {
+            if (episodesFilter == emptyList<Episode>())
+                emptyList<Episode>()
+            else {
                 val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
                 episodes.filter { episodeIdsFilter.contains(it.id) == true }
             }
@@ -77,7 +77,7 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
             val episodesFilter: List<Episode> = dao.getEpisodesByDate(minDate, maxDate).map { it.toEpisode() }
 
             if (episodesFilter == emptyList<Episode>()){
-                episodes
+                emptyList<Episode>()
             } else {
                 val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
                 episodes.filter { episodeIdsFilter.contains(it.id) == true }
@@ -90,7 +90,7 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
             val episodesFilter: List<Episode> = dao.getEpisodesBySeason(season).map { it.toEpisode() }
 
             if (episodesFilter == emptyList<Episode>()){
-                episodes
+                emptyList<Episode>()
             } else {
                 val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
                 episodes.filter { episodeIdsFilter.contains(it.id) == true }
@@ -103,7 +103,7 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
             val episodesFilter: List<Episode> = dao.getEpisodesByChapter(chapter).map { it.toEpisode() }
 
             if (episodesFilter == emptyList<Episode>()){
-                episodes
+                emptyList<Episode>()
             } else {
                 val episodeIdsFilter = episodesFilter.map { it.id }.toSet()
                 episodes.filter { episodeIdsFilter.contains(it.id) == true }

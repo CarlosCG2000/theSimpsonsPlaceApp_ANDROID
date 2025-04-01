@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FormatListNumbered
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -29,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -50,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,8 +60,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.MotionScene
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
@@ -93,7 +98,6 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 
     // _____________________ FILTROS _____________________
     var filterTitle by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
-    var debounceJob by remember { mutableStateOf<Job?>(null) } // Para cancelar el debounce
 
     var defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 16) }.timeInMillis
     val filterMinDate = rememberDatePickerState( initialSelectedDateMillis = defaultMinDate ) // ✅ Correcto: convertir a milisegundos
@@ -114,12 +118,28 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     // ___________________________________________________
 
     LaunchedEffect(Unit) {
-        viewModelAllEpisodes.getAllEpisodes() // cargue todos los episodios de primeras
+        if (stateAllEpisodes.value.episodes.isEmpty())
+            viewModelAllEpisodes.getAllEpisodes() // cargue todos los episodios de primeras
     }
 
     LaunchedEffect(stateAllEpisodes.value.episodes) {
-        // state.value.episodes = stateAllEpisodes.value.episodes
-        viewModel.updateEpisodes(episodes = stateAllEpisodes.value.episodes)// cargue todos los episodios de primeras
+        if (stateAllEpisodes.value.episodes.isNotEmpty())
+            viewModel.updateEpisodes(stateAllEpisodes.value.episodes)
+
+    }
+
+    LaunchedEffect(filterTitle.text, filterMinDate.selectedDateMillis, filterMaxDate.selectedDateMillis,
+        filterSeason, filterEpisode, isViewEnabled, isOrder) {
+        delay(350) // Debounce
+        viewModel.getEpisodesFilter(
+            title = filterTitle.text,
+            minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
+            maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
+            season = filterSeason,
+            episode = filterEpisode,
+            isView = isViewEnabled,
+            order = isOrder
+        )
     }
 
     fun logicaFiltrado(title: String = filterTitle.text,
@@ -144,13 +164,13 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
             BottomBarComponent(
                 BottomNavItem.FILTERS,
                 navigateToAllEpisodes,
-                { },
+                { /** es esta pantalla, no necesita navegar */ },
                 navigateToFavoriteEpisode
             )
         },
         topBar = {
             TopBarComponent(
-                title = "Listado de Episodios Fav",
+                title = stringResource(R.string.filtro_de_episodios),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
@@ -159,45 +179,54 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                //.background(Color.Blue),
-                               .padding(paddingValues),
+                .padding(paddingValues),
             constraintSet = episodesFilterContraintSet()
-        //  contentAlignment = Alignment.Center,
         ){
             // DEFINIR TODOS LOS FILTROS
-            TextField(
-                value = filterTitle,
-                onValueChange = { newValue ->
-                    filterTitle = newValue
-                    debounceJob?.cancel() // Cancelamos la tarea anterior si hay una nueva entrada
-                    debounceJob = viewModel.viewModelScope.launch {
-                        delay(350) // Esperamos 500 ms antes de ejecutar el filtro
-                        logicaFiltrado(title = newValue.text)
-                    }
-                },
-                label = { Text("Titulo del episodio") },
-                placeholder = {Text("Homer, Smithers, Milhouse...")},
-                trailingIcon = {
-                    if (filterTitle.text.isNotEmpty()) {
-                        IconButton(onClick = {
-                            filterTitle = TextFieldValue("")
-                            logicaFiltrado(title = "")
-                        }) {
-                            Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
+            // _______________ TEXTFIELD _______________
+            Box(modifier = Modifier
+                .layoutId("idTextFieldFilter")
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .background(
+                    MaterialTheme.colorScheme.secondary,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(6.dp))
+            {
+                OutlinedTextField(
+                    value = filterTitle,
+                    onValueChange = { newValue ->
+                        filterTitle = newValue
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.nombre_del_personaje),
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.ejemplos_personajes),
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    },
+                    trailingIcon = {
+                        if (filterTitle.text.isNotEmpty()) {
+                            IconButton(onClick = { filterTitle = TextFieldValue("") }) {
+                                Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
+                            }
                         }
-                    }
-                },
-                modifier = Modifier
-                    .layoutId("idTextFieldFilter")
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-            )
-
+                    },
+                    modifier = Modifier.fillMaxWidth() // 🔹 Para que ocupe todo el ancho del Box
+                )
+            }
+            // _________________________________________
+            // _______________ FILTRA 1 DE FILTRO: 2 DatePickerDialogComponent y Switch _______________
             Row (
                 modifier = Modifier
                     .layoutId("idColumnDate")
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                // verticalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
                 // DatePickerDialog solo se muestra cuando showDialogMinDate es true
@@ -210,10 +239,11 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                         showDialogMinDate = false
                         logicaFiltrado()
                     },
-                    title = "Start Date"
+                    title = stringResource(R.string.fecha_inicial)
                 )
 
                 DatePickerDialogComponent(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
                     showDialogDate = showDialogMaxDate,
                     onDismissRequest = { showDialogMaxDate = false },
                     onAdmitRequest = { showDialogMaxDate = true },
@@ -222,26 +252,26 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                         showDialogMaxDate = false
                         logicaFiltrado()
                     },
-                    title = "End Date"
+                    title = stringResource(R.string.fechan_fin)
                 )
 
                 // Switch para marcar si está visto
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("¿Visto?")
+                    Text(stringResource(R.string.visto))
                     Switch(
                         checked = isViewEnabled,
                         onCheckedChange = {
-                            isViewEnabled = !isViewEnabled
-                            logicaFiltrado()
+                            isViewEnabled = !isViewEnabled // logicaFiltrado()
                         },
                         colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.Yellow,
-                                checkedTrackColor = Color.Yellow.copy(alpha = 0.2f) // Fondo amarillo con transparencia
+                                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                                checkedTrackColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f) // Fondo amarillo con transparencia
                         )
                     )
                 }
             }
-
+            // _________________________________________
+            // _______________ FILTRA 2 DE FILTRO: 2 DropdownMenuComponent y IconButton _______________
             Row(
                 modifier = Modifier
                     .layoutId("idColumnPicker")
@@ -250,42 +280,44 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
             ) {
 
                 DropdownMenuComponent(
-                    label = "Temporada",
+                    label = stringResource(R.string.temporada),
                     selectedItem = filterSeason,
                     items = uniqueSeasons,
                     onItemSelected = { filterSeasonItem ->
-                        filterSeason = filterSeasonItem
-                        logicaFiltrado(season = filterSeasonItem)
+                        filterSeason = filterSeasonItem // logicaFiltrado(season = filterSeasonItem)
                     }
                 )
 
                 DropdownMenuComponent(
-                    label = "Capitulo",
+                    label = stringResource(R.string.capitulo),
                     selectedItem = filterEpisode,
                     items = uniqueEpisodes,
                     onItemSelected = { filterEpisodeItem ->
-                        filterEpisode = filterEpisodeItem
-                        logicaFiltrado(episode = filterEpisodeItem)
+                        filterEpisode = filterEpisodeItem // logicaFiltrado(episode = filterEpisodeItem)
                     }
                 )
 
                 IconButton(onClick = {
                     isOrder = !isOrder
                     viewModel.getEpisodesOrder(isOrder)
-                })
+                }, modifier = Modifier.clip(RoundedCornerShape(50))
+                                        .background(MaterialTheme.colorScheme.secondary) )
                 {
                     Icon(
+                        tint = MaterialTheme.colorScheme.onSecondary, // Color correcto del icono
                         imageVector = if (isOrder) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
-                        contentDescription = "Sort Order"
+                        contentDescription = stringResource(R.string.ordenar)
                     )
                 }
 
             }
+            // _________________________________________
 
             Box(
-                modifier = Modifier.layoutId("idListEpisodes"),
+                modifier = Modifier.layoutId("idListEpisodes")
+                                   .padding(bottom = 10.dp),
                 //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
-                contentAlignment = Alignment.Center // 🔹 Centra el contenido
+                // contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
                 if(state.value.isLoading || stateAllEpisodes.value.isLoading){
                     CircularProgressIndicator( color = Color.Yellow )
@@ -295,11 +327,10 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                             NoContentComponent(
                                 modifier = Modifier
                                     .layoutId("idListEpisodes")
-                                    //.padding(top = 10.dp)
                                     .fillMaxSize()
                                     .background(Color(0xFF0F1A35)),
-                                titleText = "No episodes",
-                                infoText = "There aren't episodes with that features. Change the episode's features."
+                                titleText = stringResource(R.string.title_episodes),
+                                infoText = stringResource(R.string.details_episodes)
                             )
                         } else {
                             ListEpisodes(
@@ -322,26 +353,6 @@ fun episodesFilterContraintSet(): ConstraintSet {
         // Creando referencias (ids)
         val (listEpisodes, textFieldFilter, columnDate, columnPicker /*iconEmptyList, titleEmptyList, subtitleEmptyList*/) =
             createRefsFor( "idListEpisodes", "idTextFieldFilter", "idColumnDate", "idColumnPicker")
-
-        // Creamos una cadena vertical para los dos botones
-//        val verticalChain = createVerticalChain(textFieldFilter, columnDate, columnPicker, chainStyle = ChainStyle.Packed)
-
-//        val horizontalChain = createHorizontalChain(iconEmptyList, titleEmptyList, subtitleEmptyList, chainStyle = ChainStyle.SpreadInside)
-//
-//        constrain(iconEmptyList) {
-//            top.linkTo(parent.top)
-//            bottom.linkTo(parent.bottom)
-//        }
-//
-//        constrain(titleEmptyList) {
-//            top.linkTo(iconEmptyList.bottom)
-//            bottom.linkTo(parent.bottom)
-//        }
-//
-//        constrain(subtitleEmptyList) {
-//            top.linkTo(titleEmptyList.bottom)
-//            bottom.linkTo(parent.bottom)
-//        }
 
         constrain(textFieldFilter) {
             top.linkTo(parent.top)
@@ -394,7 +405,7 @@ fun DatePickerDialogComponent(modifier: Modifier = Modifier,
             onDismissRequest = onDismissRequest,
             confirmButton = {
                 TextButton(onClick = onClick) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         ) {
@@ -402,17 +413,21 @@ fun DatePickerDialogComponent(modifier: Modifier = Modifier,
         }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(title, color = Color.Yellow)
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 10.dp)) {
+        Text(title, color = MaterialTheme.colorScheme.onPrimary)
 
         // Botón para abrir el DatePickerDialog
-        OutlinedButton(onClick = onAdmitRequest) {
+        OutlinedButton(onClick = onAdmitRequest,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary // Fondo del botón
+                        )) // Evita que el fondo cubra el borde del botón)
+        {
             Text(
                 SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(
                     filterDate.selectedDateMillis // ✅ Obtener la fecha seleccionada
                         ?: defaultMinDate
                 ),
-                color = Color.Yellow
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
     }
@@ -427,13 +442,16 @@ fun DropdownMenuComponent(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box ( modifier = Modifier.border(2.dp, Color.DarkGray, RoundedCornerShape(12.dp)) // ✅ Aplica el borde
-                             // .background(Color.Black) // ✅ Fondo oscuro opcional
+    Box ( modifier = Modifier//.border(2.dp, Color.DarkGray, RoundedCornerShape(12.dp)) // Primero el borde
+                            .clip(RoundedCornerShape(12.dp)) // Recorta el contenido dentro de la forma
+                            .background(MaterialTheme.colorScheme.secondary) // Aplica el fondo dentro del borde
+
+
         ){
         val itemSelect = if (selectedItem == 0) "s" else " $selectedItem"
 
         TextButton(onClick = { expanded = true }) {
-            Text(text = "$label$itemSelect", color = Color.Yellow)
+            Text(text = "$label$itemSelect", color = MaterialTheme.colorScheme.onSecondary)
             Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Expand")
         }
 
@@ -444,11 +462,11 @@ fun DropdownMenuComponent(
             // modifier = Modifier.border(10.dp, Color.DarkGray) // 🔹 Fondo oscuro
         ) {
             items.forEach { item ->
-                val itemMenu = if (item == 0) "Todos" else "$label $item"
+                val itemMenu = if (item == 0) stringResource(R.string.todos) else "$label $item"
 
                 DropdownMenuItem(
                     text = { Text(  text = itemMenu,
-                                    color = Color.Blue,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     modifier = Modifier.fillMaxWidth(), // 🔹 Hace que ocupe todo el ancho
                                     textAlign = TextAlign.Center // 🔹 Centra el texto horizontalmente)
                                  )

@@ -33,7 +33,7 @@ class EpisodeDaoImpl(val context: Context,
     }
 
     override suspend fun getEpisodesByTitle(title: String): List<EpisodeDTO> {
-        return  getAllEpisodes().filter { it.titulo?.contains(title, ignoreCase = true) == true }
+        return getAllEpisodes().filter { it.titulo?.contains(title, ignoreCase = true) == true }
     }
 
     override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<EpisodeDTO> {

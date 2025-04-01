@@ -16,4 +16,15 @@
     <string name="titulo_no_contenido_filtro_pers">No existen personajes</string>
     <string name="detalles_no_contenido_filtro_pers">No existen personajes con ese nombre. Cambia el nombre del personaje en el buscador.</string>
     <string name="detalles_no_contenido_fav_pers">Aún no hay personajes favoritos. Agrega tus personajes favoritos a la lista general de personajes para que puedas verlos aquí.</string>
+    <string name="todos_los_episodios">Todos los episodios</string>
+    <string name="filtro_de_episodios">Filtro de episodios</string>
+    <string name="fecha_inicial">Fecha inicial</string>
+    <string name="fechan_fin">Fecha Fin</string>
+    <string name="visto">¿Visto?</string>
+    <string name="temporada">Temporada</string>
+    <string name="capitulo">Capitulo</string>
+    <string name="ordenar">Ordenar</string>
+    <string name="title_episodes">Ningún episodio</string>
+    <string name="details_episodes">Aún no hay personajes favoritos. Agrega tus personajes favoritos a la lista general de personajes para que puedas verlos aquí.</string>
+    <string name="todos">Todos</string>
 </resources>

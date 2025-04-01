@@ -103,7 +103,9 @@ fun CharactersScreen (
     ) { paddingValues ->
         if(state.value.isLoading) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                modifier = Modifier.fillMaxSize()
+                                    .padding(paddingValues)
+                                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(

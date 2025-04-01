@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,6 @@ class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAl
             _episodesState.update { it.copy(isLoading = true) }
 
             val getAllEpisodes: List<Episode> = getAllEpisodesUseCase()
-
-            // delay(2000)
 
             _episodesState.update {
                 it.copy(episodes = getAllEpisodes, isLoading = false)
