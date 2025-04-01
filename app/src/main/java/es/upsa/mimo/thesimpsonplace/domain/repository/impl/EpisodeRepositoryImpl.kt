@@ -122,7 +122,7 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
                 if (isView) episodes.filter { episodeIdsInDB.contains(it.id) == true }
                 else        episodes.filter { episodeIdsInDB.contains(it.id) == false }
             } else {
-                if (isView) emptyList()
+                if (isView) emptyList<Episode>()
                 else        episodes
             }
         }
@@ -159,5 +159,4 @@ class EpisodeRepositoryImpl @Inject constructor(val dao: EpisodeDao,
                                                 esVisto: Boolean, // su nuevo 'esVisto'
                                                 esFavorito: Boolean // su nuevo 'esFavorito'
     ) = databaseDao.updateEpisodeDbStatus(episodeId = episodeId, esVisto = esVisto, esFavorito = esFavorito)
-
 }

@@ -19,7 +19,6 @@ class EpisodeDaoImpl(val context: Context,
         try {
             val json = context.assets.open(dataJson).bufferedReader().use { it.readText() }
             val episodios: List<EpisodeDTO> = jsonFormat.decodeFromString<EpisodesDTO>(json).episodios ?: emptyList()
-            Log.i("getAllEpisodes", "$episodios")
             return episodios
         } catch (e: Exception) {
             e.printStackTrace()
