@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
@@ -28,7 +29,7 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                3,
+                BottomNavItem.FAVORITES,
                 navigateToAllCharacters,
                 navigateToFilterCharacters
             ) { }

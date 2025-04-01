@@ -44,11 +44,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.models.Character
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 
 @Composable
-fun CharactersScreen(
+fun CharactersScreen (
     viewModel: ListCharactersViewModel = hiltViewModel(), // = viewModel(factory = ListCharactersViewModel.factory()
     viewModelDB: ListCharactersDBViewModel = hiltViewModel(),
     navigateToFilterCharacters: () -> Unit,
@@ -66,7 +67,7 @@ fun CharactersScreen(
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                1,
+                BottomNavItem.ALL,
                 { },
                 navigateToFilterCharacters,
                 navigateToFavoriteCharacters

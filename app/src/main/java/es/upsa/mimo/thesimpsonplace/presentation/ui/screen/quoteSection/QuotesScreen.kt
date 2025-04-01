@@ -51,6 +51,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import es.upsa.mimo.thesimpsonplace.domain.models.Quote
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
@@ -80,7 +82,7 @@ fun QuotesScreen(
     Scaffold(
         bottomBar = {
             BottomBarQuoteComponent(
-                selectedBarButtom = 1,
+                selectedBarButtom = BottomNavQuotesItem.MAIN,
                 navigateToQuotes = { },
                 navigateToFiltersQuotes = navigateToFilterQuotes,
                 navigateToFavoritesQuotes = navigateToFavoriteQuotes,

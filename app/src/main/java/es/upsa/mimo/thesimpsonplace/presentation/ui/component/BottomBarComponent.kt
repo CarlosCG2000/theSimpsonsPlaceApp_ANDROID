@@ -3,60 +3,69 @@ package es.upsa.mimo.thesimpsonplace.presentation.ui.component
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Addchart
-import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import es.upsa.mimo.thesimpsonplace.R
+
+enum class BottomNavItem { ALL, FILTERS, FAVORITES }
 
 @Composable
-fun BottomBarComponent(selectedBarButtom:Int = 1,
+fun BottomBarComponent(selectedBarButtom: BottomNavItem = BottomNavItem.ALL,
                        navigateToAllEpisodes: () -> Unit,
                        navigateToFiltersEpisode: () -> Unit,
-                       navigateToFavoritesEpisode: () -> Unit
-                            ) {
+                       navigateToFavoritesEpisode: () -> Unit) {
 
-    NavigationBar { // Barra de navegación
+    BottomAppBar { // Barra de navegación, ¿usar NavigationBar?
 
-        NavigationBarItem( // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
-            selected = selectedBarButtom == 1, // solo marcamos como seleccionada a un tipo (al principio el por defecto)
+        NavigationBarItem(
+            // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
+            selected = selectedBarButtom == BottomNavItem.ALL, // solo marcamos como seleccionada a un tipo (al principio el ALL por defecto)
             icon = {
-                Icon(   imageVector = Icons.Default.Addchart,
-                        contentDescription = "Icono del Lista Completa")
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = stringResource(R.string.lista_completa)
+                )
             },
-            label = { "Lista Completa" },
+            label = { Text(text = stringResource(R.string.lista_completa)) },
             onClick = { navigateToAllEpisodes() },
         )
 
-        NavigationBarItem( // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
-            selected = selectedBarButtom == 2, // solo marcamos como seleccionada a un tipo (al principio el por defecto)
+        NavigationBarItem(
+            selected = selectedBarButtom == BottomNavItem.FILTERS, // solo marcamos como seleccionada a un tipo
             icon = {
-                Icon(   imageVector = Icons.Default.Filter,
-                    contentDescription = "Icono del Lista Filtro")
+                Icon(imageVector = Icons.Default.Search,
+                     contentDescription = stringResource(R.string.lista_filtro))
             },
-            label = { "Lista Filtro" },
+            label = {  Text(text = stringResource(R.string.lista_filtro)) },
             onClick = { navigateToFiltersEpisode() },
         )
 
-        NavigationBarItem( // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
-            selected = selectedBarButtom == 3, // solo marcamos como seleccionada a un tipo (al principio el por defecto)
+        NavigationBarItem(
+            selected = selectedBarButtom == BottomNavItem.FAVORITES, // solo marcamos como seleccionada a un tipo
             icon = {
-                Icon(   imageVector = Icons.Default.Filter,
-                    contentDescription = "Icono del Lista Fav")
+                Icon( imageVector = Icons.Default.Star,
+                    contentDescription = stringResource(R.string.lista_fav))
             },
-            label = { "Lista Fav" },
+            label = {  Text(text = stringResource(R.string.lista_fav)) },
             onClick = { navigateToFavoritesEpisode() },
         )
-
     }
 }
+
+
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun BottomBarEpisodeComponentPreview() {
     Column {
-        BottomBarComponent(1, {}, {}, {})
+        BottomBarComponent(BottomNavItem.FILTERS, {}, {}, {})
     }
 }

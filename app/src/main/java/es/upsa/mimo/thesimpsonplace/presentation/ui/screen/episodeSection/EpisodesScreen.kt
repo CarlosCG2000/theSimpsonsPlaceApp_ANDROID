@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.utils.LoggerClass
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
@@ -73,7 +74,7 @@ fun EpisodesScreen(
     Scaffold(
         bottomBar = {
                 BottomBarComponent(
-                    1,
+                    BottomNavItem.ALL,
                     { },
                     navigateToFilterEpisode,
                     navigateToFavoriteEpisode

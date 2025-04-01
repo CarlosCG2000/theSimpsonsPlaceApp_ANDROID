@@ -39,7 +39,6 @@ import es.upsa.mimo.thesimpsonplace.data.entities.user.Language
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.PassVisibleIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,9 +95,9 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
                 onValueChange = { password = it }, // nuevo valor de la contraseña
                 isError = error,  // mostrar en rojo la label dentro del TextField, si hay error
                 trailingIcon = { // Añadir un ícono a la derecha (trailingIcon) del campo de texto.
-                    PassVisibleIcon( // Componsable personalizado del icono del ojo
-                        visible = passVisible, // Parámetro con valor que hace que el icono del ojo tachado o no
-                        onVisibleChange = { passVisible = it }) // nuevo valor del texto oculto
+//                    PassVisibleIcon( // Componsable personalizado del icono del ojo
+//                        visible = passVisible, // Parámetro con valor que hace que el icono del ojo tachado o no
+//                        onVisibleChange = { passVisible = it }) // nuevo valor del texto oculto
                 },
                 visualTransformation =  // Muestra el texto oculto o no (formato contraseña)
                     if (passVisible) {

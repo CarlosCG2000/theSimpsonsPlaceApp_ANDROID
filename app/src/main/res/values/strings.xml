@@ -3,4 +3,9 @@
     <string name="title_activity_prueba" translatable="false">PruebaActivity</string>
     <string name="logo_simpsons">LOGO SIMPSONS</string>
     <string name="anonimo">Anónimo</string>
+    <string name="lista_completa">Lista Completa</string>
+    <string name="lista_filtro">Lista Filtro</string>
+    <string name="lista_fav">Lista Fav</string>
+    <string name="volver_al_menu">Volver al menu</string>
+    <string name="juego">Juego</string>
 </resources>

@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersFilterName.ListCharactersFilterStateUI
@@ -64,7 +65,7 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                2,
+                BottomNavItem.FILTERS,
                 navigateToAllCharacters,
                 { },
                 navigateToFavoriteCharacters

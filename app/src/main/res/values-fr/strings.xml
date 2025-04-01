@@ -2,4 +2,10 @@
 <resources>
     <string name="app_name">TheSimpsonPlace</string>
     <string name="logo_simpsons">Logopathie</string>
+    <string name="anonimo">Anonyme</string>
+    <string name="lista_completa">Majeur</string>
+    <string name="lista_filtro">Filtres</string>
+    <string name="lista_fav">Favoris</string>
+    <string name="volver_al_menu">Retour au menu</string>
+    <string name="juego">Jeu</string>
 </resources>

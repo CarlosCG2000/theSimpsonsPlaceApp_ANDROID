@@ -37,6 +37,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
@@ -74,7 +76,7 @@ fun QuotesFilterScreen(
     Scaffold(
         bottomBar = {
             BottomBarQuoteComponent(
-                selectedBarButtom = 2,
+                selectedBarButtom = BottomNavQuotesItem.FILTERS,
                 navigateToQuotes = navigateToQuotes,
                 navigateToFiltersQuotes = { },
                 navigateToFavoritesQuotes = navigateToFavoriteQuotes,

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
@@ -39,7 +40,7 @@ fun EpisodesFavScreen(
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                3,
+                BottomNavItem.ALL,
                 navigateToAllEpisodes,
                 navigateToFilterEpisode
             ) { }
