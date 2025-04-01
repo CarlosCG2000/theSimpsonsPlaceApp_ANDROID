@@ -27,4 +27,17 @@
     <string name="title_episodes">Ningún episodio</string>
     <string name="details_episodes">Aún no hay personajes favoritos. Agrega tus personajes favoritos a la lista general de personajes para que puedas verlos aquí.</string>
     <string name="todos">Todos</string>
+    <string name="episodio">Episodio</string>
+    <string name="Favorito">Favorito</string>
+    <string name="vista">Visto</string>
+    <string name="lanzamiento">Lanzamiento</string>
+    <string name="escritores">Escritores</string>
+    <string name="ning_n_escritor">Ningún escritor</string>
+    <string name="directores">Directores</string>
+    <string name="invitados">Invitados</string>
+    <string name="ning_n_director">Ningún director</string>
+    <string name="ningun_invitado_famoso">Ningun invitado famoso</string>
+    <string name="recomendado">Recomendado</string>
+    <string name="no_recomendado">No recomendado</string>
+    <string name="sin_datos">Sin datos</string>
 </resources>

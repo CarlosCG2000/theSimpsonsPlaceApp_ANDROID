@@ -27,4 +27,17 @@
     <string name="title_episodes">Aucun épisode</string>
     <string name="details_episodes">Il n\'y a aucun épisode avec cette fonctionnalité. Modifiez les fonctionnalités de l\'épisode.</string>
     <string name="todos">Tous</string>
+    <string name="episodio">Épisode</string>
+    <string name="Favorito">Préféré</string>
+    <string name="vista">Vu</string>
+    <string name="lanzamiento">Date de sortie</string>
+    <string name="escritores">Écrivains</string>
+    <string name="ning_n_escritor">Pas d\'écrivain</string>
+    <string name="directores">Directeurs</string>
+    <string name="invitados">Invités</string>
+    <string name="ning_n_director">Pas de réalisateur</string>
+    <string name="ningun_invitado_famoso">Aucun invité célèbre</string>
+    <string name="recomendado">Recommandé</string>
+    <string name="no_recomendado">Non recommandé</string>
+    <string name="sin_datos">Aucune donnée</string>
 </resources>

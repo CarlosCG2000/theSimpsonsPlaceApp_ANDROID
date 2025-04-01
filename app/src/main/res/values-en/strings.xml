@@ -27,4 +27,17 @@
     <string name="title_episodes">No episodes</string>
     <string name="details_episodes">There aren\'t favorite characters yet. Please add your favorite characters to the general character list so you can view here.</string>
     <string name="todos">All</string>
+    <string name="episodio">Episode</string>
+    <string name="Favorito">Favorite</string>
+    <string name="vista">View</string>
+    <string name="lanzamiento">Release Date</string>
+    <string name="escritores">Writers</string>
+    <string name="ning_n_escritor">No writer</string>
+    <string name="directores">Directors</string>
+    <string name="invitados">Guests</string>
+    <string name="ning_n_director">No director</string>
+    <string name="ningun_invitado_famoso">No famous guests</string>
+    <string name="recomendado">Recommended</string>
+    <string name="no_recomendado">Not recommended</string>
+    <string name="sin_datos">No data</string>
 </resources>

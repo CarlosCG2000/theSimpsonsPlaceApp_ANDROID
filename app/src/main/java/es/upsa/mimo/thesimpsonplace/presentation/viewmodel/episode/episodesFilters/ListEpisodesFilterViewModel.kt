@@ -37,10 +37,15 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
 
     fun updateEpisodes(episodes: List<Episode>) {
         allEpisodes = episodes // Almacena la lista completa
+
+        // if (_stateEpisode.value.episodes != allEpisodes) // Verificar si realmente cambia
         _stateEpisode.update { it.copy(episodes = episodes, isLoading = false) }
     }
 
-    fun getEpisodesFilter(title: String = "", minDate: Date = Date(defaultMinDate), maxDate: Date = Date(), season: Int = 0, episode: Int = 0, isView: Boolean = false, order: Boolean = false){
+    fun getEpisodesFilter(title: String = "",
+                          minDate: Date = Date(defaultMinDate), maxDate: Date = Date(),
+                          season: Int = 0, episode: Int = 0,
+                          isView: Boolean = false, order: Boolean = false){
 
         viewModelScope.launch {
             _stateEpisode.update { it.copy(isLoading = true) }
@@ -53,13 +58,14 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
                                         /** solo quiero que se filtre cuando sea true el 'isView' */
             if (filteredEpisodes.isNotEmpty() && isView) filteredEpisodes = getEpisodesByViewUseCase(true, filteredEpisodes)
 
-/** Actualmente, getEpisodesFilter() usa viewModelScope.launch, lo cual es correcto, pero cada filtro se aplica secuencialmente, lo que puede ser ineficiente. 🔧 Solución: Usa filterNotNull() y un pipeline funcional para filtrar de forma más limpia:*/
-//           val filteredEpisodes = allEpisodes.value
-//                .filter { it.titulo.contains(title, ignoreCase = true) }
-//                .filter { it.fecha in minDate..maxDate }
-//                .filterNotNull { if (season != 0) it.temporada == season else null }
-//                .filterNotNull { if (episode != 0) it.episodio == episode else null }
-//                .filterNotNull { if (isView) it.visto else null }
+/**        getEpisodesFilter() usa viewModelScope.launch, lo cual es correcto, pero cada filtro se aplica secuencialmente, lo que puede ser ineficiente. 🔧 Solución: Usa filterNotNull() y un pipeline funcional para filtrar de forma más limpia:
+           val filteredEpisodes = allEpisodes.value
+                .filter { it.titulo.contains(title, ignoreCase = true) }
+                .filter { it.fecha in minDate..maxDate }
+                .filterNotNull { if (season != 0) it.temporada == season else null }
+                .filterNotNull { if (episode != 0) it.episodio == episode else null }
+                .filterNotNull { if (isView) it.visto else null }
+ */
 
             _stateEpisode.update {
                 it.copy(episodes = filteredEpisodes) // Orden inverso, isLoading = false)

@@ -1,6 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -36,14 +38,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.MotionScene
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeStateUI
@@ -53,12 +57,11 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListF
 import es.upsa.mimo.thesimpsonplace.utils.toFormattedString
 
 @Composable
-fun EpisodeDetailScreen(
-    viewModel: DetailsEpisodeViewModel = hiltViewModel(),// viewModel(factory = DetailsEpisodeViewModel.factory()),
-    id: String,
-    navigationArrowBack:() -> Unit) {
+fun EpisodeDetailScreen(viewModel: DetailsEpisodeViewModel = hiltViewModel(),
+                        id: String,
+                        navigationArrowBack:() -> Unit) {
 
-    val state: State<DetailsEpisodeStateUI> = viewModel.episodeState.collectAsState() // lo hago sincrono para usarlo en la pantalla
+    val state: State<DetailsEpisodeStateUI> = viewModel.episodeState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getEpisodeById(id)
@@ -67,7 +70,7 @@ fun EpisodeDetailScreen(
     Scaffold(
         topBar = {
             TopBarComponent(
-                title = "Episodio ${state.value.episode?.episodio} - Temporada  ${state.value.episode?.temporada}",
+                title = "${stringResource(R.string.episodio)} ${state.value.episode?.episodio} - ${stringResource(R.string.temporada)}  ${state.value.episode?.temporada}",
                 onNavigationArrowBack = navigationArrowBack
             )
         }
@@ -78,14 +81,13 @@ fun EpisodeDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                // .background(Color.White) // ✅ Fondo blanco para mejor visibilidad,
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             if(state.value.isLoading) {
                 CircularProgressIndicator(
-                    color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             } else {
-               // CharacterDetails( state.value.episode )
                 state.value.episode?.let { episode ->
                     CharacterDetails(episode)
                 }
@@ -105,36 +107,38 @@ fun CharacterDetails(episode: Episode,
     val isView = stateFavOrView.value.episodesViewSet.contains(episode.id)
 
     Column(
-        modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+        modifier = Modifier
+            .fillMaxSize() // Ocupa toda la pantalla
+                            .background(MaterialTheme.colorScheme.primary),
         verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
         horizontalAlignment = Alignment.CenterHorizontally
     ) { // Centra horizontalmente
         // Título del episodio
         Text(
-            text = episode?.titulo ?: "No titulo",
+            text = episode.titulo,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFFFFC107) // Amarillo
+            fontWeight = Bold,
+            color = MaterialTheme.colorScheme.onPrimary,
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Descripción del episodio
         Text(
-            text = episode?.descripcion ?: "No descripción",
-            fontSize = 16.sp,
-            color = Color.White,
+            text = episode.descripcion,
+            fontSize = 18.sp,
+            color =  MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Fecha de lanzamiento
         Text(
-            text = "Release date: ${episode?.lanzamiento?.toFormattedString()}",
-            fontSize = 18.sp,
-            color = Color.Gray
+            text = "${stringResource(R.string.lanzamiento)} ${episode.lanzamiento.toFormattedString()}",
+            fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.onSecondary
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -152,8 +156,8 @@ fun CharacterDetails(episode: Episode,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Favorite",
-                    color = Color.White,
+                    text = stringResource(R.string.Favorito), fontSize = 18.sp, fontWeight = Bold,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     textDecoration = if (isFavorite == true) TextDecoration.None else TextDecoration.LineThrough
                 )
 
@@ -165,8 +169,8 @@ fun CharacterDetails(episode: Episode,
                         viewModelDB.toggleFavoriteOrView(episode = episode, fav = !isFavorite, view = isView)
                     },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.Yellow,
-                        checkedTrackColor = Color.Yellow.copy(alpha = 0.2f) // Fondo amarillo con transparencia
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        checkedTrackColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f) // Fondo amarillo con transparencia
                     )
                 )
             }
@@ -175,7 +179,8 @@ fun CharacterDetails(episode: Episode,
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Vista", color = Color.White)
+                Text(stringResource(R.string.vista), fontSize = 18.sp, fontWeight = Bold,
+                    color = MaterialTheme.colorScheme.onSecondary)
 
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -184,9 +189,9 @@ fun CharacterDetails(episode: Episode,
                 }) {
                     Icon(
                         imageVector = if (isView == true) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                        contentDescription = "Visto",
-                        Modifier.size(50.dp),
-                        tint = if (isView == true) Color.Yellow else Color.Red
+                        contentDescription = stringResource(R.string.vista),
+                        modifier = Modifier.size(50.dp),
+                        tint = if (isView == true) MaterialTheme.colorScheme.onPrimary else Color.Red
                     )
                 }
             }
@@ -195,9 +200,12 @@ fun CharacterDetails(episode: Episode,
         Spacer(modifier = Modifier.height(16.dp))
 
         // Secciones de escritores, directores e invitados
-        SectionCard("Escritores", episode?.escritores ?: emptyList(), Color(0xFFFFC107), emptyMessage = "Ningún escritor")
-        SectionCard("Directores", episode?.directores ?: emptyList(), Color(0xFFFFC107), emptyMessage = "Ningún director")
-        SectionCard("Invitados", episode?.invitados ?: emptyList(), Color(0xFFFFC107) /*Color.Red*/, emptyMessage = "Ningun invitado famoso")
+        SectionCard(stringResource(R.string.escritores), episode.escritores,
+                    MaterialTheme.colorScheme.onPrimary, emptyMessage = stringResource(R.string.ning_n_escritor))
+        SectionCard(stringResource(R.string.directores), episode.directores,
+                    MaterialTheme.colorScheme.onPrimary, emptyMessage = stringResource( R.string.ning_n_director))
+        SectionCard(stringResource(R.string.invitados), episode.invitados,
+                    MaterialTheme.colorScheme.onPrimary, emptyMessage = stringResource(R.string.ningun_invitado_famoso))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -206,16 +214,18 @@ fun CharacterDetails(episode: Episode,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = if (episode?.valoracion == true) "Recomendado" else "No recomendado",
-                color = Color.White,
+                text =  if (episode.valoracion == true) stringResource(R.string.recomendado)
+                        else stringResource(R.string.no_recomendado),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.width(12.dp)) // Espaciado entre el icono y el texto
 
             Icon(
-                imageVector = if (episode?.valoracion == true) Icons.Filled.ThumbUp else Icons.Filled.ThumbDown,
-                contentDescription = if (episode?.valoracion == true) "Recomendado" else "No recomendado",
-                tint = Color.White
+                imageVector = if (episode.valoracion == true) Icons.Filled.ThumbUp else Icons.Filled.ThumbDown,
+                contentDescription = if (episode.valoracion == true) stringResource(R.string.recomendado)
+                else stringResource(R.string.no_recomendado),
+                tint = MaterialTheme.colorScheme.onSecondary
             )
         }
 
@@ -224,12 +234,12 @@ fun CharacterDetails(episode: Episode,
 
 // Composable para cada sección
 @Composable
-fun SectionCard(title: String, items: List<String>, titleColor: Color, emptyMessage: String = "No data") {
+fun SectionCard(title: String, items: List<String>, titleColor: Color, emptyMessage: String = stringResource(R.string.sin_datos)) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2C3E72))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
         Column( modifier = Modifier.padding(16.dp)) {
             Text(
@@ -248,7 +258,7 @@ fun SectionCard(title: String, items: List<String>, titleColor: Color, emptyMess
                 ) {
                     // items.forEach { item ->
                     items(items){item ->
-                        Text(modifier = Modifier.padding(end = 16.dp), text = "• $item", color = Color.White)
+                        Text(modifier = Modifier.padding(end = 16.dp), text = "• $item", color = MaterialTheme.colorScheme.onSecondary )
                     }
                 }
             }
