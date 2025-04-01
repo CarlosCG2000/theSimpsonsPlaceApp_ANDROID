@@ -8,4 +8,6 @@
     <string name="lista_fav">Favorites</string>
     <string name="volver_al_menu">Return to menu</string>
     <string name="juego">Game</string>
+    <string name="todos_los_personajes">All characters</string>
+    <string name="favorito">Favorite</string>
 </resources>

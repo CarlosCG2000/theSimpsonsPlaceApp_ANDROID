@@ -10,9 +10,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.thesimpsonplace.R
@@ -33,8 +35,8 @@ fun TopBarComponent(title: String, onNavigationArrowBack:() -> Unit ) {
                 }
             },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer, // Fondo
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer // Texto
+            containerColor = MaterialTheme.colorScheme.surface, // Fondo
+            titleContentColor = MaterialTheme.colorScheme.onSecondary, // Texto
         )
     )
 }

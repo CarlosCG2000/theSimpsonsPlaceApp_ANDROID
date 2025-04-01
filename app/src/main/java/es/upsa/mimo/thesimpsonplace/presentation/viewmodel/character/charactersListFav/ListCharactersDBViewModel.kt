@@ -26,15 +26,8 @@ class ListCharactersDBViewModel @Inject constructor(
     private val _stateCharacterFav = MutableStateFlow<ListCharactersDbStateUI>(ListCharactersDbStateUI())
     val stateCharacterFav: StateFlow<ListCharactersDbStateUI> = _stateCharacterFav.asStateFlow()
 
-//    private val _charactersSet = MutableStateFlow<Set<Int>>(emptySet())
-//    val charactersSet: StateFlow<Set<Int>> = _charactersSet.asStateFlow()
-//
-//    // Estado reactivo que almacena los personajes favoritos en Room
-//    private val _characters = MutableStateFlow<List<Character>>(emptyList())
-//    val characters: StateFlow<List<Character>> = _characters.asStateFlow()
-
     init {
-        loadFavorites()
+        viewModelScope.launch { loadFavorites() }
     }
 
     // 🔹 Cargar personajes y marcar favoritos
@@ -46,7 +39,8 @@ class ListCharactersDBViewModel @Inject constructor(
             getAllCharactersUseCase().collect { charactersList ->
 
                 _stateCharacterFav.update {
-                    it.copy(charactersSet = charactersList.mapNotNull { it.id }.toSet(),  // todos los personajes de la BD que son favoritos (en este caso siempre van a ser todos)
+                    // todos los personajes de la BD que son favoritos (en este caso siempre van a ser todos)
+                    it.copy(charactersSet = charactersList.map { it.id }.toSet(),
                             characters = charactersList,
                             isLoading = false) // todos los personajes de la BD
                 }
@@ -57,15 +51,8 @@ class ListCharactersDBViewModel @Inject constructor(
 
     fun toggleFavorite(character: Character) {
         viewModelScope.launch {
-            val existsCharacter = getCharacterByIdUseCase(character.id) // se comprueba si existe el personaje en la BD
-
-            if (existsCharacter == null) {
-                insertCharacterUseCase(character)
-            } else {
-                deleteCharacterUseCase(existsCharacter)
-            }
-
-           loadFavorites() // 🔄 Actualiza la lista de favoritos
+            val exists = getCharacterByIdUseCase(character.id) != null
+            if (exists) deleteCharacterUseCase(character) else insertCharacterUseCase(character)
         }
     }
 }

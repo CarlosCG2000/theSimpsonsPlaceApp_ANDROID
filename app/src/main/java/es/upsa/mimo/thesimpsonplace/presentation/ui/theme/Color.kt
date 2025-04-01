@@ -19,7 +19,7 @@ val BackgroundComponentColor = Color(0xFF4E5D9C)
 val TextComponentColor = Color(0xFFFFFFFF)
 
 // 🎨 Modo Claro
-val BackgroundColorLight = Color(0xFF3B4D8B) // Azul más claro que 0xFF09184D
+val BackgroundColorLight = Color(0xFF465588) // Azul más claro que 0xFF09184D
 val TextColorLight = Color(0xFFFFD54F) // Amarillo más suave
-val BackgroundComponentColorLight = Color(0xFF6F7ECF) // Azul más claro que 0xFF4E5D9C
+val BackgroundComponentColorLight = Color(0xFF7786C5) // Azul más claro que 0xFF4E5D9C
 val TextComponentColorLight = Color(0xFF000000) // Negro (para contraste en claro)

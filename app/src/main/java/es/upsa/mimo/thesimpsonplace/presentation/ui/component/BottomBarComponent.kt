@@ -8,9 +8,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.thesimpsonplace.R
@@ -18,12 +22,25 @@ import es.upsa.mimo.thesimpsonplace.R
 enum class BottomNavItem { ALL, FILTERS, FAVORITES }
 
 @Composable
+fun colorsTheme(): NavigationBarItemColors {
+    return NavigationBarItemDefaults.colors(
+        selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+        unselectedIconColor = MaterialTheme.colorScheme.onSecondary,
+        selectedTextColor = MaterialTheme.colorScheme.onPrimary,
+        unselectedTextColor =  MaterialTheme.colorScheme.onSecondary,
+        indicatorColor = Color.Transparent // Fondo transparente en el botón seleccionado
+    )
+}
+
+@Composable
 fun BottomBarComponent(selectedBarButtom: BottomNavItem = BottomNavItem.ALL,
                        navigateToAllEpisodes: () -> Unit,
                        navigateToFiltersEpisode: () -> Unit,
                        navigateToFavoritesEpisode: () -> Unit) {
 
-    BottomAppBar { // Barra de navegación, ¿usar NavigationBar?
+    BottomAppBar( // Barra de navegación, ¿usar NavigationBar?
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
 
         NavigationBarItem(
             // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
@@ -36,6 +53,7 @@ fun BottomBarComponent(selectedBarButtom: BottomNavItem = BottomNavItem.ALL,
             },
             label = { Text(text = stringResource(R.string.lista_completa)) },
             onClick = { navigateToAllEpisodes() },
+            colors = colorsTheme()
         )
 
         NavigationBarItem(
@@ -46,6 +64,7 @@ fun BottomBarComponent(selectedBarButtom: BottomNavItem = BottomNavItem.ALL,
             },
             label = {  Text(text = stringResource(R.string.lista_filtro)) },
             onClick = { navigateToFiltersEpisode() },
+            colors = colorsTheme()
         )
 
         NavigationBarItem(
@@ -56,11 +75,10 @@ fun BottomBarComponent(selectedBarButtom: BottomNavItem = BottomNavItem.ALL,
             },
             label = {  Text(text = stringResource(R.string.lista_fav)) },
             onClick = { navigateToFavoritesEpisode() },
+            colors = colorsTheme()
         )
     }
 }
-
-
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable

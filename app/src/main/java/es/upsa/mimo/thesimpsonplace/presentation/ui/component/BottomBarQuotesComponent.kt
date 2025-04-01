@@ -9,9 +9,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.thesimpsonplace.R
@@ -26,7 +30,7 @@ fun BottomBarQuoteComponent(selectedBarButtom:BottomNavQuotesItem = BottomNavQuo
                                 navigateToGameQuotes: () -> Unit
                             ) {
 
-    BottomAppBar { // Barra de navegación, ¿usar NavigationBar?
+    BottomAppBar( containerColor = MaterialTheme.colorScheme.surface) { // Barra de navegación, ¿usar NavigationBar?
 
         NavigationBarItem( // Elemento de la barra de navegacion (la tenemos puesta en BottomBar)
             selected = selectedBarButtom == BottomNavQuotesItem.MAIN, // solo marcamos como seleccionada a un tipo (al principio el por defecto)
@@ -36,6 +40,7 @@ fun BottomBarQuoteComponent(selectedBarButtom:BottomNavQuotesItem = BottomNavQuo
             },
             label = {  Text(text = stringResource(R.string.lista_completa))  },
             onClick = { navigateToQuotes() },
+            colors = colorsTheme()
         )
 
         NavigationBarItem(
@@ -46,6 +51,7 @@ fun BottomBarQuoteComponent(selectedBarButtom:BottomNavQuotesItem = BottomNavQuo
             },
             label = {  Text(text = stringResource(R.string.lista_filtro)) },
             onClick = { navigateToFiltersQuotes() },
+            colors = colorsTheme()
         )
 
         NavigationBarItem( 
@@ -56,6 +62,7 @@ fun BottomBarQuoteComponent(selectedBarButtom:BottomNavQuotesItem = BottomNavQuo
             },
             label = { Text(text = stringResource(R.string.lista_fav)) },
             onClick = { navigateToFavoritesQuotes() },
+            colors = colorsTheme()
         )
 
         NavigationBarItem(
@@ -66,10 +73,13 @@ fun BottomBarQuoteComponent(selectedBarButtom:BottomNavQuotesItem = BottomNavQuo
             },
             label = { Text(text = stringResource(R.string.juego))  },
             onClick = { navigateToGameQuotes() },
+            colors = colorsTheme()
         )
 
     }
 }
+
+
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
