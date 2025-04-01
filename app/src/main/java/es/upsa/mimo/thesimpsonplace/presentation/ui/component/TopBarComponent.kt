@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import es.upsa.mimo.thesimpsonplace.R
 
@@ -25,7 +26,7 @@ fun TopBarComponent(title: String, onNavigationArrowBack:() -> Unit ) {
 
     CenterAlignedTopAppBar( // Puede ser tambien: CenterAlignedTopAppBar, MediumTopAppBar, LargeTopAppBar
 
-        title = { Text(title) },
+        title = { Text(text = title, fontWeight = Bold,) },
 
         navigationIcon = { // Icono del menú
             IconButton(onClick = onNavigationArrowBack) {
