@@ -46,7 +46,7 @@ class ListEpisodesDBViewModel @Inject constructor(
 
                     it.copy( episodes = episodesList,
                              episodesView = episodesList.filter { it.esVisto },
-                             episodesFav = episodesList.filter { it.esFavorito },
+                             episodesFav = episodesList.filter { it.esFavorito }.sortedBy{ it.lanzamiento.time },
                              episodesSet = episodesList.map { it.id }.toSet(),
                              episodesViewSet = episodesList.mapNotNull {
                                if (it.esVisto) it.id else null

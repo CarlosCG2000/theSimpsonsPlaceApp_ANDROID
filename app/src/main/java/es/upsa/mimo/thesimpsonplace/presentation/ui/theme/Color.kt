@@ -15,11 +15,12 @@ import androidx.compose.ui.graphics.Color
 // 🎨 Modo Oscuro
 val BackgroundColor = Color(0xFF09184D)
 val TextColor = Color(0xFFFFC107)
-val BackgroundComponentColor = Color(0xFF4E5D9C)
-val TextComponentColor = Color(0xFFFFFFFF)
+val BackgroundComponentColor = Color(0xFF50609D)
+val TextComponentColor = Color(0xFFFDFDFD)
 
 // 🎨 Modo Claro
-val BackgroundColorLight = Color(0xFF5D739D) // Azul más claro que 0xFF09184D
+val BackgroundColorLight = Color(0xFA5D739D) // Azul más claro que 0xFF09184D
 val TextColorLight = Color(0xFFFFD54F) // Amarillo más suave
-val BackgroundComponentColorLight = Color(0xFF98A0C7) // Azul más claro que 0xFF4E5D9C
+val BackgroundComponentColorLight = Color(0xFFA7ACDA) // Azul más claro que 0xFF4E5D9C
 val TextComponentColorLight = Color(0xFF1C1919) // Negro (para contraste en claro)
+

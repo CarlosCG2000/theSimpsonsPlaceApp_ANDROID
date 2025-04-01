@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,10 +37,13 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
     private val defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 17) }.timeInMillis
 
     fun updateEpisodes(episodes: List<Episode>) {
+        Log.i("ListEpisodesFilterViewModel", "Recibidos ${episodes.size} episodios para filtrar")
         allEpisodes = episodes // Almacena la lista completa
 
         // if (_stateEpisode.value.episodes != allEpisodes) // Verificar si realmente cambia
         _stateEpisode.update { it.copy(episodes = episodes, isLoading = false) }
+
+        Log.i("ListEpisodesFilterViewModel", "stateEpisode actualizado: ${_stateEpisode.value.episodes.size} episodios")
     }
 
     fun getEpisodesFilter(title: String = "",

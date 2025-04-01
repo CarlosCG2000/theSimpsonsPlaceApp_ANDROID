@@ -1,9 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,17 +9,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DropdownMenu
@@ -32,12 +30,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButtonDefaults.colors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +46,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,14 +54,11 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.constraintlayout.compose.MotionScene
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
@@ -76,10 +70,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilte
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters.ListEpisodesFilterViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -98,6 +89,8 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     var stateAllEpisodes: State<ListEpisodesStateUI> = viewModelAllEpisodes.episodesState.collectAsState()
     var state: State<ListEpisodesFilterStateUI> = viewModel.stateEpisode.collectAsState() // pasa a ser sincrono para manejarlo en la UI
     val stateFavOrView: State<ListEpisodesDbStateUI> = viewModelDB.stateEpisodesFavOrView.collectAsState()
+
+    Log.i("EpisodesFilterScreen", "state.episodes size: ${state.value.episodes.size}")
 
     // _____________________ FILTROS _____________________
     var filterTitle by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
@@ -120,15 +113,18 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     var isOrder by remember { mutableStateOf(false) }
     // ___________________________________________________
 
+    // **🛠 Depuración: Ver qué está pasando con los episodios**
+    Log.i("EpisodesFilterScreen", "stateAllEpisodes.isLoading: ${stateAllEpisodes.value.isLoading}")
+    Log.i("EpisodesFilterScreen", "stateAllEpisodes.episodes size: ${stateAllEpisodes.value.episodes.size}")
+
 //    1.	Primer LaunchedEffect(Unit)
 //    •	Se ejecuta al iniciarse el Composable.
 //    •	Como stateAllEpisodes.value.episodes está vacío, llama a viewModelAllEpisodes.getAllEpisodes() para obtener los episodios.
 //    •	Esto actualiza stateAllEpisodes, lo que desencadena el siguiente LaunchedEffect.
     LaunchedEffect(Unit) {
-        Log.i("LaunchedEffect", "Unit: ${stateAllEpisodes.value.episodes}")
-        if (stateAllEpisodes.value.episodes.isEmpty()) {
+        if (stateAllEpisodes.value.episodes.isEmpty() && !stateAllEpisodes.value.isLoading) {
             viewModelAllEpisodes.getAllEpisodes() // cargue todos los episodios de primeras
-            Log.i("LaunchedEffect", "Unit: ${stateAllEpisodes.value.episodes}")
+            Log.i("EpisodesFilterScreen", "Llamando a getAllEpisodes()")
         }
     }
 
@@ -136,9 +132,8 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 //    •	Se ejecuta cuando stateAllEpisodes.value.episodes cambia.
 //    •	Cuando la lista de episodios se llena, llama a viewModel.updateEpisodes(stateAllEpisodes.value.episodes), lo que posiblemente también esté actualizando el estado y provocando otro renderizado.
     LaunchedEffect(stateAllEpisodes.value.episodes) {
-        Log.i("LaunchedEffect", "stateAllEpisodes: ${stateAllEpisodes.value.episodes}")
-        if (stateAllEpisodes.value.episodes.isNotEmpty()) {
-            Log.i("LaunchedEffect", "stateAllEpisodes: ${stateAllEpisodes.value.episodes}")
+        if (stateAllEpisodes.value.episodes.isNotEmpty()){ //&& state.value.episodes != stateAllEpisodes.value.episodes) {
+            Log.i("EpisodesFilterScreen", "Actualizando filtros con episodios cargados")
             viewModel.updateEpisodes(stateAllEpisodes.value.episodes)
         }
     }
@@ -148,17 +143,20 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 //    •	Si stateAllEpisodes.value.episodes se actualiza varias veces en cascada, podría estar generando múltiples llamadas.
     LaunchedEffect(filterTitle.text, filterMinDate.selectedDateMillis, filterMaxDate.selectedDateMillis,
         filterSeason, filterEpisode, isViewEnabled, isOrder) {
-        delay(350) // Debounce
-        viewModel.getEpisodesFilter(
-            title = filterTitle.text,
-            minDate = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-            maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-            season = filterSeason,
-            episode = filterEpisode,
-            isView = isViewEnabled,
-            order = isOrder
-        )
-        Log.i("LaunchedEffect", "filterTitle: ${state.value.episodes}")
+        if (stateAllEpisodes.value.episodes.isNotEmpty()) { // Solo filtra si ya hay episodios cargados
+            delay(300) // Debounce
+            viewModel.getEpisodesFilter(
+                title = filterTitle.text,
+                minDate = filterMinDate.selectedDateMillis?.let { Date(it) }
+                    ?: Date(defaultMinDate),
+                maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
+                season = filterSeason,
+                episode = filterEpisode,
+                isView = isViewEnabled,
+                order = isOrder
+            )
+            Log.i("LaunchedEffect", "filterTitle: ${state.value.episodes}")
+        }
     }
 
     fun logicaFiltrado(title: String = filterTitle.text,
@@ -338,7 +336,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
                 // contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
-                if(state.value.isLoading || stateAllEpisodes.value.isLoading){
+                if(stateAllEpisodes.value.isLoading){ // state.value.isLoading ||
                     CircularProgressIndicator( color = MaterialTheme.colorScheme.onPrimary )
                 }
                 else {
@@ -420,6 +418,9 @@ fun DatePickerDialogComponent(modifier: Modifier = Modifier,
                               ) {
     if (showDialogDate) {
         DatePickerDialog(
+            colors = DatePickerDefaults.colors(
+                containerColor = Color.White // Fondo del diálogo en blanco
+            ),
             modifier = modifier,
             onDismissRequest = onDismissRequest,
             confirmButton = {
@@ -428,7 +429,11 @@ fun DatePickerDialogComponent(modifier: Modifier = Modifier,
                 }
             }
         ) {
-            DatePicker(state = filterDate)
+            DatePicker(state = filterDate,
+//                     colors = DatePickerDefaults.colors(
+//                          containerColor = Color.White // Fondo interno del DatePicker en blanco
+//                    )
+                )
         }
     }
 

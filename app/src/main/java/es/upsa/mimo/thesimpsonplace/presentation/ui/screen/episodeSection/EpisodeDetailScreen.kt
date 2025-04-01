@@ -141,7 +141,7 @@ fun CharacterDetails(episode: Episode,
             color = MaterialTheme.colorScheme.onSecondary
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         // Fila para Favorito y Visto
         Row(
