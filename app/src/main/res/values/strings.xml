@@ -43,4 +43,10 @@
     <string name="no_recomendado">No recomendado</string>
     <string name="sin_datos">Sin datos</string>
     <string name="episodios_favoritos">Episodios favoritos</string>
+    <string name="citas_aleatorias">Citas aleatorias</string>
+    <string name="imagen_personaje">Imagen personaje</string>
+    <string name="citas_filtradas">Citas Filtradas</string>
+    <string name="item">Item %1$s</string>
+    <string name="items">Items %1$s</string>
+    <string name="citas_favoritos">Citas Favoritos</string>
 </resources>

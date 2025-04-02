@@ -18,11 +18,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +44,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +53,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
@@ -70,11 +74,10 @@ fun QuotesScreen(
 ) {
 
     val state: State<ListQuotesStateUI> = viewModel.stateQuotes.collectAsState() // sincrono para manejarlo en la UI
-    var generateNewQuotes by remember { mutableStateOf(true) }
-
     val stateFav: State<ListQuotesDbStateUI> = viewModelDB.stateQuotesFav.collectAsState()
 
-    //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
+    var generateNewQuotes by remember { mutableStateOf(true) }
+
     LaunchedEffect(generateNewQuotes /**Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
         viewModel.getQuotes()
     }
@@ -83,7 +86,7 @@ fun QuotesScreen(
         bottomBar = {
             BottomBarQuoteComponent(
                 selectedBarButtom = BottomNavQuotesItem.MAIN,
-                navigateToQuotes = { },
+                navigateToQuotes = { /** es esta pantalla, no necesita navegar */ },
                 navigateToFiltersQuotes = navigateToFilterQuotes,
                 navigateToFavoritesQuotes = navigateToFavoriteQuotes,
                 navigateToGameQuotes = navigateToGameQuotes
@@ -91,20 +94,22 @@ fun QuotesScreen(
         },
         topBar = {
             TopBarComponent(
-                title = "Listado de Citas",
+                title = stringResource(R.string.citas_aleatorias),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
 
     ) { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
         ) {
             val (boton, listado) = createRefs()
 
             Button(
                 onClick = { generateNewQuotes = !generateNewQuotes },
+                colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.secondary),
                 modifier = Modifier
                     .constrainAs(boton) {
                         top.linkTo(parent.top, margin = 10.dp)
@@ -114,19 +119,18 @@ fun QuotesScreen(
                         // width = Dimension.value(30.dp)
                     }
                     .clip(RoundedCornerShape(12.dp)) // Bordes redondeados
-                    .background(Color.DarkGray) // Degradado de colores
-                    .shadow(8.dp, RoundedCornerShape(12.dp)) // Sombra suave
+                    //.shadow(8.dp, RoundedCornerShape(12.dp)) // Sombra suave
             ) {
                 Text(
                     text = "Nuevas Citas",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                 )
             }
 
-            // ✅ Contenido centrado en el resto de la pantalla
+            // Contenido centrado en el resto de la pantalla
             Box(
                 modifier = Modifier
                     .constrainAs(listado) {
@@ -136,14 +140,15 @@ fun QuotesScreen(
                         end.linkTo(parent.end)
                         height = Dimension.fillToConstraints
                     },
-                    //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
-                contentAlignment = Alignment.Center // 🔹 Centra el contenido
+                contentAlignment = Alignment.Center, // 🔹 Centra el contenido
             ) {
                 if (state.value.isLoading) {
-                    CircularProgressIndicator(color = Color.Yellow)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 } else {
                     listQuotes(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary),
                         quotes = state.value.quotes,
                         favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
                         onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
@@ -170,11 +175,10 @@ fun listQuotes(modifier: Modifier = Modifier,
 
             val isFavorite = rememberUpdatedState(quote.cita in favoriteQuotes)
 
-            QuoteItem(quote = quote,
+            QuoteItem (  quote = quote,
                         isFavorite = isFavorite.value,
-                        onToggleFavorite = {
-                            onToggleFavorite(quote)
-                        })
+                        onToggleFavorite = { onToggleFavorite(quote) }
+                      )
         }
     }
 }
@@ -182,15 +186,14 @@ fun listQuotes(modifier: Modifier = Modifier,
 @Composable
 fun QuoteItem(quote: Quote,
               isFavorite: Boolean,
-              onToggleFavorite: () -> Unit
-              /** dbQuoteViewModel: DbQuotesViewModel = hiltViewModel() */
-              ) {
+              onToggleFavorite: () -> Unit) {
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2C3E72)), // Azul oscuro
+                                //.background(MaterialTheme.colorScheme.secondary),
+            colors = CardDefaults.cardColors(containerColor =MaterialTheme.colorScheme.secondary), // Azul oscuro
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             Row(
@@ -206,21 +209,22 @@ fun QuoteItem(quote: Quote,
                         text = quote.cita,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onSecondary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = quote.personaje,
                         fontSize = 16.sp,
-                        color = Color.White.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.7f)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
                     IconButton(onClick = { onToggleFavorite() }) {
                         Icon(
                             imageVector = Icons.Filled.Star, // Usa el ícono de estrella
-                            contentDescription = "Favorito",
-                            tint = if (isFavorite) Color.Yellow else Color.Red, // Amarillo si es favorito, rojo si no
+                            contentDescription = stringResource(R.string.favorito),
+                            tint = if (isFavorite) MaterialTheme.colorScheme.onPrimary
+                                   else Color.Red,
                             modifier = Modifier.size(38.dp) // Tamaño del icono
                         )
                     }
@@ -231,7 +235,7 @@ fun QuoteItem(quote: Quote,
                         .data(quote.imagen.toString())
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Character Image",
+                    contentDescription = stringResource(R.string.imagen_personaje),
                     modifier = Modifier
                         .size(150.dp),
                     contentScale = ContentScale.Fit

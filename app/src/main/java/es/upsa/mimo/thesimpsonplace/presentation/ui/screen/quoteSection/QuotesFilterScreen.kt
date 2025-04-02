@@ -16,6 +16,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +40,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
@@ -68,8 +72,7 @@ fun QuotesFilterScreen(
     var selectedItem by remember { mutableStateOf(3) }
     val options = listOf(1, 3, 5, 10)
 
-    //Queremos que siempre que se ejecute mi vista queremos que se ejecute el caso de uso de `queryContacts()` del View Model.
-    LaunchedEffect(Unit /**Se ejecute el metodo cuando se modifique lo que tengamos aqui (variables), si tenemos 'Unit' se modificar solo una vez */) {
+   LaunchedEffect(filterName.text, selectedItem) {
         viewModel.getQuotes(selectedItem, filterName.text)
     }
 
@@ -78,55 +81,70 @@ fun QuotesFilterScreen(
             BottomBarQuoteComponent(
                 selectedBarButtom = BottomNavQuotesItem.FILTERS,
                 navigateToQuotes = navigateToQuotes,
-                navigateToFiltersQuotes = { },
+                navigateToFiltersQuotes = { /** es esta pantalla, no necesita navegar */ },
                 navigateToFavoritesQuotes = navigateToFavoriteQuotes,
                 navigateToGameQuotes = navigateToGameQuotes
             )
         },
         topBar = {
             TopBarComponent(
-                title = "Listado de Citas Filtrado",
+                title = stringResource(R.string.citas_filtradas),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
     ) { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
         ) {
             val (textfield, segmentedPicker, listado) = createRefs()
 
-            TextField(
-                value = filterName,
-                onValueChange = { newValue ->
-                    filterName = newValue
-                    debounceJob?.cancel() // Cancelamos la tarea anterior si hay una nueva entrada
-                    debounceJob = viewModel.viewModelScope.launch {
-                        delay(350) // Esperamos 500 ms antes de ejecutar el filtro
-                        viewModel.getQuotes(numElementos = selectedItem, textPersonaje = newValue.text)
+            // _______________ TEXTFIELD _______________
+            Box(
+                modifier = Modifier
+                    .constrainAs(textfield) {
+                        top.linkTo(parent.top, margin = 10.dp)
+                        bottom.linkTo(segmentedPicker.top) // 🔹 Margen inferior
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
                     }
-                },
-                label = { Text("Nombre del personaje") },
-                placeholder = { Text("Homer, Smithers, Milhouse...")},
-                trailingIcon = {
-                    if (filterName.text.isNotEmpty()) {
-                        IconButton(onClick = {
-                            filterName = TextFieldValue("")
-                            // logicaFiltrado(title = "")
-                        }) {
-                            Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                    .background(
+                        MaterialTheme.colorScheme.secondary,
+                        shape = MaterialTheme.shapes.small
+                    )
+                    .padding(6.dp)
+            ) {
+                OutlinedTextField(
+                    value = filterName,
+                    onValueChange = { newValue ->
+                        filterName = newValue
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.nombre_del_personaje),
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.ejemplos_personajes),
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    },
+                    trailingIcon = {
+                        if (filterName.text.isNotEmpty()) {
+                            IconButton(onClick = { filterName = TextFieldValue("") }) {
+                                Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
+                            }
                         }
-                    }
-                },
-                modifier = Modifier.constrainAs(textfield) {
-                    top.linkTo(parent.top, margin = 10.dp)
-                    bottom.linkTo(segmentedPicker.top) // 🔹 Margen inferior
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-            )
+                    },
+                    modifier = Modifier.fillMaxWidth() // 🔹 Para que ocupe todo el ancho del Box
+                )
+            }
+            // _________________________________________
 
             SegmentedPicker(
                 options = options,
@@ -135,18 +153,20 @@ fun QuotesFilterScreen(
                     selectedItem = it
                     viewModel.getQuotes(numElementos = selectedItem, textPersonaje = filterName.text)
                                    },
-                modifier = Modifier.constrainAs(segmentedPicker) {
-                    top.linkTo(textfield.bottom)
-                    bottom.linkTo(listado.top) // 🔹 Margen inferior
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }.fillMaxWidth()
-                  .padding(horizontal = 10.dp)
-                  .background(Color(0xFF0F1A35), RoundedCornerShape(12.dp) )
+                modifier = Modifier
+                    .constrainAs(segmentedPicker) {
+                        top.linkTo(textfield.bottom)
+                        bottom.linkTo(listado.top) // 🔹 Margen inferior
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(12.dp))
             )
 
 
-            // ✅ Contenido centrado en el resto de la pantalla
+            // Contenido centrado en el resto de la pantalla
             Box(
                 modifier = Modifier
                     .constrainAs(listado) {
@@ -163,14 +183,15 @@ fun QuotesFilterScreen(
                     CircularProgressIndicator(color = Color.Yellow)
                 } else {
                     listQuotes(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary),
                         quotes = state.value.quotes,
                         favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
                         onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
                     )
                 }
             }
-
         }
     }
 }
@@ -183,20 +204,23 @@ fun SegmentedPicker(
     onOptionSelected: (Int) -> Unit
 ) {
     Row(
-        modifier = modifier, // Fondo oscuro y bordes redondeados
-        horizontalArrangement = Arrangement.SpaceEvenly
+        modifier = modifier.background(MaterialTheme.colorScheme.primary), // Fondo oscuro y bordes redondeados
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         options.forEach { option ->
             Button(
                 onClick = { onOptionSelected(option) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (option == selectedOption) Color.White else Color(0xFF1B2A50), // Fondo blanco si está seleccionado
-                    contentColor = if (option == selectedOption) Color.Black else Color.Gray // Texto oscuro si está seleccionado
+                    containerColor = if (option == selectedOption) MaterialTheme.colorScheme.onPrimary
+                                        else MaterialTheme.colorScheme.secondary, // Fondo blanco si está seleccionado
+                    contentColor = if (option == selectedOption) Color.Black
+                                    else Color.Black // Texto oscuro si está seleccionado
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.padding(4.dp)
             ) {
-                val text = if (option == 1) "Item $option" else "Items $option"
+                val text = if (option == 1) stringResource(R.string.item, option)
+                                            else stringResource(R.string.items, option)
                 Text(text)
             }
         }

@@ -38,7 +38,7 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
                 BottomNavItem.FAVORITES,
                 navigateToAllCharacters,
                 navigateToFilterCharacters
-            ) { }
+            ) { /** es esta pantalla, no necesita navegar */ }
         }, topBar = {
             TopBarComponent(
                 title = stringResource(R.string.personajes_favoritos),

@@ -40,4 +40,11 @@
     <string name="recomendado">Recommended</string>
     <string name="no_recomendado">Not recommended</string>
     <string name="sin_datos">No data</string>
+    <string name="episodios_favoritos">Favorite episodes</string>
+    <string name="citas_aleatorias">Random quotes</string>
+    <string name="imagen_personaje">Character image</string>
+    <string name="citas_filtradas">Quotes Filter</string>
+    <string name="item">Item %1$s</string>
+    <string name="items">Items %1$s</string>
+    <string name="citas_favoritos">Favorite quotes</string>
 </resources>

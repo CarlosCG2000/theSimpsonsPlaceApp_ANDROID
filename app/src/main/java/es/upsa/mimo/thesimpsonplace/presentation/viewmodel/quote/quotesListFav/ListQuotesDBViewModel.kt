@@ -60,8 +60,6 @@ class ListQuotesDBViewModel @Inject constructor(
             } else {
                 deleteQuoteDbUseCase(quote)
             }
-
-            // loadFavorites() // 🔄 Actualiza la lista de favoritos
         }
     }
 

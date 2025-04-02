@@ -1,9 +1,11 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -11,9 +13,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
@@ -36,19 +40,20 @@ fun QuotesFavScreen(
                 selectedBarButtom = BottomNavQuotesItem.FAVORITES,
                 navigateToQuotes = navigateToQuotes,
                 navigateToFiltersQuotes = navigateToFilterQuotes,
-                navigateToFavoritesQuotes = { },
+                navigateToFavoritesQuotes = { /** es esta pantalla, no necesita navegar */ },
                 navigateToGameQuotes = navigateToGameQuotes
             )
         },
         topBar = {
             TopBarComponent(
-                title = "Listado de Citas Fav",
+                title = stringResource(R.string.citas_favoritos),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
     ) { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
         ) {
             val (boton, listado) = createRefs()
@@ -63,11 +68,10 @@ fun QuotesFavScreen(
                         end.linkTo(parent.end)
                         height = Dimension.fillToConstraints
                     },
-                //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
                 contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
                 if (stateFav.value.isLoading) {
-                    CircularProgressIndicator(color = Color.Yellow)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 } else {
                     listQuotes(
                         modifier = Modifier.fillMaxSize(),
