@@ -47,4 +47,13 @@
     <string name="item">Élém %1$s</string>
     <string name="items">Éléms %1$s</string>
     <string name="citas_favoritos">Citations préférées</string>
+    <string name="bienvenido">ACCUEILLIR</string>
+    <string name="icono_del_men_desplegable">Icône de menu déroulant</string>
+    <string name="icono_del_b_squeda">Icône de recherche</string>
+    <string name="logo_de_los_simpsons">Le logo des Simpson</string>
+    <string name="donut_de_los_simpsons">Donut from The Simpsons</string>
+    <string name="men_principal">MENU PRINCIPAL</string>
+    <string name="personajes">Personnages</string>
+    <string name="episodios">Épisodes</string>
+    <string name="citas">Citations</string>
 </resources>

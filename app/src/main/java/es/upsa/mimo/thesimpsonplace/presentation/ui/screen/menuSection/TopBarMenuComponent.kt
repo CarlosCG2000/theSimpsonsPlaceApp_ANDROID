@@ -10,7 +10,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.tooling.preview.Preview
+import es.upsa.mimo.thesimpsonplace.R
 
 
 @Composable
@@ -20,19 +23,21 @@ fun TopBarMenuComponent(openMenu:() -> Unit,
 
     CenterAlignedTopAppBar( // Puede ser tambien: TopAppBar, CenterAlignedTopAppBar, MediumTopAppBar, LargeTopAppBar
 
-        title = { Text("BIENVENIDO") },
+        title = { Text( text = stringResource(R.string.bienvenido),
+                        fontWeight = SemiBold) },
 
         navigationIcon = { // Icono del menú
             IconButton(onClick = openMenu) {
                 Icon(   imageVector = Icons.Default.Menu,
-                    contentDescription = "Icono del menú desplegable")
+                    contentDescription = stringResource(R.string.icono_del_men_desplegable)
+                )
             }
         },
 
         actions = {
             IconButton(onClick = { navigateToProfile() }) {
                 Icon(   imageVector = Icons.Default.Person,
-                    contentDescription = "Icono del búsqueda"
+                    contentDescription = stringResource(R.string.icono_del_b_squeda)
                 )
             }
         }
