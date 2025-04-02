@@ -93,7 +93,7 @@ fun ItemMenuComponent(  viewModelCharactersDB: ListCharactersDBViewModel  = hilt
                                 navigate = navigateToCharacters)
 
         NavDrawerItemComponent(contentDescription = stringResource(R.string.episodios),
-                                numFavorites = stateEpisodes.value.episodes.size,
+                                numFavorites = stateEpisodes.value.episodesSet.size,
                                 imageVector = Icons.Default.Tv,
                                 navigate = navigateToEpisodes)
 

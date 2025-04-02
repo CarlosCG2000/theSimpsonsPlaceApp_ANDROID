@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,7 +63,7 @@ fun EpisodesFavScreen(
                     .padding(paddingValues)
             ) {
                 CircularProgressIndicator(
-                    color = Color.Yellow // ✅ Cambia el color del spinner a amarillo
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         } else {

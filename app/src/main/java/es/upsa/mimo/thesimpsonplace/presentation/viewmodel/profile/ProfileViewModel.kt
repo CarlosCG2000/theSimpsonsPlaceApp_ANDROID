@@ -48,10 +48,10 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
 //                else -> it.copy(loggedIn = true)
 //            }
 
-            if (user.isNotEmpty()) {
+            if (user.isNotEmpty() && user.length > 3) {
                 it.copy(loggedIn = true, error = null)
             } else {
-                it.copy(error = "Usuario vacío")
+                it.copy(error = "Mínino 3 caracteres para el usuario")
             }
 
         }
