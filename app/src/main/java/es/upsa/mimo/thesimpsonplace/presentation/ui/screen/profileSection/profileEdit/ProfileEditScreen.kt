@@ -4,10 +4,15 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -32,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 
@@ -76,91 +82,112 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
         }
     )
     { paddingValues ->
-        Column(
-            modifier = Modifier.fillMaxSize()
-                                .padding(paddingValues)
-                                .background(MaterialTheme.colorScheme.primary),
-            verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column (modifier = Modifier.fillMaxSize()
+                                .padding(paddingValues),
+        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally) {
 
-            TextField(
-                value = user, // Usar directamente el valor del ViewModel
-                onValueChange = { user = it },
-                isError = error, // mostrar en rojo la label dentro del TextField, si hay error
-                label = { Text("User") },
-                placeholder = { Text("Write your name") },
-                trailingIcon = {
-                    { user = "" }
-                }
-            )
-
-            // En caso de que halla error, se mostrara debajo el error dato en el View Model (estamos en una columna)
-            userPreference.error?.let { error ->
-                Text(error, color = MaterialTheme.colorScheme.error)
-            }
-
-            Button(
-                // colors = ButtonDefaults(containerColor = MaterialTheme.colorScheme.secondary),
-                enabled = (user.isNotEmpty()),
-                onClick = {
-                    val userNew = UserPreference(username = user,
-                                                 darkMode = userPreference.user.darkMode,
-                                                 language = userPreference.user.language )
-
-                    viewModel.updateUser(userNew)
-
-                    viewModel.onLoginClick(user)
-                }
-            ) { Text("Registrar") }
-
-            Row( modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
-                verticalAlignment = Alignment.CenterVertically
-                ){
-
-            Text(text = "Modo ${if (userPreference.user.darkMode) "Oscuro" else "Claro"} ")
-
-            Switch(
-                checked = userPreference.user.darkMode,
-                onCheckedChange = {
-                    val userNew = UserPreference(username = userPreference.user.username,
-                                                 darkMode = !userPreference.user.darkMode,
-                                                 language = userPreference.user.language )
-                    viewModel.updateUser(userNew)
-                })
-            }
-
-            ExposedDropdownMenuBox(
-                modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
-                expanded = expanded,
-                onExpandedChange = { expanded = it }
+            Column ( modifier = Modifier//.fillMaxSize(0.4f) // Reducir ancho para dejar margen
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(MaterialTheme.colorScheme.secondary)
+                                        .padding(50.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                OutlinedTextField(
-                    value = TextFieldValue(selectedLanguage.code), // Corregido: usar TextFieldValue
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { "Idioma" },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-                    modifier = Modifier.menuAnchor(PrimaryEditable, true) // Modificador correcto
+                TextField(
+                    value = user, // Usar directamente el valor del ViewModel
+                    onValueChange = { user = it },
+                    isError = error, // mostrar en rojo la label dentro del TextField, si hay error
+                    label = { Text("User") },
+                    placeholder = { Text("Write your name") },
+                    trailingIcon = {
+                        // DEFINIR EL ICONO
+                        { user = "" }
+                    }
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    languages.forEach { languageItem ->
-                        DropdownMenuItem(
-                            text = { Text(languageItem) },
-                            onClick = {
-                                val userNew = userPreference.user.copy(language = Language.fromCode(languageItem))
-                                viewModel.updateUser(userNew) // Guardar el idioma en el ViewModel
-                                expanded = false
-                            }
-                        )
-                    }
+                Spacer(modifier = Modifier.height(5.dp)) // Ajusta la altura según sea necesario
+
+                // En caso de que halla error, se mostrara debajo el error dato en el View Model (estamos en una columna)
+                userPreference.error?.let { error ->
+                    Text(error, color = MaterialTheme.colorScheme.error)
                 }
 
+                Spacer(modifier = Modifier.height(16.dp)) // Ajusta la altura según sea necesario
+
+                Button(
+                    // colors = ButtonDefaults(containerColor = MaterialTheme.colorScheme.secondary),
+                    enabled = (user.isNotEmpty()),
+                    onClick = {
+                        val userNew = UserPreference(
+                            username = user,
+                            darkMode = userPreference.user.darkMode,
+                            language = userPreference.user.language
+                        )
+
+                        viewModel.updateUser(userNew)
+
+                        viewModel.onLoginClick(user)
+                    }
+                ) { Text("Registrar") }
+
+                Spacer(modifier = Modifier.height(16.dp)) // Ajusta la altura según sea necesario
+
+                Row(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(text = "Modo ${if (userPreference.user.darkMode) "Oscuro" else "Claro"} ")
+
+                    Switch(
+                        checked = userPreference.user.darkMode,
+                        onCheckedChange = {
+                            val userNew = UserPreference(
+                                username = userPreference.user.username,
+                                darkMode = !userPreference.user.darkMode,
+                                language = userPreference.user.language
+                            )
+                            viewModel.updateUser(userNew)
+                        })
+                }
+
+                Spacer(modifier = Modifier.height(16.dp)) // Ajusta la altura según sea necesario
+
+                ExposedDropdownMenuBox(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it }
+                ) {
+
+                    OutlinedTextField(
+                        value = TextFieldValue(selectedLanguage.code), // Corregido: usar TextFieldValue
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { "Idioma" },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                        modifier = Modifier.menuAnchor(PrimaryEditable, true) // Modificador correcto
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        languages.forEach { languageItem ->
+                            DropdownMenuItem(
+                                text = { Text(languageItem) },
+                                onClick = {
+                                    val userNew = userPreference.user.copy(
+                                        language = Language.fromCode(languageItem)
+                                    )
+                                    viewModel.updateUser(userNew) // Guardar el idioma en el ViewModel
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+
+                }
             }
         }
     }
