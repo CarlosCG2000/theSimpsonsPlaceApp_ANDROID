@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +31,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,25 +42,30 @@ import es.upsa.mimo.thesimpsonplace.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarProfileComponent( userName: String = "Desconocido",
-                            onNavigationArrowBack:() -> Unit,
+fun TopBarProfileComponent(userName: String = stringResource(R.string.an_nimo),
+                           onNavigationArrowBack:() -> Unit,
                            onNavigationProfileForm:() -> Unit /**Para el el icono del menú*/) {
 
-    TopAppBar( // Puede ser tambien: CenterAlignedTopAppBar, MediumTopAppBar, LargeTopAppBar
+    CenterAlignedTopAppBar( // Puede ser tambien: CenterAlignedTopAppBar, MediumTopAppBar, LargeTopAppBar
 
-        title = { Text(userName) },
+        title = { Text( text = stringResource(R.string.usuario, userName),
+                        fontSize = 22.sp,
+                        fontWeight = Bold,
+                        textAlign = TextAlign.Center) },
 
         navigationIcon = { // Icono del menú
             IconButton(onClick = onNavigationArrowBack) {
-                Icon(   imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = "Icono de regreso al menú")
+                Icon(
+                    imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = stringResource(R.string.icono_de_regreso_al_men),
+                )
             }
         },
 
         actions = {
             IconButton(onClick = { onNavigationProfileForm() }) {
                 Icon(   imageVector = Icons.Default.Settings,
-                        contentDescription = "Icono con tres puntitos"
+                        contentDescription = stringResource(R.string.icono_con_tres_puntitos)
                 )
             }
 

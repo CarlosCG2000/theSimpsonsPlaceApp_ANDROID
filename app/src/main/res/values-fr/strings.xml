@@ -56,4 +56,20 @@
     <string name="personajes">Personnages</string>
     <string name="episodios">Épisodes</string>
     <string name="citas">Citations</string>
+    <string name="usuario">" Utilisateur %1$s"</string>
+    <string name="icono_de_regreso_al_men">Retour à l\'icône du menu</string>
+    <string name="icono_con_tres_puntitos">Icône avec trois points</string>
+    <string name="an_nimo">Anonyme</string>
+    <string name="favorite_characters_of_in_total">Personnages préférés : %1$s sur %2$s au total</string>
+    <string name="favorite_episodes_of_in_total">Favorite episodes: %1$s of %2$s in total</string>
+    <string name="favorite_quotes">Citations préférées : %1$s</string>
+    <string name="characters_top_3">Personnages - Top 3</string>
+    <string name="seasons_top_3">Saisons - Top 3</string>
+    <string name="season">Saison %1$s</string>
+    <string name="favorite_episode">L\'épisode préféré de %1$s%2$s</string>
+    <string name="history_game_statistics">Statistiques du jeu historique</string>
+    <string name="success">Succès</string>
+    <string name="failures">Échecs</string>
+    <string name="failures_descrp">Échecs - %1$s%</string>
+    <string name="correct_answers_of">Réponses correctes : %1$s sur %2$s</string>
 </resources>
