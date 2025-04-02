@@ -40,19 +40,20 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
         }
     }
 
-    fun onLoginClick(user: String, pass: String) {
+    fun onLoginClick(user: String) {
         _userState.update {
-//            when {
-//                !user.contains('@') -> it.copy(error = "User must be a valid name")
-//                pass.length < 5 -> it.copy(error = "Password must be at least 5 characters")
-//                else -> it.copy(loggedIn = true)
-//            }
 
             if (user.isNotEmpty() && user.length > 3) {
                 it.copy(loggedIn = true, error = null)
             } else {
                 it.copy(error = "Mínino 3 caracteres para el usuario")
             }
+
+//            when {
+//                !user.contains('@') -> it.copy(error = "User must be a valid name")
+//                pass.length < 5 -> it.copy(error = "Password must be at least 5 characters")
+//                else -> it.copy(loggedIn = true)
+//            }
 
         }
     }

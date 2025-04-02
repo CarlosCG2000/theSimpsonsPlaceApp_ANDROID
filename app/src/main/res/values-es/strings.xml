@@ -67,7 +67,7 @@
     <string name="seasons_top_3">Temporadas - Top 3</string>
     <string name="season">Temporada %1$s</string>
     <string name="favorite_episode">%1$s episodio favorito%2$s</string>
-    <string name="history_game_statistics">Estadísticas del juego histórico</string>
+    <string name="history_game_statistics">Estadísticas del juego</string>
     <string name="success">Aciertos</string>
     <string name="failures">Fallos</string>
     <string name="failures_descrp">Fallos - %1$s%</string>
