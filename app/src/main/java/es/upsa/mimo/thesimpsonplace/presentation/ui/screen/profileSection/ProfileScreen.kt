@@ -122,6 +122,8 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { // Centra horizontalmente
 
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     textoPrincipal(
                         text = stringResource(
                             R.string.favorite_characters_of_in_total,

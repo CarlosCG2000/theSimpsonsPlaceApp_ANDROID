@@ -1,25 +1,24 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.profileSection.profileEdit
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType.Companion.PrimaryEditable
 import androidx.compose.material3.OutlinedTextField
@@ -38,13 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.data.entities.user.Language
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileViewModel
@@ -76,21 +75,22 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
     Scaffold(
         topBar = {
             TopBarComponent(
-                title = "Formulario de Usuario",
+                title = stringResource(R.string.formulario_de_usuario),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
     )
     { paddingValues ->
-        Column (modifier = Modifier.fillMaxSize()
-                                .padding(paddingValues),
+        Column (modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
             Column ( modifier = Modifier//.fillMaxSize(0.4f) // Reducir ancho para dejar margen
                                         .clip(RoundedCornerShape(12.dp))
-                                        .background(MaterialTheme.colorScheme.secondary)
-                                        .padding(50.dp),
+                .background(MaterialTheme.colorScheme.secondary)
+                .padding(50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -98,11 +98,18 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
                     value = user, // Usar directamente el valor del ViewModel
                     onValueChange = { user = it },
                     isError = error, // mostrar en rojo la label dentro del TextField, si hay error
-                    label = { Text("User") },
-                    placeholder = { Text("Write your name") },
+                    label = { Text(stringResource(R.string.user)) },
+                    placeholder = { Text(stringResource(R.string.write_your_name)) },
                     trailingIcon = {
-                        // DEFINIR EL ICONO
-                        { user = "" }
+                        if (user.isNotEmpty()) { // Solo muestra el icono si hay texto
+                            IconButton(onClick = { user = "" }) {
+                                androidx.compose.material3.Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(R.string.limpiar_nombre_del_usuario),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
                 )
 
@@ -129,7 +136,7 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
 
                         viewModel.onLoginClick(user)
                     }
-                ) { Text("Registrar") }
+                ) { Text(stringResource(R.string.registrar)) }
 
                 Spacer(modifier = Modifier.height(16.dp)) // Ajusta la altura según sea necesario
 
@@ -138,7 +145,13 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    Text(text = "Modo ${if (userPreference.user.darkMode) "Oscuro" else "Claro"} ")
+                    Text(text = stringResource(
+                        R.string.modo,
+                        if (userPreference.user.darkMode) stringResource(R.string.oscuro)
+                                    else stringResource(R.string.claro)
+                    ), color = MaterialTheme.colorScheme.onSecondary)
+
+                    Spacer(modifier = Modifier.width(12.dp))
 
                     Switch(
                         checked = userPreference.user.darkMode,
@@ -154,6 +167,9 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
 
                 Spacer(modifier = Modifier.height(16.dp)) // Ajusta la altura según sea necesario
 
+                Text(text = "Idioma $selectedLanguage.code",
+                    color = MaterialTheme.colorScheme.onSecondary)
+
                 ExposedDropdownMenuBox(
                     modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
                     expanded = expanded,
@@ -164,7 +180,7 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
                         value = TextFieldValue(selectedLanguage.code), // Corregido: usar TextFieldValue
                         onValueChange = {},
                         readOnly = true,
-                        label = { "Idioma" },
+                        label = { stringResource(R.string.idioma) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                         modifier = Modifier.menuAnchor(PrimaryEditable, true) // Modificador correcto
                     )

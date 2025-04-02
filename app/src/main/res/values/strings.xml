@@ -74,4 +74,13 @@
     <string name="failures">Failures</string>
     <string name="failures_descrp">Failures - %1$s%</string>
     <string name="correct_answers_of">Correct Answers: %1$s of %2$s</string>
+    <string name="formulario_de_usuario">Formulario de Usuario</string>
+    <string name="user">User</string>
+    <string name="write_your_name">Write your name</string>
+    <string name="registrar">Registrar</string>
+    <string name="modo">Modo %1$s</string>
+    <string name="idioma">Idioma</string>
+    <string name="oscuro">Oscuro</string>
+    <string name="claro">Claro</string>
+    <string name="limpiar_nombre_del_usuario">Limpiar nombre del usuario</string>
 </resources>

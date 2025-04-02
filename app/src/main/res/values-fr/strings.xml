@@ -72,4 +72,13 @@
     <string name="failures">Échecs</string>
     <string name="failures_descrp">Échecs - %1$s%</string>
     <string name="correct_answers_of">Réponses correctes : %1$s sur %2$s</string>
+    <string name="formulario_de_usuario">Formulaire d\'utilisateur</string>
+    <string name="user">Utilisateur</string>
+    <string name="write_your_name">Écrivez votre nom</string>
+    <string name="registrar">Registre</string>
+    <string name="modo">Mode %1$s</string>
+    <string name="idioma">Langue</string>
+    <string name="oscuro">Sombre</string>
+    <string name="claro">Clair</string>
+    <string name="limpiar_nombre_del_usuario">Effacer le nom d\'utilisateur</string>
 </resources>
