@@ -47,10 +47,9 @@ fun MenuScreen(  /** 4 navegaciones */
             ModalDrawerSheet{
                 // 3 navegaciones, en el menú a las 3 secciones 'Personajes', 'Episodios', 'Citas'
                 ItemMenuComponent(        // Mi componente
-                    navigateToCharacters, // -> navegación a la sección de personajes
-                    navigateToEpisodes,   // -> navegación a la sección de personajes
-                    navigateToQuotes      // -> navegación a la sección de personajes
-                )
+                    navigateToCharacters = navigateToCharacters, // -> navegación a la sección de personajes
+                    navigateToEpisodes = navigateToEpisodes, // -> navegación a la sección de personajes
+                    navigateToQuotes = navigateToQuotes) // -> navegación a la sección de personajes
             }
         },
         drawerState = drawerState // Tipo de estado de desplazamiento del menú

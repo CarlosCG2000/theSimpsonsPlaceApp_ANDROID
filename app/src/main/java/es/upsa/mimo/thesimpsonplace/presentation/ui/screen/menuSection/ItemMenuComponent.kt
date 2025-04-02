@@ -27,6 +27,8 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,13 +41,29 @@ import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.menuSection.NavDrawerItemComponent
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
 
 @Composable
-fun ItemMenuComponent(navigateToCharacters: () -> Unit,
-                      navigateToEpisodes: () -> Unit,
-                      navigateToQuotes: () -> Unit) {
+fun ItemMenuComponent(  viewModelCharactersDB: ListCharactersDBViewModel  = hiltViewModel(),
+                        viewModelEpisodesDB: ListEpisodesDBViewModel = hiltViewModel(),
+                        viewModelQuotesDB: ListQuotesDBViewModel = hiltViewModel(),
+                        navigateToCharacters: () -> Unit,
+                        navigateToEpisodes: () -> Unit,
+                        navigateToQuotes: () -> Unit) {
+
+    val stateCharacters: State<ListCharactersDbStateUI> = viewModelCharactersDB.stateCharacterFav.collectAsState()
+    val stateEpisodes: State<ListEpisodesDbStateUI> = viewModelEpisodesDB.stateEpisodesFavOrView.collectAsState()
+    val stateQuotes: State<ListQuotesDbStateUI> = viewModelQuotesDB.stateQuotesFav.collectAsState()
 
     Column( modifier = Modifier
         .fillMaxSize()
@@ -69,14 +87,20 @@ fun ItemMenuComponent(navigateToCharacters: () -> Unit,
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        NavDrawerItemComponent(contentDescription = stringResource(R.string.personajes), numFavorites = 0,
-            imageVector =  Icons.Default.Person, navigate = navigateToCharacters)
+        NavDrawerItemComponent(contentDescription = stringResource(R.string.personajes),
+                                numFavorites = stateCharacters.value.charactersSet.size,
+                                imageVector = Icons.Default.Person,
+                                navigate = navigateToCharacters)
 
-        NavDrawerItemComponent(contentDescription = stringResource(R.string.episodios), numFavorites = 3,
-            imageVector = Icons.Default.Tv, navigate = navigateToEpisodes)
+        NavDrawerItemComponent(contentDescription = stringResource(R.string.episodios),
+                                numFavorites = stateEpisodes.value.episodes.size,
+                                imageVector = Icons.Default.Tv,
+                                navigate = navigateToEpisodes)
 
-        NavDrawerItemComponent(contentDescription = stringResource(R.string.citas), numFavorites = 1,
-            imageVector =  Icons.Default.FormatQuote, navigate = navigateToQuotes)
+        NavDrawerItemComponent(contentDescription = stringResource(R.string.citas),
+                                numFavorites = stateQuotes.value.quotesSet.size,
+                                imageVector = Icons.Default.FormatQuote,
+                                navigate = navigateToQuotes)
     }
 }
 
@@ -116,6 +140,9 @@ fun NavDrawerItemComponent(contentDescription: String, numFavorites: Int = 0,
 @Composable
 fun ItemMenuComponentPreview() {
     Column {
-        ItemMenuComponent({}, {}, {})
+        ItemMenuComponent(
+            navigateToCharacters = {},
+            navigateToEpisodes = {},
+            navigateToQuotes = {})
     }
 }
