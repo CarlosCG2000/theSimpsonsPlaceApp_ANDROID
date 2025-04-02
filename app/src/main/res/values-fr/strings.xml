@@ -81,4 +81,7 @@
     <string name="oscuro">Sombre</string>
     <string name="claro">Clair</string>
     <string name="limpiar_nombre_del_usuario">Effacer le nom d\'utilisateur</string>
+    <string name="idioma_espa_ol">Choisi: Langue Espagnol</string>
+    <string name="idioma_ingl_s">Choisi: Langue anglaise</string>
+    <string name="idioma_franc_s">Choisi: Langue française</string>
 </resources>

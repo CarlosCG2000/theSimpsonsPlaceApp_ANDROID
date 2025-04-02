@@ -83,4 +83,7 @@
     <string name="oscuro">Oscuro</string>
     <string name="claro">Claro</string>
     <string name="limpiar_nombre_del_usuario">Limpiar nombre del usuario</string>
+    <string name="idioma_espa_ol">Idioma español</string>
+    <string name="idioma_ingl_s">Idioma inglés</string>
+    <string name="idioma_franc_s">Idioma francés</string>
 </resources>

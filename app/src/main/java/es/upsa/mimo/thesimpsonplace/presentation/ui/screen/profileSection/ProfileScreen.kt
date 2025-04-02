@@ -65,6 +65,8 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDbStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileViewModel
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resultGame.ResultGameUI
+import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resultGame.ResultGameViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
 
@@ -75,6 +77,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
                   viewModelQuotesDB: ListQuotesDBViewModel = hiltViewModel(),
                   viewModelCharacter: ListCharactersViewModel = hiltViewModel(),
                   viewModelEpisode: ListEpisodesViewModel = hiltViewModel(),
+                  viewModelGane: ResultGameViewModel = hiltViewModel(),
                   onNavigationProfileForm:() -> Unit,
                   navigationArrowBack:() -> Unit) {
 
@@ -86,6 +89,9 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 
     val stateCharacters: State<ListCharactersStateUI> = viewModelCharacter.stateCharacter.collectAsState()
     val stateEpisodes: State<ListEpisodesStateUI> = viewModelEpisode.episodesState.collectAsState()
+
+    val gameStats: State<ResultGameUI> = viewModelGane.gameStats.collectAsState()
+
 
     LaunchedEffect(Unit) {
         if(stateCharacters.value.characters.isEmpty())
@@ -170,7 +176,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 
                     TopCharactersAndSeasons(top3Characters = topCharacters, top3Seasons = topSeasons)
 
-                    HistoryGameStatistics(totalQuestions = 20, correctAnswers = 5)
+                    HistoryGameStatistics(totalQuestions = gameStats.value.result.second, correctAnswers = gameStats.value.result.first)
                 }
             }
         }

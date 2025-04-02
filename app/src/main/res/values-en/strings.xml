@@ -81,4 +81,7 @@
     <string name="oscuro">Dark</string>
     <string name="claro">Light</string>
     <string name="limpiar_nombre_del_usuario">Clear username</string>
+    <string name="idioma_espa_ol">Selected: Spanish language</string>
+    <string name="idioma_ingl_s">Selected: English language</string>
+    <string name="idioma_franc_s">Selected: French language</string>
 </resources>

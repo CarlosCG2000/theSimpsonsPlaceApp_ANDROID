@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.input.TextFieldValue
 
 import androidx.compose.ui.tooling.preview.Preview
@@ -149,7 +150,7 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
                         R.string.modo,
                         if (userPreference.user.darkMode) stringResource(R.string.oscuro)
                                     else stringResource(R.string.claro)
-                    ), color = MaterialTheme.colorScheme.onSecondary)
+                    ),  fontWeight = SemiBold, color = MaterialTheme.colorScheme.onSecondary)
 
                     Spacer(modifier = Modifier.width(12.dp))
 
@@ -167,7 +168,10 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
 
                 Spacer(modifier = Modifier.height(16.dp)) // Ajusta la altura según sea necesario
 
-                Text(text = "Idioma $selectedLanguage.code",
+                Text(text = if (selectedLanguage == Language.SPANISH) stringResource(R.string.idioma_espa_ol)
+                            else if (selectedLanguage == Language.ENGLISH) stringResource(R.string.idioma_ingl_s)
+                            else stringResource(R.string.idioma_franc_s),
+                    fontWeight = SemiBold,
                     color = MaterialTheme.colorScheme.onSecondary)
 
                 ExposedDropdownMenuBox(
