@@ -92,7 +92,7 @@ fun EpisodeDetailScreen(viewModel: DetailsEpisodeViewModel = hiltViewModel(),
             }
         }
     }
-    
+
 }
 
 @Composable

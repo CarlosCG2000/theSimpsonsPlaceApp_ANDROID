@@ -1,5 +1,6 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,13 +13,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.ListQuotes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
 
@@ -49,43 +53,29 @@ fun QuotesFavScreen(
             )
         }
     ) { paddingValues ->
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+        Box(
+            modifier = ModifierContainer(paddingValues),
+            contentAlignment = Alignment.Center // 🔹 Centra el contenido
         ) {
-            val (boton, listado) = createRefs()
-
-            // ✅ Contenido centrado en el resto de la pantalla
-            Box(
-                modifier = Modifier
-                    .constrainAs(listado) {
-                        top.linkTo(boton.bottom)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        height = Dimension.fillToConstraints
-                    },
-                contentAlignment = Alignment.Center // 🔹 Centra el contenido
-            ) {
-                if (stateFav.value.isLoading) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
-                } else {
-                    listQuotes(
-                        modifier = Modifier.fillMaxSize(),
-                        quotes = stateFav.value.quotes,
-                        favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
-                        onToggleFavorite = { quote -> viewModel.toggleFavorite(quote) }
-                    )
-                }
+            if (stateFav.value.isLoading) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+            } else {
+                ListQuotes(
+                    modifier = Modifier.fillMaxSize(),
+                    quotes = stateFav.value.quotes,
+                    favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
+                    onToggleFavorite = { quote -> viewModel.toggleFavorite(quote) }
+                )
             }
-
         }
     }
 }
 
-//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
-//@Composable
-//fun QuotesFavScreenPreview() {
-//    QuotesFavScreen({}, {}, {}, {})
-//}
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
+@Composable
+fun QuotesFavScreenPreview() {
+    QuotesFavScreen(navigateToQuotes = {},
+        navigateToFilterQuotes = {},
+        navigateToGameQuotes = {},
+        navigationArrowBack = {})
+}

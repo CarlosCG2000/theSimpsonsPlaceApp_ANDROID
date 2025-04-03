@@ -1,29 +1,12 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,29 +17,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import es.upsa.mimo.thesimpsonplace.R
-import es.upsa.mimo.thesimpsonplace.domain.models.Quote
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.ListQuotes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
@@ -100,25 +80,14 @@ fun QuotesScreen(
 
     ) { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier = ModifierContainer(paddingValues),
+            constraintSet = quotesScreenConstraintSet()
         ) {
-            val (boton, listado) = createRefs()
-
             Button(
                 onClick = { generateNewQuotes = !generateNewQuotes },
                 colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.secondary),
-                modifier = Modifier
-                    .constrainAs(boton) {
-                        top.linkTo(parent.top, margin = 10.dp)
-                        bottom.linkTo(listado.top, margin = 10.dp) // 🔹 Margen inferior
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        // width = Dimension.value(30.dp)
-                    }
-                    .clip(RoundedCornerShape(12.dp)) // Bordes redondeados
-                    //.shadow(8.dp, RoundedCornerShape(12.dp)) // Sombra suave
+                modifier = Modifier.layoutId("idBoton")
+                                    .clip(RoundedCornerShape(12.dp)) // Bordes redondeados
             ) {
                 Text(
                     text = "Nuevas Citas",
@@ -131,23 +100,13 @@ fun QuotesScreen(
 
             // Contenido centrado en el resto de la pantalla
             Box(
-                modifier = Modifier
-                    .constrainAs(listado) {
-                        top.linkTo(boton.bottom)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        height = Dimension.fillToConstraints
-                    },
+                modifier = Modifier.layoutId("idListado"),
                 contentAlignment = Alignment.Center, // 🔹 Centra el contenido
             ) {
                 if (state.value.isLoading) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 } else {
-                    listQuotes(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary),
+                    ListQuotes(
                         quotes = state.value.quotes,
                         favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
                         onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
@@ -155,93 +114,30 @@ fun QuotesScreen(
                 }
             }
 
-         }
-      }
-    }
-
-@Composable
-fun listQuotes(modifier: Modifier = Modifier,
-               quotes: List<Quote>,
-               favoriteQuotes: Set<String>,
-               onToggleFavorite: (Quote) -> Unit
-               ) {
-
-    LazyColumn( modifier = modifier, // Ocupa toda la pantalla
-        verticalArrangement = Arrangement.Top, // Centra verticalmente dentro de Column
-        horizontalAlignment = Alignment.CenterHorizontally) {
-
-        items(quotes) { quote ->
-
-            val isFavorite = rememberUpdatedState(quote.cita in favoriteQuotes)
-
-            QuoteItem (  quote = quote,
-                        isFavorite = isFavorite.value,
-                        onToggleFavorite = { onToggleFavorite(quote) }
-                      )
         }
     }
 }
 
-@Composable
-fun QuoteItem(quote: Quote,
-              isFavorite: Boolean,
-              onToggleFavorite: () -> Unit) {
+fun quotesScreenConstraintSet(): ConstraintSet {
+    return ConstraintSet {
+        val (boton, listado) = createRefsFor("idBoton", "idListado")
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-                                //.background(MaterialTheme.colorScheme.secondary),
-            colors = CardDefaults.cardColors(containerColor =MaterialTheme.colorScheme.secondary), // Azul oscuro
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier.weight(0.5f)
-                ) {
-                    Text(
-                        text = quote.cita,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = quote.personaje,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.7f)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    IconButton(onClick = { onToggleFavorite() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Star, // Usa el ícono de estrella
-                            contentDescription = stringResource(R.string.favorito),
-                            tint = if (isFavorite) MaterialTheme.colorScheme.onPrimary
-                                   else Color.Red,
-                            modifier = Modifier.size(38.dp) // Tamaño del icono
-                        )
-                    }
-                }
-
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(quote.imagen.toString())
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = stringResource(R.string.imagen_personaje),
-                    modifier = Modifier
-                        .size(150.dp),
-                    contentScale = ContentScale.Fit
-                )
-            }
+        constrain(boton) {
+            top.linkTo(parent.top, margin = 10.dp)
+            bottom.linkTo(listado.top, margin = 10.dp) // 🔹 Margen inferior
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            // width = Dimension.value(30.dp)
         }
 
+        constrain(listado) {
+            top.linkTo(boton.bottom)
+            bottom.linkTo(parent.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            height = Dimension.fillToConstraints
+        }
+    }
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")

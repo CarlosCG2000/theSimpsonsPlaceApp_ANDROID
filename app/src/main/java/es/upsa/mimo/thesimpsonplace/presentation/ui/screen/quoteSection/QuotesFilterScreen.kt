@@ -26,18 +26,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.ListQuotes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
@@ -84,77 +88,81 @@ fun QuotesFilterScreen(
         }
     ) { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier = ModifierContainer(paddingValues),
+            constraintSet = quotesFilterScreenConstraintSet()
         ) {
-            val (textfield, segmentedPicker, listado) = createRefs()
 
             Box(
-                modifier = Modifier.constrainAs(textfield) {
-                                        top.linkTo(parent.top, margin = 10.dp)
-                                        bottom.linkTo(segmentedPicker.top) // 🔹 Margen inferior
-                                        start.linkTo(parent.start)
-                                        end.linkTo(parent.end)
-                                        width = Dimension.fillToConstraints
-                                    }
+                modifier = Modifier.layoutId("idTextfield")
                                     .padding(horizontal = 10.dp, vertical = 5.dp)
                                     .background(
-                                        MaterialTheme.colorScheme.secondary,
+                                        color = MaterialTheme.colorScheme.secondary,
                                         shape = MaterialTheme.shapes.small
                                     )
                                     .padding(6.dp)
             ) {
                 MySearchTextField(nameFilter = filterName,
-                    valueChange = { newValue -> filterName = newValue })
+                                  valueChange = { newValue -> filterName = newValue })
             }
 
             SegmentedPicker(
                 options = options,
                 selectedOption = selectedItem,
                 onOptionSelected = {
-                    selectedItem = it
-                    viewModel.getQuotes(numElementos = selectedItem, textPersonaje = filterName.text)
-                                   },
-                modifier = Modifier
-                    .constrainAs(segmentedPicker) {
-                        top.linkTo(textfield.bottom)
-                        bottom.linkTo(listado.top) // 🔹 Margen inferior
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(12.dp))
+                        selectedItem = it
+                        viewModel.getQuotes(numElementos = selectedItem, textPersonaje = filterName.text)
+                },
+                modifier = Modifier.layoutId("idSegmentedPicker")
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp)
+                                    .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(12.dp))
             )
-
 
             // Contenido centrado en el resto de la pantalla
             Box(
-                modifier = Modifier
-                    .constrainAs(listado) {
-                        top.linkTo(segmentedPicker.bottom)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        height = Dimension.fillToConstraints
-                    },
-                //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
+                modifier = Modifier.layoutId("idListado"),
                 contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
                 if (state.value.isLoading) {
                     CircularProgressIndicator(color = Color.Yellow)
                 } else {
-                    listQuotes(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary),
+                    ListQuotes(
                         quotes = state.value.quotes,
                         favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
                         onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
                     )
                 }
             }
+        }
+    }
+}
+
+fun quotesFilterScreenConstraintSet(): ConstraintSet {
+    return ConstraintSet {
+
+        val (textfield, segmentedPicker, listado) =  createRefsFor("idTextfield", "idSegmentedPicker", "idListado")
+
+        constrain(textfield) {
+            top.linkTo(parent.top, margin = 10.dp)
+            bottom.linkTo(segmentedPicker.top) // 🔹 Margen inferior
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            width = Dimension.fillToConstraints
+        }
+
+        constrain(segmentedPicker) {
+            top.linkTo(textfield.bottom)
+            bottom.linkTo(listado.top) // 🔹 Margen inferior
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }
+
+        constrain(listado) {
+            top.linkTo(segmentedPicker.bottom)
+            bottom.linkTo(parent.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            height = Dimension.fillToConstraints
         }
     }
 }
