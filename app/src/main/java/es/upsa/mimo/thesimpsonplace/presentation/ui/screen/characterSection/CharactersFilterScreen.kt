@@ -19,12 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.constraintlayout.compose.Dimension
 import es.upsa.mimo.thesimpsonplace.R
@@ -79,41 +81,26 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
+            constraintSet = characterFilterScreenConstraintSet()
+
         ){
 
-            val (textFieldFilter, characterList) = createRefs()
-
-            // _______________ TEXTFIELD _______________
             Box(
-                modifier = Modifier
-                    .constrainAs(textFieldFilter) {
-                        top.linkTo(parent.top, margin = 10.dp)
-                        bottom.linkTo(characterList.top, margin = 10.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary,
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .padding(6.dp)
+                modifier = Modifier.layoutId("idBoxMySearch")
+                                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        shape = MaterialTheme.shapes.small
+                                    )
+                                    .padding(6.dp)
             ) {
                 MySearchTextField(nameFilter = filtroNombre,
                                 valueChange = { newValue -> filtroNombre = newValue })
             }
-            // _________________________________________
 
             Box(
-                modifier = Modifier.constrainAs(characterList) {
-                                        top.linkTo(textFieldFilter.bottom)
-                                        bottom.linkTo(parent.bottom)
-                                        start.linkTo(parent.start)
-                                        end.linkTo(parent.end)
-                                        height = Dimension.fillToConstraints
-                                    },
+                modifier = Modifier.layoutId("idBoxMyCharacterList"),
                 contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
                 if(state.value.isLoading == true) {
@@ -138,6 +125,27 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
     }
 }
 
+fun characterFilterScreenConstraintSet(): ConstraintSet {
+    return ConstraintSet {
+        val (textFieldFilter, characterList) = createRefsFor("idBoxMySearch", "idBoxMyCharacterList")
+
+        constrain(textFieldFilter) {
+            top.linkTo(parent.top, margin = 10.dp)
+            bottom.linkTo(characterList.top, margin = 10.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            width = Dimension.fillToConstraints
+        }
+
+        constrain(characterList) {
+            top.linkTo(textFieldFilter.bottom)
+            bottom.linkTo(parent.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            height = Dimension.fillToConstraints
+        }
+    }
+}
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable

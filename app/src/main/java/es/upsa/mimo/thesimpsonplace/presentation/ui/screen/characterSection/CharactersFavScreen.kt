@@ -1,7 +1,9 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.characterSection
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -14,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
@@ -26,7 +29,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersL
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 
 @Composable
-fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
+fun CharactersFavScreen(viewModel: ListCharactersDBViewModel = hiltViewModel(),
                         navigateToAllCharacters: () -> Unit,
                         navigateToFilterCharacters: () -> Unit,
                         navigationArrowBack:() -> Unit
@@ -40,7 +43,8 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
                 navigateToAllCharacters,
                 navigateToFilterCharacters
             ) { /** es esta pantalla, no necesita navegar */ }
-        }, topBar = {
+        },
+        topBar = {
             TopBarComponent(
                 title = stringResource(R.string.personajes_favoritos),
                 onNavigationArrowBack = navigationArrowBack
@@ -49,25 +53,22 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
     ) { paddingValues ->
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier = Modifier.fillMaxSize()
+                                .padding(paddingValues)
         ) {
             if (stateFav.value.isLoading) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
             } else if (stateFav.value.characters.isEmpty()) {
                 NoContentComponent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.fillMaxSize()
+                                        .background(MaterialTheme.colorScheme.primary),
                     titleText = stringResource(R.string.titulo_no_contenido_filtro_pers),
                     infoText = stringResource(R.string.detalles_no_contenido_fav_pers)
                 )
             } else {
                 CharacterList(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.fillMaxSize()
+                                        .background(MaterialTheme.colorScheme.primary),
                     characters = stateFav.value.characters, // todos los personajes en la Base datos (ya van a ser favoritos)
                     favoriteCharacters = stateFav.value.charactersSet,
                     onToggleFavorite = { character -> viewModel.toggleFavorite(character) }
@@ -77,10 +78,13 @@ fun CharactersFavScreen( viewModel: ListCharactersDBViewModel = hiltViewModel(),
     }
 }
 
-//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
-//@Composable
-//fun CharactersFavScreenPreview() {
-//    Column {
-//        CharactersFavScreen({},{}, {})
-//    }
-//}
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
+@Composable
+fun CharactersFavScreenPreview() {
+    Column {
+        CharactersFavScreen(navigateToAllCharacters = {},
+                            navigateToFilterCharacters = {},
+                            navigationArrowBack = {})
+    }
+}
+
