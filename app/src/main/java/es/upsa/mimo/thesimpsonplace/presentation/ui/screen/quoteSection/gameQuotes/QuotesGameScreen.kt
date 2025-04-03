@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
@@ -72,24 +73,19 @@ fun QuotesGameScreen(
 
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.primary),
+            modifier = ModifierContainer(paddingValues),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = R.drawable.background_all_characters),
                 contentDescription = stringResource(R.string.fondo_juego_de_los_simpsons),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer(alpha = 0.7f),
+                modifier = Modifier.fillMaxSize()
+                                    .graphicsLayer(alpha = 0.7f),
                 contentScale = ContentScale.Crop
             )
 
             Column(
-                modifier = Modifier
-                    .background(
+                modifier = Modifier.background(
                         color = Color(0xCC0F1A35), // Mantener este color es el fondo del circulo
                         shape = CircleShape
                     )
