@@ -97,7 +97,7 @@ fun QuotesGameScreen(
 
                 Text(
                     text = stringResource(R.string.quiz_game),
-                    color = Color(0xFFFFC107),
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -131,6 +131,8 @@ fun QuotesGameScreen(
                                 textAlign = TextAlign.Center) },
                 containerColor = MaterialTheme.colorScheme.secondary,
                 shape = RoundedCornerShape(16.dp),
+                // confirmButton = { Button() {} },
+                // dismissButton = { Button() {} },
                 confirmButton = {
                     Row(
                         modifier = Modifier
@@ -154,25 +156,8 @@ fun QuotesGameScreen(
                             Text(stringResource(R.string.cancel), color = Color.Black)
                         }
                     }
-                })
-            /**
-            confirmButton = {
-                Button(
-                    onClick = { /* Acción para iniciar el quiz */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
-                ) {
-                    Text("Start", color = Color.Black)
                 }
-            },
-            dismissButton = {
-                Button(
-                    onClick = { showDialog = false },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                ) {
-                    Text("Cancel", color = Color.White)
-                }
-            }
-            */
+            )
         }
     }
 }

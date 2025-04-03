@@ -1,15 +1,11 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.profileSection
 
 import android.content.res.Configuration
-import android.graphics.Color.alpha
-import android.util.Log
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,13 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,23 +30,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.domain.models.Character
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.game.HistoryGameStatistics
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersList.ListCharactersViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
@@ -70,7 +58,6 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resu
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resultGame.ResultGameViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
-import java.util.Locale
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
@@ -94,7 +81,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 
     val gameStats: State<ResultGameUI> = viewModelGane.gameStats.collectAsState()
 
-
     LaunchedEffect(Unit) {
         if(stateCharacters.value.characters.isEmpty())
             viewModelCharacter.getAllCharacters()
@@ -112,10 +98,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
             )
         }) { paddingValues ->  // 👈 Recibe el padding generado por Scaffold
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(paddingValues),
+        Box(modifier = ModifierContainer(paddingValues),
             contentAlignment = Alignment.Center
         ) {
             if (stateCharacters.value.isLoading || stateEpisodes.value.isLoading) {
@@ -132,7 +115,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    textoPrincipal(
+                    TextoPrincipal(
                         text = stringResource(
                             R.string.favorite_characters_of_in_total,
                             stateCharactersDB.value.charactersSet.size,
@@ -140,13 +123,13 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
                         )
                     )
 
-                    textoPrincipal(text = stringResource(
+                    TextoPrincipal(text = stringResource(
                         R.string.favorite_episodes_of_in_total,
                         stateEpisodesDB.value.episodesFavSet.size,
                         stateEpisodes.value.episodes.size
                     ))
 
-                    textoPrincipal(text = stringResource(
+                    TextoPrincipal(text = stringResource(
                         R.string.favorite_quotes,
                         stateQuotesDB.value.quotesSet.size
                     ))
@@ -189,7 +172,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 }
 
 @Composable
-fun textoPrincipal(text: String) {
+fun TextoPrincipal(text: String) {
     Text(
         text = text,
         fontWeight = SemiBold,
@@ -205,7 +188,7 @@ fun textoPrincipal(text: String) {
     )
 }
 
-//____________________ LISTADOS HORIZONTALES TOP________________________
+//______ LISTADOS HORIZONTALES TOP 'Characters' y 'Seasons' ________________________
 @Composable
 fun TopCharactersAndSeasons(top3Characters: List<Character>, top3Seasons: List<Pair<Int, Int>>) {
     Column(
@@ -317,125 +300,6 @@ fun SeasonCard(season: Pair<Int, Int>) {
         )
     }
 }
-
-//_____________________ GRAFICA _______________________
-@Composable
-fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int, size: Dp, paddingText: Dp = 0.dp) {
-    val successPercentage = ((correctAnswers.toFloat() / totalQuestions) * 100).let {
-        String.format(Locale.US, "%.2f", it).toFloat()
-    }
-    val failurePercentage = 100 - successPercentage
-
-    Column(
-        modifier = Modifier
-            .padding(12.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.secondary) // Color similar al de la imagen
-                            .padding(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-            // 🔹 Título
-            Text(
-                text = stringResource(R.string.history_game_statistics),
-                fontSize = 20.sp,
-                fontWeight = Bold,
-                color = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.padding(bottom = paddingText)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 🔹 Gráfico circular
-            PieChart(
-                successPercentage = successPercentage,
-                failurePercentage = failurePercentage,
-                canvasSize = size
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 🔹 Leyenda de estadísticas
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Circle,
-                    contentDescription = stringResource(R.string.success),
-                    tint = Color.Green,
-                    modifier = Modifier.size(12.dp)
-                )
-                Text(
-                    text = stringResource(R.string.success)  + " $successPercentage %",
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Icon(
-                    imageVector = Icons.Default.Circle,
-                    contentDescription = stringResource(R.string.failures),
-                    tint = Color.Red,
-                    modifier = Modifier.size(12.dp)
-                )
-                Text(
-                    text = stringResource(  R.string.failures) + " $failurePercentage %",
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 🔹 Resumen de respuestas correctas
-            Text(
-                text = stringResource(R.string.correct_answers_of, correctAnswers, totalQuestions),
-                fontSize = 18.sp,
-                fontWeight = Bold,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-        }
-
-}
-
-@Composable
-fun PieChart(successPercentage: Float, failurePercentage: Float, canvasSize: Dp) {
-    val pieEntries = listOf(
-        PieChartData(successPercentage, Color.Green),
-        PieChartData(failurePercentage, Color.Red)
-    )
-
-    Box(
-        modifier = Modifier
-            .size(200.dp)
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(modifier = Modifier.size(canvasSize)) {
-            val totalAngle = 360f
-            val strokeWidth = 150f  // Grosor del círculo
-            var startAngle = -90f   // Empezamos desde arriba
-            pieEntries.forEach { entry ->
-                val adjustedSweepAngle = ((entry.percentage / 100) * totalAngle)
-                drawArc(
-                    color = entry.color,
-                    startAngle = startAngle,
-                    sweepAngle = adjustedSweepAngle,
-                    useCenter = false,
-                    size = size,
-                    style = Stroke(width = strokeWidth, cap = StrokeCap.Butt)
-                )
-                startAngle += adjustedSweepAngle // sweepAngle // 🔹 Avanzamos al siguiente segmento
-            }
-        }
-    }
-}
-
-// 🔹 Modelo de datos para la gráfica
-data class PieChartData(val percentage: Float, val color: Color)
-//____________________________________________
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable

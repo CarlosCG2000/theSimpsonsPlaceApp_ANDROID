@@ -11,6 +11,6 @@ import androidx.compose.ui.Modifier
 @Composable
 fun ModifierContainer(paddingValues: PaddingValues): Modifier {
     return Modifier.fillMaxSize()
-        .padding(paddingValues)
-        .background(MaterialTheme.colorScheme.primary)
+                    .padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.primary)
 }

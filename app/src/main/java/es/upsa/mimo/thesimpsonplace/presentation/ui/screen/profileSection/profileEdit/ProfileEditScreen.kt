@@ -47,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.data.entities.user.Language
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.profile.ProfileViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 
@@ -82,16 +83,13 @@ fun ProfileEditScreen(onLogin: () -> Unit /** Para la navegación a otra vista *
         }
     )
     { paddingValues ->
-        Column (modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        Column (ModifierContainer(paddingValues),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Column ( modifier = Modifier//.fillMaxSize(0.4f) // Reducir ancho para dejar margen
-                                        .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.secondary)
-                .padding(50.dp),
+            Column ( modifier = Modifier.clip(RoundedCornerShape(12.dp))
+                                        .background(MaterialTheme.colorScheme.secondary)
+                                        .padding(50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 

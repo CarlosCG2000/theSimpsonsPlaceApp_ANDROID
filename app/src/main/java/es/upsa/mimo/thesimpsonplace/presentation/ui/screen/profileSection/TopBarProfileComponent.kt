@@ -68,7 +68,6 @@ fun TopBarProfileComponent(userName: String = stringResource(R.string.an_nimo),
                         contentDescription = stringResource(R.string.icono_con_tres_puntitos)
                 )
             }
-
         }
     )
 

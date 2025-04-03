@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import es.upsa.mimo.thesimpsonplace.R
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.questionGame.QuotesGameUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.questionGame.QuotesGameViewModel
 import kotlin.String
@@ -62,10 +64,8 @@ fun QuotesQuestionScreen(
 
     // Si está cargando, mostrar un indicador
     if (state.value.isLoading) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary),
-                                contentAlignment = Alignment.Center) {
+        Box(modifier = ModifierContainer(PaddingValues(0.dp)),
+            contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
                     color = MaterialTheme.colorScheme.onPrimary
             )
@@ -75,14 +75,12 @@ fun QuotesQuestionScreen(
 
     if (state.value.questions.isEmpty()) { // Si no hay preguntas después de cargar, mostrar un mensaje de error
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary),
+            modifier = ModifierContainer(PaddingValues(0.dp)),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    stringResource(R.string.no_questions_available),
+                    text = stringResource(R.string.no_questions_available),
                     color = Color.White
                 )
 
@@ -103,28 +101,18 @@ fun QuotesQuestionScreen(
 
     val currentQuestion = state.value.questions[currentQuestionIndex]
 
-//    // Se guarda el orden aleatorio de respuestas solo una vez por pregunta
-//    val shuffledOptions by remember(currentQuestion) {
-//        mutableStateOf((currentQuestion.personajeIncorrectos + currentQuestion.personajeCorrecto).shuffled())
-//    }
-
     // La aleatorización ahora solo ocurre cuando el usuario avanza a la siguiente pregunta.
     val shuffledOptions = remember(currentQuestionIndex) {
         (currentQuestion.personajeIncorrectos + currentQuestion.personajeCorrecto).shuffled()
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary),
+        modifier = ModifierContainer(PaddingValues(0.dp)),
         contentAlignment = Alignment.Center
     ) {
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(16.dp),
+            modifier = ModifierContainer(PaddingValues(16.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -178,17 +166,17 @@ fun QuotesQuestionScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(modifier = Modifier.padding(4.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor =  Color(0xFFAB82EE) // MaterialTheme.colorScheme.onPrimary
-                ),
-                onClick = {
-                    if (selectedAnswer == currentQuestion.personajeCorrecto) {
-                        correctAnswers++
-                    }
-                    showDialog = true
-                },
-                enabled = selectedAnswer != null
-            ) {
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor =  Color(0xFFAB82EE) // MaterialTheme.colorScheme.onPrimary
+                    ),
+                    onClick = {
+                        if (selectedAnswer == currentQuestion.personajeCorrecto) {
+                            correctAnswers++
+                        }
+                        showDialog = true
+                    },
+                    enabled = selectedAnswer != null)
+            {
                 Text(text = stringResource(R.string.check_answer),
                     color = Color.Black)
             }
