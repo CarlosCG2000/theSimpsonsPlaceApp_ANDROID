@@ -33,7 +33,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,7 +65,7 @@ fun QuotesGameScreen(
         },
         topBar = {
             TopBarComponent(
-                title = "Juego de Citas",
+                title = stringResource(R.string.juego_de_citas),
                 onNavigationArrowBack = navigationArrowBack
             )
         }
@@ -72,42 +74,54 @@ fun QuotesGameScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = R.drawable.background_all_characters),
-                contentDescription = "Background",
-                modifier = Modifier.fillMaxSize().graphicsLayer(alpha = 0.8f),
+                contentDescription = stringResource(R.string.fondo_juego_de_los_simpsons),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(alpha = 0.7f),
                 contentScale = ContentScale.Crop
             )
+
             Column(
                 modifier = Modifier
-                    .background(Color(0xCC0F1A35), shape = CircleShape)
+                    .background(
+                        color = Color(0xCC0F1A35), // Mantener este color es el fondo del circulo
+                        shape = CircleShape
+                    )
                     .padding(24.dp)
                     .size(300.dp), // Ajusta el tamaño del fondo redondeado
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+
                 Text(
-                    text = "Quiz Game",
+                    text = stringResource(R.string.quiz_game),
                     color = Color(0xFFFFC107),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
-                    text = "The game consists of a quiz where you have to guess which character the quote belongs to\n(5 questions/quotes)",
+                    text = stringResource(R.string.detalles_del_juego),
                     color = Color.White,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 Button(
                     onClick = { showDialog = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary)
                 ) {
-                    Text(text = "Start Quiz", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.start_quiz), color = Color.Black, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -115,12 +129,17 @@ fun QuotesGameScreen(
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Ready to start the Quiz Game?", color = Color.White, textAlign = TextAlign.Center) },
-                containerColor = Color(0xFF283593), // Color azul oscuro
+                title = { Text(text = stringResource(R.string.ready_to_start_the_quiz_game),
+                                fontWeight = SemiBold,
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                textAlign = TextAlign.Center) },
+                containerColor = MaterialTheme.colorScheme.secondary,
                 shape = RoundedCornerShape(16.dp),
                 confirmButton = {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly // Distribuye los botones equitativamente
                     ) {
                         Button(
@@ -130,34 +149,35 @@ fun QuotesGameScreen(
                           },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
                         ) {
-                            Text("Start", color = Color.Black)
+                            Text(stringResource(R.string.start), color = Color.Black)
                         }
                         Button(
                             onClick = { showDialog = false },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                         ) {
-                            Text("Cancel", color = Color.White)
+                            Text(stringResource(R.string.cancel), color = Color.Black)
                         }
                     }
                 })
-
-//            confirmButton = {
-//                Button(
-//                    onClick = { /* Acción para iniciar el quiz */ },
-//                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
-//                ) {
-//                    Text("Start", color = Color.Black)
-//                }
-//            },
-//            dismissButton = {
-//                Button(
-//                    onClick = { showDialog = false },
-//                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-//                ) {
-//                    Text("Cancel", color = Color.White)
-//                }
-//            }
-    }
+            /**
+            confirmButton = {
+                Button(
+                    onClick = { /* Acción para iniciar el quiz */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
+                ) {
+                    Text("Start", color = Color.Black)
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Cancel", color = Color.White)
+                }
+            }
+            */
+        }
     }
 }
 

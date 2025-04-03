@@ -84,4 +84,26 @@
     <string name="idioma_espa_ol">Selected: Spanish language</string>
     <string name="idioma_ingl_s">Selected: English language</string>
     <string name="idioma_franc_s">Selected: French language</string>
+    <string name="juego_de_citas">Quotes Game</string>
+    <string name="fondo_juego_de_los_simpsons">Simpsons Game Background</string>
+    <string name="quiz_game">Quiz Game</string>
+    <string name="detalles_del_juego">The game consists of a quiz where you have to guess which character the quote belongs to\\n(5 questions/quotes)</string>
+    <string name="start_quiz">Start Quiz</string>
+    <string name="ready_to_start_the_quiz_game">Ready to start the Quiz Game?</string>
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_questions_available">No questions available.</string>
+    <string name="quote_of">Quote %1$s of %2$s</string>
+    <string name="check_answer">Check Answer</string>
+    <string name="next">Next</string>
+    <string name="wrong">Wrong!</string>
+    <string name="correct">Correct!</string>
+    <string name="the_correct_answer_was">"The correct answer was "</string>
+    <string name="character_image">Character Image</string>
+    <string name="reiniciar">Reset</string>
+    <string name="total_games_statistics">Total Games Statistics</string>
+    <string name="finish">RESULT</string>
+    <string name="jugar_de_nuevo">Play again?</string>
+    <string name="reset_history_statistics">Reset History Statistics</string>
+    <string name="cerrar_historial">Close History</string>
 </resources>

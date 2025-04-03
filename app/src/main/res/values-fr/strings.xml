@@ -84,4 +84,26 @@
     <string name="idioma_espa_ol">Choisi: Langue Espagnol</string>
     <string name="idioma_ingl_s">Choisi: Langue anglaise</string>
     <string name="idioma_franc_s">Choisi: Langue française</string>
+    <string name="juego_de_citas">Jeu de citations</string>
+    <string name="detalles_del_juego">Le jeu consiste en des citations où vous devez deviner à quel personnage appartient la citation (5 questions/citations)</string>
+    <string name="start_quiz">Démarrer le jeu</string>
+    <string name="ready_to_start_the_quiz_game">Prêt à commencer le jeu Quiz?</string>
+    <string name="start">Commencer</string>
+    <string name="cancel">Annuler</string>
+    <string name="fondo_juego_de_los_simpsons">Jeu de fond des Simpson</string>
+    <string name="quiz_game">Jeu de quiz</string>
+    <string name="quote_of">Citation %1$s de %2$s</string>
+    <string name="check_answer">Vérifier la réponse</string>
+    <string name="no_questions_available">Aucune question disponible.</string>
+    <string name="next">Suivant</string>
+    <string name="wrong">Erreur!</string>
+    <string name="correct">Correct!</string>
+    <string name="the_correct_answer_was">"La bonne réponse était "</string>
+    <string name="character_image">Image du personnage</string>
+    <string name="reiniciar">Redémarrer</string>
+    <string name="total_games_statistics">Statistiques totales des jeux</string>
+    <string name="finish">RÉSULTAT</string>
+    <string name="jugar_de_nuevo">Rejouer ?</string>
+    <string name="reset_history_statistics">Réinitialiser les statistiques de l\'historique</string>
+    <string name="cerrar_historial">Fermer l\'historique</string>
 </resources>

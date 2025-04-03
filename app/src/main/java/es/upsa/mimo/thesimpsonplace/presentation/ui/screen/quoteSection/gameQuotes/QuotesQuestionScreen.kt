@@ -2,6 +2,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuo
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
@@ -40,42 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.questionGame.QuotesGameUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.questionGame.QuotesGameViewModel
 import kotlin.String
-
-//val questions: List<Question> = listOf(
-//    Question(
-//        cita = "Cita 1",
-//        personajeCorrecto = "Homer",
-//        imagen = URL("https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FHomerSimpson.png?1497567511939"),
-//        personajeIncorrectos = listOf("Apu", "Marge", "Nelson")
-//    ),
-//    Question(
-//        cita = "Cita 2",
-//        personajeCorrecto = "Homer",
-//        imagen = URL("https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FHomerSimpson.png?1497567511939"),
-//        personajeIncorrectos = listOf("Apu", "Marge", "Nelson")
-//    ),
-//    Question(
-//        cita = "Cita 3",
-//        personajeCorrecto = "Homer",
-//        imagen = URL("https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FHomerSimpson.png?1497567511939"),
-//        personajeIncorrectos = listOf("Apu", "Marge", "Nelson")
-//    ),
-//    Question(
-//        cita = "Cita 4",
-//        personajeCorrecto = "Homer",
-//        imagen = URL("https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FHomerSimpson.png?1497567511939"),
-//        personajeIncorrectos = listOf("Apu", "Marge", "Nelson")
-//    ),
-//    Question(
-//        cita = "Cita 5",
-//        personajeCorrecto = "Homer",
-//        imagen = URL("https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FHomerSimpson.png?1497567511939"),
-//        personajeIncorrectos = listOf("Apu", "Marge", "Nelson")
-//    ),
-//)
 
 @Composable
 fun QuotesQuestionScreen(
@@ -84,91 +55,120 @@ fun QuotesQuestionScreen(
 ) {
     val state: State<QuotesGameUI> = viewModel.stateQuestions.collectAsState() // sincrono para manejarlo en la UI
 
-    var currentQuestionIndex by remember { mutableStateOf(0) }
+    var currentQuestionIndex by remember { mutableIntStateOf(0) }
     var selectedAnswer by remember { mutableStateOf<String?>(null) }
     var showDialog by remember { mutableStateOf(false) }
-    var correctAnswers by remember { mutableStateOf(0) }
-
-//    if (questions.isEmpty()) {
-//        viewModel.getQuestions()
-//        return
-//    }
-
-    // ✅ Ejecutar getQuestions() solo una vez al iniciar
-    LaunchedEffect(Unit) {
-        if (state.value.questions.isEmpty()) {
-            viewModel.getQuestions()
-        }
-    }
+    var correctAnswers by remember { mutableIntStateOf(0) }
 
     // Si está cargando, mostrar un indicador
     if (state.value.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary),
+                                contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         return
     }
 
-    // Si no hay preguntas después de cargar, mostrar un mensaje de error
-    if (state.value.questions.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No questions available.", color = Color.White)
+    if (state.value.questions.isEmpty()) { // Si no hay preguntas después de cargar, mostrar un mensaje de error
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    stringResource(R.string.no_questions_available),
+                    color = Color.White
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { viewModel.getQuestions() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    )
+                ) {
+                    Text(stringResource(R.string.reiniciar), color = MaterialTheme.colorScheme.onSecondary)
+                }
+            }
         }
         return
     }
 
     val currentQuestion = state.value.questions[currentQuestionIndex]
 
-    // Se guarda el orden aleatorio de respuestas solo una vez por pregunta
-    val shuffledOptions by remember(currentQuestion) {
-        mutableStateOf((currentQuestion.personajeIncorrectos + currentQuestion.personajeCorrecto).shuffled())
+//    // Se guarda el orden aleatorio de respuestas solo una vez por pregunta
+//    val shuffledOptions by remember(currentQuestion) {
+//        mutableStateOf((currentQuestion.personajeIncorrectos + currentQuestion.personajeCorrecto).shuffled())
+//    }
+
+    // La aleatorización ahora solo ocurre cuando el usuario avanza a la siguiente pregunta.
+    val shuffledOptions = remember(currentQuestionIndex) {
+        (currentQuestion.personajeIncorrectos + currentQuestion.personajeCorrecto).shuffled()
     }
 
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary),
         contentAlignment = Alignment.Center
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Quote ${currentQuestionIndex + 1} of ${state.value.questions.size}",
+                text = stringResource(
+                    R.string.quote_of,
+                    currentQuestionIndex + 1,
+                    state.value.questions.size
+                ),
                 fontSize = 20.sp,
                 fontWeight = Bold
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "\"${currentQuestion.cita}\"", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = "\"${currentQuestion.cita}\"",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Column {
-                LazyColumn  {
-                    items(shuffledOptions) {answer ->
+                LazyColumn {
+                    items(shuffledOptions) { answer ->
                         Box(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center // Centra cada botón dentro de su fila
                         ) {
                             Button(
                                 onClick = { selectedAnswer = answer },
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .width(200.dp), // Opcional: define un ancho fijo para uniformidad
+                                modifier = Modifier.padding(4.dp)
+                                                   .width(200.dp), // Opcional: define un ancho fijo para uniformidad
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = if (selectedAnswer == answer)
-                                        MaterialTheme.colorScheme.primary
+                                        MaterialTheme.colorScheme.onPrimary
                                     else
-                                        MaterialTheme.colorScheme.secondaryContainer
+                                        MaterialTheme.colorScheme.secondary
                                 )
                             ) {
-                                Text(text = answer)
+                                Text(text = answer,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSecondary)
                             }
                         }
                     }
@@ -177,7 +177,10 @@ fun QuotesQuestionScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
+            Button(modifier = Modifier.padding(4.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor =  Color(0xFFAB82EE) // MaterialTheme.colorScheme.onPrimary
+                ),
                 onClick = {
                     if (selectedAnswer == currentQuestion.personajeCorrecto) {
                         correctAnswers++
@@ -186,7 +189,8 @@ fun QuotesQuestionScreen(
                 },
                 enabled = selectedAnswer != null
             ) {
-                Text("Check Answer")
+                Text(text = stringResource(R.string.check_answer),
+                    color = Color.Black)
             }
         }
 
@@ -208,16 +212,22 @@ fun QuotesQuestionScreen(
                             .fillMaxWidth()
                             .align(Alignment.Center)
                     ) {
-                        Text("Next")
+                        Text(stringResource(R.string.next))
                     }
                 },
                 title = {
-                    Box(   modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center) {
-                        Text(if (selectedAnswer == currentQuestion.personajeCorrecto) "Correct!" else "Wrong!",
-                            textAlign = TextAlign.Center)
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            if (selectedAnswer == currentQuestion.personajeCorrecto) stringResource(R.string.correct)
+                                  else stringResource(R.string.wrong),
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
                     }
-                 },
+                },
                 text = {
                     Row {
                         Box(
@@ -227,26 +237,26 @@ fun QuotesQuestionScreen(
                             contentAlignment = Alignment.Center  // Centra el contenido en el Box
                         ) {
                             Text(
-                                text = "The correct answer was ${currentQuestion.personajeCorrecto}",
+                                text = stringResource(R.string.the_correct_answer_was) + currentQuestion.personajeCorrecto,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
-//                        Text("The correct answer was ${currentQuestion.personajeCorrecto}",
-//                            modifier = Modifier.padding(horizontal = 10.dp).width(150.dp).height(180.dp), textAlign = TextAlign.Center)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Image(
                             painter = rememberAsyncImagePainter(currentQuestion.imagen.toString()),
-                            contentDescription = "Character Image",
+                            contentDescription = stringResource(R.string.character_image),
                             modifier = Modifier
                                 .width(100.dp)
                                 .height(180.dp),
                             contentScale = ContentScale.Crop
                         )
                     }
-                }
+                },
+                containerColor = MaterialTheme.colorScheme.secondary
             )
         }
     }

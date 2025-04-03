@@ -24,6 +24,10 @@ class ResultGameViewModel @Inject constructor( val getGameStatsUseCase: GetGameS
     val gameStats: StateFlow<ResultGameUI> = _gameStats.asStateFlow()
 
     init {
+        getStats()
+    }
+
+    fun getStats(){
         viewModelScope.launch {
             getGameStatsUseCase.gameStatsFlow.collect { stats ->
                 _gameStats.update {

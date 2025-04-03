@@ -86,4 +86,26 @@
     <string name="idioma_espa_ol">Idioma español</string>
     <string name="idioma_ingl_s">Idioma inglés</string>
     <string name="idioma_franc_s">Idioma francés</string>
+    <string name="juego_de_citas">Juego de Citas</string>
+    <string name="fondo_juego_de_los_simpsons">Fondo juego de los Simpsons</string>
+    <string name="quiz_game">Quiz Game</string>
+    <string name="detalles_del_juego">detalles_del-juego</string>
+    <string name="start_quiz">Start Quiz</string>
+    <string name="ready_to_start_the_quiz_game">Ready to start the Quiz Game?</string>
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_questions_available">No questions available.</string>
+    <string name="quote_of">Quote %1$s of %2$s</string>
+    <string name="check_answer">Check Answer</string>
+    <string name="next">Next</string>
+    <string name="wrong">Wrong!</string>
+    <string name="correct">Correct!</string>
+    <string name="the_correct_answer_was">"The correct answer was "</string>
+    <string name="character_image">Character Image</string>
+    <string name="reiniciar">Reiniciar</string>
+    <string name="total_games_statistics">Total Games Statistics</string>
+    <string name="finish">FINISH</string>
+    <string name="jugar_de_nuevo">¿Jugar de nuevo?</string>
+    <string name="reset_history_statistics">Reset History Statistics</string>
+    <string name="cerrar_historial">Cerrar Historial</string>
 </resources>

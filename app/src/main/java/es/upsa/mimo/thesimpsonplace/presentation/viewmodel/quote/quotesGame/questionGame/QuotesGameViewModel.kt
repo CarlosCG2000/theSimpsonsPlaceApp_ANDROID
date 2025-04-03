@@ -17,6 +17,10 @@ class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuest
     private val _stateQuestions: MutableStateFlow<QuotesGameUI> = MutableStateFlow(QuotesGameUI()) // Asincrono esta en un hilo secundario
     val stateQuestions: StateFlow<QuotesGameUI> = _stateQuestions.asStateFlow()
 
+    init { // ✅ Llamar solo una vez al inicializar el ViewModel
+        getQuestions()
+    }
+
     fun getQuestions(){
         viewModelScope.launch {
             _stateQuestions.update { it.copy(isLoading = true) }

@@ -1281,6 +1281,7 @@ PASAR A LA VISUALIZACIONES. ❌
 - VER PAGINACIÓN (Paging 3, carga diferida) ⚠️
 - VER RETROFIT (llamada a API'S) ✅
 - VER BD CON ROOMS ⚠️
+- VER ANIMACIONES PARA EL JUEGO Y SPINNER DEL JUEGO GIRATORIO ⚠️
 
 #### ✅ Cómo usar Hilt para inyectar dependencias en tu ViewModel
 

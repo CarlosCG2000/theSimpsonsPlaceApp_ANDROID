@@ -51,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -69,6 +70,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resu
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resultGame.ResultGameViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
+import java.util.Locale
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
@@ -176,7 +178,9 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 
                     TopCharactersAndSeasons(top3Characters = topCharacters, top3Seasons = topSeasons)
 
-                    HistoryGameStatistics(totalQuestions = gameStats.value.result.second, correctAnswers = gameStats.value.result.first)
+                    HistoryGameStatistics(totalQuestions = gameStats.value.result.second,
+                                        correctAnswers = gameStats.value.result.first,
+                                        size = 125.dp)
                 }
             }
         }
@@ -316,8 +320,10 @@ fun SeasonCard(season: Pair<Int, Int>) {
 
 //_____________________ GRAFICA _______________________
 @Composable
-fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int) {
-    val successPercentage = (correctAnswers.toFloat() / totalQuestions) * 100
+fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int, size: Dp, paddingText: Dp = 0.dp) {
+    val successPercentage = ((correctAnswers.toFloat() / totalQuestions) * 100).let {
+        String.format(Locale.US, "%.2f", it).toFloat()
+    }
     val failurePercentage = 100 - successPercentage
 
     Column(
@@ -328,21 +334,13 @@ fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int) {
                             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-            // 🔹 Botón para resetear historial
-//        Button(
-//            onClick = { /* Acción para resetear */ },
-//            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)), // Color amarillo
-//            modifier = Modifier.padding(bottom = 16.dp)
-//        ) {
-//            Text(text = "Reset History", color = Color.Black, fontWeight = FontWeight.Bold)
-//        }
-
             // 🔹 Título
             Text(
                 text = stringResource(R.string.history_game_statistics),
                 fontSize = 20.sp,
                 fontWeight = Bold,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onSecondary,
+                modifier = Modifier.padding(bottom = paddingText)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -350,7 +348,8 @@ fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int) {
             // 🔹 Gráfico circular
             PieChart(
                 successPercentage = successPercentage,
-                failurePercentage = failurePercentage
+                failurePercentage = failurePercentage,
+                canvasSize = size
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -402,7 +401,7 @@ fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int) {
 }
 
 @Composable
-fun PieChart(successPercentage: Float, failurePercentage: Float) {
+fun PieChart(successPercentage: Float, failurePercentage: Float, canvasSize: Dp) {
     val pieEntries = listOf(
         PieChartData(successPercentage, Color.Green),
         PieChartData(failurePercentage, Color.Red)
@@ -414,7 +413,7 @@ fun PieChart(successPercentage: Float, failurePercentage: Float) {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.size(125.dp)) {
+        Canvas(modifier = Modifier.size(canvasSize)) {
             val totalAngle = 360f
             val strokeWidth = 150f  // Grosor del círculo
             var startAngle = -90f   // Empezamos desde arriba
