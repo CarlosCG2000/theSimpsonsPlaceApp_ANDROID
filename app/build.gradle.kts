@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) // Serialization
     kotlin("kapt")
     alias(libs.plugins.hilt)
-    // alias(libs.plugins.ksp)
+    // alias(libs.plugins.ksp) // NUEVO
 }
 
 android {
@@ -52,27 +52,29 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)// Navigation compose
     implementation(libs.kotlinx.serialization.json) // Serialization
     implementation(libs.androidx.constraintlayout.compose)  // Constraint Layout
     implementation(libs.androidx.lifecycle.viewmodel.compose) // View Model
-    implementation(libs.androidx.navigation.compose) // Navigation compose
     implementation(libs.coil.compose) // Coil Compose (cargar imagenes web)
     implementation(libs.androidx.material.icons.extended) // Material Icons Extension (para tener mas iconos)
     implementation(libs.gson)  // GSON
-    implementation(libs.dagger.hilt)
-    implementation(libs.dagger.hilt.navigation)
-    // implementation(libs.com.google.devtools.ksp.gradle.plugin)
-    kapt(libs.dagger.hilt.compiler)
-    implementation(libs.retrofit2.retrofit)
-    implementation(libs.converter.gson)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.appcompat) // Agrega esto
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.dagger.hilt)
+    implementation(libs.dagger.hilt.navigation)
+    // ksp(libs.dagger.hilt.compiler)
+    kapt(libs.dagger.hilt.compiler)
+    // ksp(libs.androidx.room.compiler) // NUEVO
     kapt(libs.androidx.room.compiler)
-    // ksp(libs.androidx.room.compiler)
-    //    implementation(libs.charts)
-    //    implementation(libs.mpandroidchart)
+    implementation(libs.google.material) // NUEVO
+    implementation(libs.androidx.navigation.ui.ktx) // NUEVO
+    implementation(libs.okhttp) // NUEVO
+    implementation(libs.okhttp.logging.interceptor) // NUEVO
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -82,3 +84,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+
