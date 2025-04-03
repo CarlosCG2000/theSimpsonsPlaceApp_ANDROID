@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.character.CharacterList
@@ -53,8 +54,7 @@ fun CharactersFavScreen(viewModel: ListCharactersDBViewModel = hiltViewModel(),
     ) { paddingValues ->
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-                                .padding(paddingValues)
+            modifier =  ModifierContainer(paddingValues)
         ) {
             if (stateFav.value.isLoading) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)

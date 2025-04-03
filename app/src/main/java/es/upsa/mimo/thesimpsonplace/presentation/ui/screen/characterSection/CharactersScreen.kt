@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.models.Character
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.character.CharacterList
 import es.upsa.mimo.thesimpsonplace.presentation.ui.theme.BackgroundColor
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
@@ -123,12 +124,6 @@ fun CharactersScreen (
     }
 }
 
-@Composable
-fun ModifierContainer(paddingValues: PaddingValues): Modifier {
-     return Modifier.fillMaxSize()
-                    .padding(paddingValues)
-                    .background(MaterialTheme.colorScheme.primary)
-}
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable

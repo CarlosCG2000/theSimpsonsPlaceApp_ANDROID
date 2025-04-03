@@ -54,9 +54,8 @@ fun CharacterItem(modifier: Modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
+            modifier = Modifier .fillMaxWidth()
+                                .padding(8.dp)
         )
         {
             Image(
@@ -74,6 +73,7 @@ fun CharacterItem(modifier: Modifier,
                     fontWeight = Bold,
                     fontSize = 20.sp,
                     color =  MaterialTheme.colorScheme.onSecondary)
+
                 Text(text = character.genero.toString(),
                     fontSize = 16.sp,
                     color =  MaterialTheme.colorScheme.onSecondary)

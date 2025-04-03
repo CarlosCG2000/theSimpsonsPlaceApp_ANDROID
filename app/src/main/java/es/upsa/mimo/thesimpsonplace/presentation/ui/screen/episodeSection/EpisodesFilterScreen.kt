@@ -58,9 +58,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.episode.ListEpisodes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters.ListEpisodesFilterStateUI
@@ -189,36 +191,31 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
     ) { paddingValues ->
 
         ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = ModifierContainer(paddingValues),
             constraintSet = episodesFilterContraintSet()
         ){
-            // DEFINIR TODOS LOS FILTROS
-            // _______________ TEXTFIELD _______________
-            Box(modifier = Modifier
-                .layoutId("idTextFieldFilter")
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-                .background(
-                    MaterialTheme.colorScheme.secondary,
-                    shape = MaterialTheme.shapes.small
-                )
-                .padding(6.dp))
+            // @@@@@@@@@@@@ FILTROS @@@@@@@@@@@@
+            // ______ TEXTFIELD ______
+            Box(modifier = Modifier.layoutId("idTextFieldFilter")
+                                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                                    .background(
+                                        MaterialTheme.colorScheme.secondary,
+                                        shape = MaterialTheme.shapes.small
+                                    )
+                                    .padding(6.dp))
             {
                 MySearchTextField(nameFilter = filterTitle,
                                     valueChange = { newValue -> filterTitle = newValue })
             }
-            // _________________________________________
-            // _______________ FILTRA 1 DE FILTRO: 2 DatePickerDialogComponent y Switch _______________
+            // ______ 2 DatePicker y 1 Switch ______
             Row (
-                modifier = Modifier
-                    .layoutId("idColumnDate")
-                    .fillMaxWidth(),
+                modifier = Modifier.layoutId("idColumnDate")
+                                   .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
                 // DatePickerDialog solo se muestra cuando showDialogMinDate es true
-                DatePickerDialogComponent(
+                MyDatePickerDialogComponent(
                     showDialogDate = showDialogMinDate,
                     onDismissRequest = { showDialogMinDate = false },
                     onAdmitRequest = { showDialogMinDate = true },
@@ -230,7 +227,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     title = stringResource(R.string.fecha_inicial)
                 )
 
-                DatePickerDialogComponent(
+                MyDatePickerDialogComponent(
                     modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
                     showDialogDate = showDialogMaxDate,
                     onDismissRequest = { showDialogMaxDate = false },
@@ -246,6 +243,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 // Switch para marcar si está visto
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(stringResource(R.string.visto))
+
                     Switch(
                         checked = isViewEnabled,
                         onCheckedChange = {
@@ -258,8 +256,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     )
                 }
             }
-            // _________________________________________
-            // _______________ FILTRA 2 DE FILTRO: 2 DropdownMenuComponent y IconButton _______________
+            // ______ 2 DropdownMenu y 1 IconButton ______
             Row(
                 modifier = Modifier
                     .layoutId("idColumnPicker")
@@ -267,7 +264,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
-                DropdownMenuComponent(
+                MyDropdownMenuComponent(
                     label = stringResource(R.string.temporada),
                     selectedItem = filterSeason,
                     items = uniqueSeasons,
@@ -276,7 +273,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     }
                 )
 
-                DropdownMenuComponent(
+                MyDropdownMenuComponent(
                     label = stringResource(R.string.capitulo),
                     selectedItem = filterEpisode,
                     items = uniqueEpisodes,
@@ -298,48 +295,44 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                         contentDescription = stringResource(R.string.ordenar)
                     )
                 }
-
             }
-            // _________________________________________
 
+            // ______ Box principal ______
             Box(
-                modifier = Modifier
-                    .layoutId("idListEpisodes")
-                    .padding(bottom = 10.dp),
-                //.fillMaxSize(), // 🔹 Se asegura de ocupar el espacio disponible
-                // contentAlignment = Alignment.Center // 🔹 Centra el contenido
+                modifier = Modifier.layoutId("idListEpisodes")
+                                    .padding(bottom = 10.dp)
             ) {
                 if(stateAllEpisodes.value.isLoading){ // state.value.isLoading ||
                     CircularProgressIndicator( color = MaterialTheme.colorScheme.onPrimary )
                 }
                 else {
-                        if (state.value.episodes.isEmpty()) {
-                            NoContentComponent(
-                                modifier = Modifier
-                                    .layoutId("idListEpisodes")
-                                    .fillMaxSize()
-                                    .background(Color(0xFF0F1A35)),
-                                titleText = stringResource(R.string.title_episodes),
-                                infoText = stringResource(R.string.details_episodes)
-                            )
-                        } else {
-                            ListEpisodes(
-                                modifier = Modifier.layoutId("idListEpisodes"),
-                                episodes = state.value.episodes,
-                                allEpisodes = stateAllEpisodes.value.episodes,
-                                onEpisodeSelected = onEpisodeSelected,
-                                episodesFavDbSet = stateFavOrView.value.episodesFavSet,
-                                episodesViewDbSet = stateFavOrView.value.episodesViewSet
-                            )
-                        }
+                    if (state.value.episodes.isEmpty()) {
+                        NoContentComponent(
+                            modifier = Modifier
+                                .layoutId("idListEpisodes")
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.primary),
+                            titleText = stringResource(R.string.title_episodes),
+                            infoText = stringResource(R.string.details_episodes)
+                        )
+                    } else {
+                        ListEpisodes(
+                            modifier = Modifier.layoutId("idListEpisodes"),
+                            episodes = state.value.episodes,
+                            allEpisodes = stateAllEpisodes.value.episodes,
+                            onEpisodeSelected = onEpisodeSelected,
+                            episodesFavDbSet = stateFavOrView.value.episodesFavSet,
+                            episodesViewDbSet = stateFavOrView.value.episodesViewSet
+                        )
                     }
+                }
             }
         }
     }
 }
 
 fun episodesFilterContraintSet(): ConstraintSet {
-    return ConstraintSet() {
+    return ConstraintSet {
         // Creando referencias (ids)
         val (listEpisodes, textFieldFilter, columnDate, columnPicker /*iconEmptyList, titleEmptyList, subtitleEmptyList*/) =
             createRefsFor( "idListEpisodes", "idTextFieldFilter", "idColumnDate", "idColumnPicker")
@@ -380,14 +373,14 @@ fun episodesFilterContraintSet(): ConstraintSet {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDialogComponent(modifier: Modifier = Modifier,
-                              showDialogDate: Boolean,
-                              onDismissRequest: () -> Unit,
-                              onAdmitRequest: () -> Unit,
-                              filterDate: DatePickerState,
-                              onClick: () -> Unit,
-                              title: String,
-                              defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 16) }.timeInMillis
+fun MyDatePickerDialogComponent(modifier: Modifier = Modifier,
+                                showDialogDate: Boolean,
+                                onDismissRequest: () -> Unit,
+                                onAdmitRequest: () -> Unit,
+                                filterDate: DatePickerState,
+                                onClick: () -> Unit,
+                                title: String,
+                                defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 16) }.timeInMillis
                               ) {
     if (showDialogDate) {
         DatePickerDialog(
@@ -431,12 +424,10 @@ fun DatePickerDialogComponent(modifier: Modifier = Modifier,
 }
 
 @Composable
-fun DropdownMenuComponent(
-    label: String,
-    selectedItem: Int,
-    items: List<Int>,
-    onItemSelected: (Int) -> Unit
-) {
+fun MyDropdownMenuComponent(label: String,
+                            selectedItem: Int,
+                            items: List<Int>,
+                            onItemSelected: (Int) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Box ( modifier = Modifier//.border(2.dp, Color.DarkGray, RoundedCornerShape(12.dp)) // Primero el borde

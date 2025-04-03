@@ -32,6 +32,7 @@ import androidx.constraintlayout.compose.Dimension
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
@@ -79,11 +80,8 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
     )
     { paddingValues ->
         ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = ModifierContainer(paddingValues),
             constraintSet = characterFilterScreenConstraintSet()
-
         ){
 
             Box(

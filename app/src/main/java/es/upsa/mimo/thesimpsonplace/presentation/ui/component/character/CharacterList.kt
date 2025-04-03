@@ -17,7 +17,7 @@ fun CharacterList(modifier: Modifier = Modifier,
                   onToggleFavorite: (Character) -> Unit) {
 
     LazyColumn( modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally) {
         items(characters) { character ->
 
             // val isFavorite = rememberUpdatedState(character.id in favoriteCharacters) // ✅ ¿que es 'rememberUpdatedState' y porque este tipo y no otro?
@@ -32,7 +32,7 @@ fun CharacterList(modifier: Modifier = Modifier,
 
             CharacterItem(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(16.dp),
+                                    .padding(16.dp),
                 character = character,
                 isFavorite = isFavorite/*.value*/,
                 onToggleFavorite = { onToggleFavorite(character) }

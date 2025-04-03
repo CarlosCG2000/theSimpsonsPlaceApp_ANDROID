@@ -46,7 +46,9 @@ import es.upsa.mimo.thesimpsonplace.utils.LoggerClass
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.episode.ListEpisodes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
@@ -76,7 +78,7 @@ fun EpisodesScreen(
     Scaffold(
         bottomBar = {
                 BottomBarComponent(
-                    BottomNavItem.ALL,
+                    selectedBarButtom = BottomNavItem.ALL,
                     { /** es esta pantalla, no necesita navegar */ },
                     navigateToFilterEpisode,
                     navigateToFavoriteEpisode
@@ -91,20 +93,17 @@ fun EpisodesScreen(
     ) { paddingValues ->
         if (state.value.isLoading && stateFavOrView.value.isLoading) {
             Box(
-                modifier = Modifier.fillMaxSize()
-                    .padding(paddingValues)
-                    .background(MaterialTheme.colorScheme.primary),
+                modifier = ModifierContainer(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
-        } else {
-            ListEpisodes(modifier = Modifier.fillMaxSize()
-                                            .padding(paddingValues)
-                                            .padding(top = 10.dp)
-                                            .background(MaterialTheme.colorScheme.primary),
+        }
+        else {
+            ListEpisodes(modifier = ModifierContainer(paddingValues)
+                                            .padding(top = 10.dp),
                          episodes = state.value.episodes,
                          allEpisodes = state.value.episodes,
                          onEpisodeSelected = onEpisodeSelected,
@@ -114,89 +113,15 @@ fun EpisodesScreen(
     }
 }
 
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
-fun ListEpisodes(modifier: Modifier,
-                 episodes: List<Episode>,
-                 allEpisodes: List<Episode>, // para sacar solo el indice de los episodios
-                 onEpisodeSelected: (String) -> Unit,
-                 episodesFavDbSet: Set<String>,
-                 episodesViewDbSet: Set<String>) {
-
-        LazyColumn(modifier = modifier) {
-
-            items(episodes, key = { it.id }) {episode ->
-                val indiceEpisodio = allEpisodes.indexOfFirst { it.id == episode.id }.takeIf { it != -1 } ?: -1
-
-                // val isFavorite = rememberUpdatedState(episode.id in episodesFavDbSet)
-                // val isView = rememberUpdatedState(episode.id in episodesViewDbSet)
-                val isFavorite = episode.id in episodesFavDbSet
-                val isView = episode.id in episodesViewDbSet
-
-                EpisodeItem(Modifier.fillMaxWidth().padding(16.dp),
-                                    indiceEpisodio,
-                                    episode,
-                                    onEpisodeSelected,
-                                    isFavorite, //.value,
-                                    isView //.value
-                )
-            }
-
-        }
-
-}
-
-@Composable
-fun EpisodeItem(modifier: Modifier, indiceEpisodio: Int, episode: Episode, onEpisodeSelected: (String) -> Unit, isFavorite: Boolean, isView: Boolean) {
-
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor =
-                                        if (isFavorite) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)
-                                        else MaterialTheme.colorScheme.secondary),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clickable { onEpisodeSelected(episode.id) } // Ahora puedes obtener la posición del item
-        ) {
-
-            Text(text = "${indiceEpisodio + 1} - ${episode.titulo}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Row (modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                /*horizontalArrangement = Arrangement.SpaceAround*/){
-
-                Text(text = episode.lanzamiento.toFormattedString(), fontSize = 20.sp)
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Text(text = "Temporada ${ episode.temporada }", fontSize = 20.sp)
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Icon(
-                    imageVector = if (isView) Icons.Filled.Visibility else Icons.Filled.VisibilityOff, // Usa el ícono de estrella
-                    contentDescription = "View",
-                    tint = if (isView) MaterialTheme.colorScheme.onPrimary else Color.Transparent, // Amarillo si es visto, rojo si no
-                    modifier = Modifier.size(38.dp) // Tamaño del icono
-                )
-            }
-        }
+fun EpisodesScreenPreview() {
+    Column {
+        EpisodesScreen(
+            navigateToFilterEpisode = {},
+            navigateToFavoriteEpisode = {},
+            onEpisodeSelected = {},
+            navigationArrowBack = {}
+        )
     }
 }
-
-//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
-//@Composable
-//fun EpisodesScreenPreview() {
-//    Column {
-//        EpisodesScreen(
-//            navigateToFilterEpisode = {},
-//            navigateToFavoriteEpisode = {},
-//            onEpisodeSelected = {},
-//            navigationArrowBack = {}
-//        )
-//    }
-//}

@@ -49,6 +49,7 @@ import androidx.constraintlayout.compose.MotionScene
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodeDetails.DetailsEpisodeViewModel
@@ -78,10 +79,7 @@ fun EpisodeDetailScreen(viewModel: DetailsEpisodeViewModel = hiltViewModel(),
     { paddingValues ->
         Box(
             contentAlignment = Alignment.Center, // ✅ Asegura que el spinner esté centrado
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.primary)
+            modifier = ModifierContainer(paddingValues)
         ) {
             if(state.value.isLoading) {
                 CircularProgressIndicator(
@@ -94,6 +92,7 @@ fun EpisodeDetailScreen(viewModel: DetailsEpisodeViewModel = hiltViewModel(),
             }
         }
     }
+    
 }
 
 @Composable
@@ -107,8 +106,7 @@ fun CharacterDetails(episode: Episode,
     val isView = stateFavOrView.value.episodesViewSet.contains(episode.id)
 
     Column(
-        modifier = Modifier
-            .fillMaxSize() // Ocupa toda la pantalla
+        modifier = Modifier.fillMaxSize() // Ocupa toda la pantalla
                             .background(MaterialTheme.colorScheme.primary),
         verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
         horizontalAlignment = Alignment.CenterHorizontally
@@ -147,9 +145,8 @@ fun CharacterDetails(episode: Episode,
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
+            modifier = Modifier.fillMaxWidth()
+                                .padding(horizontal = 32.dp)
         ) {
             // Favorito
             Row(
@@ -202,8 +199,10 @@ fun CharacterDetails(episode: Episode,
         // Secciones de escritores, directores e invitados
         SectionCard(stringResource(R.string.escritores), episode.escritores,
                     MaterialTheme.colorScheme.onPrimary, emptyMessage = stringResource(R.string.ning_n_escritor))
+
         SectionCard(stringResource(R.string.directores), episode.directores,
                     MaterialTheme.colorScheme.onPrimary, emptyMessage = stringResource( R.string.ning_n_director))
+
         SectionCard(stringResource(R.string.invitados), episode.invitados,
                     MaterialTheme.colorScheme.onPrimary, emptyMessage = stringResource(R.string.ningun_invitado_famoso))
 
@@ -234,7 +233,10 @@ fun CharacterDetails(episode: Episode,
 
 // Composable para cada sección
 @Composable
-fun SectionCard(title: String, items: List<String>, titleColor: Color, emptyMessage: String = stringResource(R.string.sin_datos)) {
+fun SectionCard(title: String,
+                items: List<String>,
+                titleColor: Color,
+                emptyMessage: String = stringResource(R.string.sin_datos)) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

@@ -1,6 +1,8 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -12,13 +14,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.episode.ListEpisodes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesListFav.ListEpisodesDBViewModel
@@ -59,29 +63,29 @@ fun EpisodesFavScreen(
         if (stateFavOrView.value.isLoading) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-                    .padding(paddingValues)
+                modifier = ModifierContainer(paddingValues)
             ) {
                 CircularProgressIndicator(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         } else {
-            ListEpisodes(modifier = Modifier.fillMaxSize()
-                                            .padding(paddingValues),
-                episodes = stateFavOrView.value.episodesFav,
-                allEpisodes = stateAllEpisodes.value.episodes,
-                onEpisodeSelected = onEpisodeSelected,
-                episodesFavDbSet = stateFavOrView.value.episodesFavSet,
-                episodesViewDbSet = stateFavOrView.value.episodesViewSet)
+            ListEpisodes(modifier = ModifierContainer(paddingValues),
+                        episodes = stateFavOrView.value.episodesFav,
+                        allEpisodes = stateAllEpisodes.value.episodes,
+                        onEpisodeSelected = onEpisodeSelected,
+                        episodesFavDbSet = stateFavOrView.value.episodesFavSet,
+                        episodesViewDbSet = stateFavOrView.value.episodesViewSet)
         }
     }
 }
 
-//@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
-//@Composable
-//fun EpisodesFavScreenPreview() {
-//    Column {
-//        EpisodesFavScreen( {}, {},{},{})
-//    }
-//}
+@Preview(showBackground = true,
+        uiMode = Configuration.UI_MODE_NIGHT_NO,
+        name = "Modo Claro")
+@Composable
+fun EpisodesFavScreenPreview() {
+    Column {
+        EpisodesFavScreen( navigateToAllEpisodes = {}, navigateToFilterEpisode = {}, onEpisodeSelected = {}, navigationArrowBack = {})
+    }
+}
