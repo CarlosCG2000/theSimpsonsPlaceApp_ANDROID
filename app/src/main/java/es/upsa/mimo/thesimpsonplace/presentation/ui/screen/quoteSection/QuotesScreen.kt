@@ -40,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -55,8 +54,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.domain.models.Quote
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel

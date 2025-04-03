@@ -21,6 +21,7 @@ import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.character.CharacterList
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
 

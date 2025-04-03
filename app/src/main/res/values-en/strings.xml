@@ -106,4 +106,5 @@
     <string name="jugar_de_nuevo">Play again?</string>
     <string name="reset_history_statistics">Reset History Statistics</string>
     <string name="cerrar_historial">Close History</string>
+    <string name="borrar_texto">Delete text</string>
 </resources>

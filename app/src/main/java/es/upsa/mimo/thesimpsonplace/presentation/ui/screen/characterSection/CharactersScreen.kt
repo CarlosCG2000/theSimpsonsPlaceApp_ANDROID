@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.models.Character
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.character.CharacterList
 import es.upsa.mimo.thesimpsonplace.presentation.ui.theme.BackgroundColor
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDbStateUI
@@ -88,10 +90,10 @@ fun CharactersScreen (
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                BottomNavItem.ALL,
-                { /** es esta pantalla, no necesita navegar */ },
-                navigateToFilterCharacters,
-                navigateToFavoriteCharacters
+                selectedBarButtom = BottomNavItem.ALL,
+                navigateToAllEpisodes = { /** es esta pantalla, no necesita navegar */ },
+                navigateToFiltersEpisode = navigateToFilterCharacters,
+                navigateToFavoritesEpisode = navigateToFavoriteCharacters
             )
         },
         topBar = {
@@ -103,9 +105,7 @@ fun CharactersScreen (
     ) { paddingValues ->
         if(state.value.isLoading) {
             Box(
-                modifier = Modifier.fillMaxSize()
-                                    .padding(paddingValues)
-                                    .background(MaterialTheme.colorScheme.primary),
+                modifier = ModifierContainer(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
@@ -115,8 +115,7 @@ fun CharactersScreen (
         }
         else {
             CharacterList(
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
-                                   .background(MaterialTheme.colorScheme.primary),
+                modifier = ModifierContainer(paddingValues),
                 characters = state.value.characters, // se muestran todos los personajes (independiente de que sean de la BD o no, se obtienen del Json)
                 favoriteCharacters = stateFav.value.charactersSet, // saber que personajes son favoritos
                 onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) }) // acción de actualizar personajes (a favorito o no) en la base de datos
@@ -125,100 +124,18 @@ fun CharactersScreen (
 }
 
 @Composable
-fun CharacterList(modifier: Modifier = Modifier,
-                  characters: List<Character>,
-                  favoriteCharacters: Set<Int>,
-                  onToggleFavorite: (Character) -> Unit) {
-
-    LazyColumn( modifier = modifier,
-                horizontalAlignment = Alignment.CenterHorizontally) {
-        items(characters) { character ->
-
-            // val isFavorite = rememberUpdatedState(character.id in favoriteCharacters) // ✅ ¿que es 'rememberUpdatedState' y porque este tipo y no otro?
-            /**
-            •	rememberUpdatedState(value) mantiene actualizado un valor que cambia frecuentemente, evitando recomposiciones innecesarias.
-            •	En este caso:
-            •	character.id in favoriteCharacters puede cambiar cuando se agregan/eliminan favoritos.
-            •	rememberUpdatedState garantiza que CharacterItem siempre tenga el valor más reciente sin recomposiciones extra.
-            - Alternativa sin rememberUpdatedState (puede recomponer más de la cuenta)
-             */
-            val isFavorite = character.id in favoriteCharacters
-
-            CharacterItem(
-                modifier = Modifier.fillMaxWidth()
-                                    .padding(16.dp),
-                character = character,
-                isFavorite = isFavorite/*.value*/,
-                onToggleFavorite = { onToggleFavorite(character) }
-            )
-        }
-    }
-}
-
-@Composable
-fun CharacterItem( modifier: Modifier,
-                   character: Character,
-                   isFavorite: Boolean,
-                   onToggleFavorite: () -> Unit) {
-
-    val context = LocalContext.current
-
-    val imageResId = remember(character.imagen) {
-        val id = context.resources.getIdentifier( // ⚠️ getIdentifier, esta deprecado pero aún funciona y sigue siendo la única opción dinámica.
-            character.imagen?.lowercase(),
-            "drawable",
-            context.packageName
-        )
-        if (id == 0) R.drawable.not_specified else id
-    }
-
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary), //if (isFavorite) Color.Gray else Color(0xFF2C3E72) )
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
-    ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    )
-    {
-            Image(
-                painter = painterResource(id = imageResId),
-                contentDescription = character.nombre,
-                modifier = Modifier
-                    .size(110.dp)
-                    .clip(CircleShape)
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column {
-                Text(text = character.nombre,
-                    fontWeight = Bold,
-                    fontSize = 20.sp,
-                    color =  MaterialTheme.colorScheme.onSecondary)
-                Text(text = character.genero.toString(),
-                    fontSize = 16.sp,
-                    color =  MaterialTheme.colorScheme.onSecondary)
-
-                IconButton(onClick = { onToggleFavorite() }) {
-                    Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = stringResource(R.string.favorito),
-                        tint = if (isFavorite) Color.Yellow else Color.Gray,
-                        modifier = Modifier.size(38.dp)
-                    )
-                }
-            }
-        }
-    }
+fun ModifierContainer(paddingValues: PaddingValues): Modifier {
+     return Modifier.fillMaxSize()
+                    .padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.primary)
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun CharactersScreenPreview() {
     Column {
-        CharactersScreen(navigateToFilterCharacters = {}, navigateToFavoriteCharacters ={}, navigationArrowBack = {})
+        CharactersScreen(navigateToFilterCharacters = {},
+                         navigateToFavoriteCharacters = {},
+                         navigationArrowBack = {})
     }
 }

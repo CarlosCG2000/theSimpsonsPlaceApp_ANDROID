@@ -5,17 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -37,8 +30,10 @@ import androidx.constraintlayout.compose.Dimension
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.character.CharacterList
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersListFav.ListCharactersDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersFilterName.ListCharactersFilterStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.character.charactersFilterName.ListCharactersFilterViewModel
@@ -54,7 +49,6 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
 ) {
 
     val state: State<ListCharactersFilterStateUI> = viewModel.stateCharacterFilter.collectAsState() // sincrono para manejarlo en la UI
-
     val stateFav: State<ListCharactersDbStateUI> = viewModelDB.stateCharacterFav.collectAsState()
 
     var filtroNombre by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
@@ -68,10 +62,10 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
     Scaffold(
         bottomBar = {
             BottomBarComponent(
-                BottomNavItem.FILTERS,
-                navigateToAllCharacters,
-                { /** es esta pantalla, no necesita navegar */ },
-                navigateToFavoriteCharacters
+                selectedBarButtom = BottomNavItem.FILTERS,
+                navigateToAllEpisodes = navigateToAllCharacters,
+                navigateToFiltersEpisode = { /** es esta pantalla, no necesita navegar */ },
+                navigateToFavoritesEpisode = navigateToFavoriteCharacters
             )
         },
         topBar = {
@@ -102,37 +96,13 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
                     }
                     .padding(horizontal = 10.dp, vertical = 5.dp)
                     .background(
-                        MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.secondary,
                         shape = MaterialTheme.shapes.small
                     )
                     .padding(6.dp)
             ) {
-                OutlinedTextField(
-                    value = filtroNombre,
-                    onValueChange = { newValue ->
-                        filtroNombre = newValue
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.nombre_del_personaje),
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.ejemplos_personajes),
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    },
-                    trailingIcon = {
-                        if (filtroNombre.text.isNotEmpty()) {
-                            IconButton(onClick = { filtroNombre = TextFieldValue("") }) {
-                                Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth() // 🔹 Para que ocupe todo el ancho del Box
-                )
+                MySearchTextField(nameFilter = filtroNombre,
+                                valueChange = { newValue -> filtroNombre = newValue })
             }
             // _________________________________________
 
@@ -146,21 +116,19 @@ fun CharacterFilterScreen(viewModel: ListCharactersFilterViewModel = hiltViewMod
                                     },
                 contentAlignment = Alignment.Center // 🔹 Centra el contenido
             ) {
-                if(state.value.isLoading == true){
+                if(state.value.isLoading == true) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 } else if (state.value.characters.isEmpty()) {
                     NoContentComponent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier.fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.primary),
                         titleText = stringResource(R.string.titulo_no_contenido_filtro_pers),
                         infoText = stringResource(R.string.detalles_no_contenido_filtro_pers)
                     )
                 } else {
                     CharacterList(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier.fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.primary),
                         characters = state.value.characters,
                         favoriteCharacters = stateFav.value.charactersSet, // personajes favoritos
                         onToggleFavorite = { character -> viewModelDB.toggleFavorite(character) })

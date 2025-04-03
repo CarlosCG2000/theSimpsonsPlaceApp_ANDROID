@@ -9,18 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -39,18 +33,15 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import es.upsa.mimo.thesimpsonplace.R
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesStateUI
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesList.ListQuotesViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDBViewModel
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesListFav.ListQuotesDbStateUI
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun QuotesFilterScreen(
@@ -67,7 +58,6 @@ fun QuotesFilterScreen(
     val stateFav: State<ListQuotesDbStateUI> = viewModelDB.stateQuotesFav.collectAsState()
 
     var filterName by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
-    var debounceJob by remember { mutableStateOf<Job?>(null) } // Para cancelar el debounce
 
     var selectedItem by remember { mutableStateOf(3) }
     val options = listOf(1, 3, 5, 10)
@@ -100,51 +90,24 @@ fun QuotesFilterScreen(
         ) {
             val (textfield, segmentedPicker, listado) = createRefs()
 
-            // _______________ TEXTFIELD _______________
             Box(
-                modifier = Modifier
-                    .constrainAs(textfield) {
-                        top.linkTo(parent.top, margin = 10.dp)
-                        bottom.linkTo(segmentedPicker.top) // 🔹 Margen inferior
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .background(
-                        MaterialTheme.colorScheme.secondary,
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .padding(6.dp)
+                modifier = Modifier.constrainAs(textfield) {
+                                        top.linkTo(parent.top, margin = 10.dp)
+                                        bottom.linkTo(segmentedPicker.top) // 🔹 Margen inferior
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        width = Dimension.fillToConstraints
+                                    }
+                                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                                    .background(
+                                        MaterialTheme.colorScheme.secondary,
+                                        shape = MaterialTheme.shapes.small
+                                    )
+                                    .padding(6.dp)
             ) {
-                OutlinedTextField(
-                    value = filterName,
-                    onValueChange = { newValue ->
-                        filterName = newValue
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.nombre_del_personaje),
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.ejemplos_personajes),
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    },
-                    trailingIcon = {
-                        if (filterName.text.isNotEmpty()) {
-                            IconButton(onClick = { filterName = TextFieldValue("") }) {
-                                Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth() // 🔹 Para que ocupe todo el ancho del Box
-                )
+                MySearchTextField(nameFilter = filterName,
+                    valueChange = { newValue -> filterName = newValue })
             }
-            // _________________________________________
 
             SegmentedPicker(
                 options = options,

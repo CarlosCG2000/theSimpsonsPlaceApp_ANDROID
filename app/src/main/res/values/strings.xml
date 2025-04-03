@@ -108,4 +108,5 @@
     <string name="jugar_de_nuevo">¿Jugar de nuevo?</string>
     <string name="reset_history_statistics">Reset History Statistics</string>
     <string name="cerrar_historial">Cerrar Historial</string>
+    <string name="borrar_texto">Borrar texto</string>
 </resources>

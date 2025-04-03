@@ -40,8 +40,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarQuoteComponent
-import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavQuotesItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 
 @Composable
 fun QuotesGameScreen(

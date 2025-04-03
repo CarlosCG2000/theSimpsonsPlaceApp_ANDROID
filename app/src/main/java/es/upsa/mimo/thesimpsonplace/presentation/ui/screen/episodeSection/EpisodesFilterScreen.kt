@@ -14,11 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -29,8 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButtonDefaults.colors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -62,6 +58,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
@@ -208,32 +205,8 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                 )
                 .padding(6.dp))
             {
-                OutlinedTextField(
-                    value = filterTitle,
-                    onValueChange = { newValue ->
-                        filterTitle = newValue
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.nombre_del_personaje),
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.ejemplos_personajes),
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    },
-                    trailingIcon = {
-                        if (filterTitle.text.isNotEmpty()) {
-                            IconButton(onClick = { filterTitle = TextFieldValue("") }) {
-                                Icon(imageVector = Icons.Filled.Close, contentDescription = "Borrar texto")
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth() // 🔹 Para que ocupe todo el ancho del Box
-                )
+                MySearchTextField(nameFilter = filterTitle,
+                                    valueChange = { newValue -> filterTitle = newValue })
             }
             // _________________________________________
             // _______________ FILTRA 1 DE FILTRO: 2 DatePickerDialogComponent y Switch _______________
