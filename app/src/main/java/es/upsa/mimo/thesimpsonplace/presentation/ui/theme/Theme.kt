@@ -35,8 +35,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun TheSimpsonPlaceTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+
     dynamicColor: Boolean =  false, // ❌ Desactiva los colores dinámicos, usará exclusivamente los colores de DarkColorScheme y LightColorScheme.
     content: @Composable () -> Unit
 ) {
