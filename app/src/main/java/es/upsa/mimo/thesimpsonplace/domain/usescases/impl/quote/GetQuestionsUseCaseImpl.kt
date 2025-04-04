@@ -8,5 +8,6 @@ import javax.inject.Inject
 
 class GetQuestionsUseCaseImpl @Inject constructor(val repository: QuoteRepository): GetQuestionsUseCase {
     override suspend operator fun invoke(): List<Question> =
-         repository.getQuotes().map { it.toQuestion() }
+        repository.getQuotes().getOrElse { emptyList() } // Si hay error, devuelve una lista vacía
+                              .map { it.toQuestion() }
 }

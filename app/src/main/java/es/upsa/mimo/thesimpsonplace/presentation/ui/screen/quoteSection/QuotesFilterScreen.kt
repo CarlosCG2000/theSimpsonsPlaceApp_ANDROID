@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,7 +63,7 @@ fun QuotesFilterScreen(
 
     var filterName by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
 
-    var selectedItem by remember { mutableStateOf(3) }
+    var selectedItem by remember { mutableIntStateOf(3) }
     val options = listOf(1, 3, 5, 10)
 
    LaunchedEffect(filterName.text, selectedItem) {
@@ -108,10 +108,7 @@ fun QuotesFilterScreen(
             SegmentedPicker(
                 options = options,
                 selectedOption = selectedItem,
-                onOptionSelected = {
-                        selectedItem = it
-                        viewModel.getQuotes(numElementos = selectedItem, textPersonaje = filterName.text)
-                },
+                onOptionSelected = { selectedItem = it },
                 modifier = Modifier.layoutId("idSegmentedPicker")
                                     .fillMaxWidth()
                                     .padding(horizontal = 10.dp)
@@ -119,19 +116,20 @@ fun QuotesFilterScreen(
             )
 
             // Contenido centrado en el resto de la pantalla
-            Box(
-                modifier = Modifier.layoutId("idListado"),
-                contentAlignment = Alignment.Center // 🔹 Centra el contenido
-            ) {
-                if (state.value.isLoading) {
-                    CircularProgressIndicator(color = Color.Yellow)
-                } else {
-                    ListQuotes(
-                        quotes = state.value.quotes,
-                        favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
-                        onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
-                    )
+            if (state.value.isLoading) {
+                Box(
+                    modifier = Modifier.layoutId("idListado"),
+                    contentAlignment = Alignment.Center // 🔹 Centra el contenido
+                ) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 }
+            } else {
+                ListQuotes(
+                    modifier = Modifier.layoutId("idListado"),
+                    quotes = state.value.quotes,
+                    favoriteQuotes = stateFav.value.quotesSet, // saber que citas son favoritas
+                    onToggleFavorite = { quote -> viewModelDB.toggleFavorite(quote) }
+                )
             }
         }
     }

@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -89,6 +91,16 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
             viewModelEpisode.getAllEpisodes()
     }
 
+    LaunchedEffect( stateCharactersDB.value.characters,
+                    stateQuotesDB.value.quotes,
+                    stateEpisodesDB.value.episodesFav) {
+        viewModel.calculateTopCharactersAndSeasons(
+            favoriteCharacters = stateCharactersDB.value.characters,
+            favoriteQuotes = stateQuotesDB.value.quotes,
+            favoriteEpisodes = stateEpisodesDB.value.episodesFav
+        )
+    }
+
     Scaffold(
         topBar = {
             TopBarProfileComponent(
@@ -108,7 +120,9 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
             } else {
 
                 Column(
-                    modifier = Modifier.fillMaxSize(), // Ocupa toda la pantalla
+                    modifier = Modifier
+                        .fillMaxSize() // Ocupa toda la pantalla
+                                       .verticalScroll(rememberScrollState()), // Añadir Scroll Vertical
                     verticalArrangement = Arrangement.Center, // Centra verticalmente dentro de Column
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { // Centra horizontalmente
@@ -134,36 +148,13 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
                         stateQuotesDB.value.quotesSet.size
                     ))
 
-                    stateCharactersDB.value.characters // Listado de personajes favoritas// nombre: String
-                    stateQuotesDB.value.quotes // Listado de citas favoritas //  personaje: String
-
-                    val quoteCounts = stateQuotesDB.value.quotes
-                        .groupingBy { it.personaje }  // Agrupar por personaje
-                        .eachCount()                   // Contar ocurrencias
-
-                    // Paso 2: Filtrar solo los personajes favoritos y mapear con el conteo de citas
-                    val topCharacters = stateCharactersDB.value.characters
-                        .map { character ->
-                            character to (quoteCounts[character.nombre] ?: 0) // Obtener cuántas citas tiene
-                        }
-                        .sortedByDescending { it.second } // Paso 3: Ordenar por cantidad de citas
-                        .take(3) // Tomar los 3 primeros
-                        .map { it.first }
-
-                    // Obtener las 3 temporadas con mas episodios favoritos.
-                    val topSeasons = stateEpisodesDB.value.episodesFav
-                        .groupingBy { it.temporada }  // 🔹 Agrupar por temporada
-                        .eachCount()  // 🔹 Contar cuántos episodios favoritos tiene cada temporada
-                        .entries
-                        .sortedByDescending { it.value }  // 🔹 Ordenar por cantidad de episodios favoritos
-                        .take(3)  // 🔹 Tomar las 3 temporadas con más episodios favoritos
-                        .map { it.key to it.value }  // 🔹 Obtener el nombre de la temporada y el número de episodios favoritos
-
-                    TopCharactersAndSeasons(top3Characters = topCharacters, top3Seasons = topSeasons)
+                    TopCharactersAndSeasons(top3Characters = userPreference.topCharacters, top3Seasons = userPreference.topSeasons)
 
                     HistoryGameStatistics(totalQuestions = gameStats.value.result.second,
                                         correctAnswers = gameStats.value.result.first,
                                         size = 125.dp)
+
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
@@ -190,7 +181,7 @@ fun TextoPrincipal(text: String) {
 
 //______ LISTADOS HORIZONTALES TOP 'Characters' y 'Seasons' ________________________
 @Composable
-fun TopCharactersAndSeasons(top3Characters: List<Character>, top3Seasons: List<Pair<Int, Int>>) {
+fun TopCharactersAndSeasons(top3Characters: List<Pair<Character, Int>>, top3Seasons: List<Pair<Int, Int>>) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -235,12 +226,12 @@ fun TopCharactersAndSeasons(top3Characters: List<Character>, top3Seasons: List<P
 }
 
 @Composable
-fun CharacterCard(character: Character) {
+fun CharacterCard(character: Pair<Character, Int>) {
     val context = LocalContext.current
 
-    val imageResId = remember(character.imagen) {
+    val imageResId = remember(character.first.imagen) {
         val id = context.resources.getIdentifier( // ⚠️ getIdentifier, esta deprecado pero aún funciona y sigue siendo la única opción dinámica.
-            character.imagen?.lowercase(),
+            character.first.imagen?.lowercase(),
             "drawable",
             context.packageName
         )
@@ -249,7 +240,7 @@ fun CharacterCard(character: Character) {
 
     Column(
         modifier = Modifier
-            .height(180.dp)
+            .height(205.dp) // 180.dp
             .width(190.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.secondary) // Color similar al de la imagen
@@ -259,17 +250,25 @@ fun CharacterCard(character: Character) {
     ) {
         Image(
             painter = painterResource(imageResId), // Cargar imagen de recursos
-            contentDescription = character.nombre,
+            contentDescription = character.first.nombre,
             modifier = Modifier.size(100.dp),
             contentScale = ContentScale.Fit
         )
         Text(
-            text = character.nombre,
+            text = character.first.nombre,
             color =  MaterialTheme.colorScheme.onSecondaryContainer,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             fontWeight = Bold,
             modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.citas_favoritas, character.second),
+            color =  MaterialTheme.colorScheme.onSecondaryContainer,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
@@ -280,7 +279,7 @@ fun SeasonCard(season: Pair<Int, Int>) {
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.secondary) // Color similar al de la imagen
-            .padding(12.dp),
+            .padding(14.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(

@@ -107,4 +107,5 @@
     <string name="reset_history_statistics">Reset History Statistics</string>
     <string name="cerrar_historial">Close History</string>
     <string name="borrar_texto">Delete text</string>
+    <string name="citas_favoritas">%1$s favorite quotes</string>
 </resources>

@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.data.entities.user.UserPreference
+import es.upsa.mimo.thesimpsonplace.domain.models.Character
+import es.upsa.mimo.thesimpsonplace.domain.models.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,5 +66,35 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
              it.copy(loggedIn = false)
          }
      }
+
+    fun calculateTopCharactersAndSeasons(
+        favoriteCharacters: List<Character>,
+        favoriteQuotes: List<Quote>,
+        favoriteEpisodes: List<Episode>
+    ) {
+        viewModelScope.launch {
+            val quoteCounts = favoriteQuotes
+                .groupingBy { it.personaje } // Agrupar por personaje
+                .eachCount() // Contar ocurrencias
+
+            // Paso 2: Filtrar solo los personajes favoritos y mapear con el conteo de citas
+            val topCharacters = favoriteCharacters
+                .map { character -> character to (quoteCounts[character.nombre] ?: 0) }
+                .sortedByDescending { it.second }  // Obtener cuántas citas tiene
+                .take(3) // Tomar los 3 primeros
+                // .map { it.first } // Obtener solo el personaje y no el numero de citas favoritas
+
+            // Obtener las 3 temporadas con mas episodios favoritos.
+            val topSeasons = favoriteEpisodes
+                .groupingBy { it.temporada } // 🔹 Agrupar por temporada
+                .eachCount() // 🔹 Contar cuántos episodios favoritos tiene cada temporada
+                .entries
+                .sortedByDescending { it.value }// 🔹 Ordenar por cantidad de episodios favoritos
+                .take(3) // 🔹 Tomar las 3 temporadas con más episodios favoritos
+                .map { it.key to it.value } // 🔹 Obtener el nombre de la temporada y el número de episodios favoritos
+
+            _userState.update { it.copy(topCharacters = topCharacters, topSeasons = topSeasons) }
+        }
+    }
 
 }

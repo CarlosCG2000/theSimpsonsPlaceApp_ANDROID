@@ -5,28 +5,50 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.QuoteDao
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+// Esta es la instancia de RetroFit
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object NetworkModule { // Object ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
+    private const val BASE_URL = "https://thesimpsonsquoteapi.glitch.me/" // Llamamos a la raiz del servidor (ApiRest)
 
+    // Creamos un objeto de tipo Retrofit
     @Provides
-    @Singleton // ✅ Solo necesitamos una instancia de Retrofit
+    @Singleton // Solo necesitamos una instancia de Retrofit
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://thesimpsonsquoteapi.glitch.me/")
-            .addConverterFactory(GsonConverterFactory.create()) // ✅ Usa Gson
+            .baseUrl(BASE_URL)
+            .client(createOkHttpClient()) // Cuando ejecutemos las peticiones veremos en el LogCat el resultado
+            .addConverterFactory(GsonConverterFactory.create()) // Usa Gson para convertir de json a nuestros objetos 'QuoteEntity'
             .build()
     }
 
     @Provides
     @Singleton
     fun provideQuoteDao(retrofit: Retrofit): QuoteDao {
-        return retrofit.create(QuoteDao::class.java) // ✅ Retrofit ya implementa la interfaz automáticamente - No añado 'QuoteDaoApi'
+        return retrofit.create( QuoteDao::class.java) // Retrofit ya implementa la interfaz automáticamente - No añado 'QuoteDaoApi'
     }
+
+    /** Podemos crear una instancia de Http con ciertas condiciones para verlo en el LogCat al hacer las llamadas */
+    private fun createOkHttpClient(): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+//          .connectTimeout(30, TimeUnit.SECONDS)
+//          .readTimeout(30, TimeUnit.SECONDS)
+//          .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
+
 }
 
 /**

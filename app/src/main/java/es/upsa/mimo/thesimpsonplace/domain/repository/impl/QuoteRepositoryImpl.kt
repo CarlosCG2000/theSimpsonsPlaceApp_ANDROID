@@ -8,7 +8,6 @@ import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.domain.mappers.toQuoteDb
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import okhttp3.internal.connection.Exchange
 import javax.inject.Inject
 
 // 'QuoteRepositoryImpl' usa inyección de dependencias (api y db).
@@ -16,15 +15,17 @@ import javax.inject.Inject
 class QuoteRepositoryImpl @Inject constructor(private val apiDao: QuoteDao,
                                                private val databaseDao: QuoteDatabaseDao) : QuoteRepository {
 
-    override suspend fun getQuotes(numElementos: Int, textPersonaje: String): List<Quote> =
+    override suspend fun getQuotes(numElementos: Int, textPersonaje: String): Result<List<Quote>> =
         // return withContext(Dispatchers.IO) { // no es necesario en un repositorio si la función ya es suspend, porque Retrofit maneja el cambio de contexto automáticamente.
         try {
-            apiDao.getQuotes(numElementos, textPersonaje).map { quoteDto ->
-                quoteDto.toQuote() // Convertimos a Quote
-            }
+            Result.success(
+                apiDao.getQuotes(numElementos, textPersonaje).map { quoteDto ->
+                    quoteDto.toQuote() // Convertimos a Quote
+                }
+            )
         } catch (e: Exception){
-            // ERROR ...
-            emptyList<Quote>()
+            Result.failure(e) // recibe una excepcion
+            // emptyList<Quote>()
         }
         // }
 
