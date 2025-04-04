@@ -10,6 +10,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+// Si tuviera muchas llamadas a la Api podria crear una funcion inline para simplicar el manejo de errores
+/**
+ inline fun <T> tryCatching( block:() -> T): Result<T> =
+    try {
+        Result.success(block())
+    } catch (e: Exception){
+        Result.failure(e)
+    }
+*/
+
 // 'QuoteRepositoryImpl' usa inyección de dependencias (api y db).
 // Separa API y BD, cumpliendo el Principio de Responsabilidad Única (SRP).
 class QuoteRepositoryImpl @Inject constructor(private val apiDao: QuoteDao,
