@@ -9,9 +9,11 @@ data class QuoteEntity(
     @PrimaryKey(autoGenerate = false) // importante poner clave primaria
     val cita: String,
     val personaje: String,
-    val imagen: URL
+    /**  @SerializedName("image") */ val imagen: URL
 ){
     companion object {
         const val TABLE_NAME = "quotes"
     }
 }
+
+

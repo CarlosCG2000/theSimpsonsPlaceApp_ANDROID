@@ -58,7 +58,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose) // View Model
     implementation(libs.coil.compose) // Coil Compose (cargar imagenes web)
     implementation(libs.androidx.material.icons.extended) // Material Icons Extension (para tener mas iconos)
-    implementation(libs.gson)  // GSON
+    implementation(libs.gson) // GSON
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.runtime)
