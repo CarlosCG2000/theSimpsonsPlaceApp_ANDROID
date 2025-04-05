@@ -6,6 +6,7 @@ plugins {
     kotlin("kapt")
     alias(libs.plugins.hilt)
     // alias(libs.plugins.ksp) // NUEVO
+    alias(libs.plugins.screenshot) // Test de captura de pantalla
 }
 
 android {
@@ -31,16 +32,21 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
+
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true // Test de captura de pantalla
 }
 
 dependencies {
@@ -85,6 +91,8 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    screenshotTestImplementation(libs.androidx.compose.ui.tooling)
 
     // Esta configuración de dependencia se utiliza para agregar bibliotecas que son necesarias para ejecutar pruebas de instrumentación. Estas pruebas se ejecutan en un dispositivo Android real o en un emulador.
     androidTestImplementation(libs.androidx.junit)

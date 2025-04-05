@@ -33,6 +33,7 @@ androidXTest = "1.6.1" # Reemplaza con la versión que necesites
 mockito = "5.10.0" # Reemplaza con la versión que necesites
 mockitoKotlin = "5.1.0" # Reemplaza con la versión que necesites
 mockk = "1.13.8" # Reemplaza con la versión que necesites
+screenshot = "0.0.1-alpha09"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -81,6 +82,8 @@ mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mo
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
+
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
@@ -88,4 +91,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"} 
 
