@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Homer Simpson",
+        "image": "Homer_Simpson"
+    },
+    {
+        "name": "Marge Simpson",
+        "image": "Marge"
+    },
+    {
+        "name": "Bart Simpson",
+        "image": "Bart"
+    },
+    {
+        "name": "Carl Carlson",
+        "image": "Carl_Carlson"
+    },
+    {
+        "name": "Maggie Simpson",
+        "image": "Maggie"
+    },
+    {
+        "name": "Apu Nahasapeemapetilon",
+        "image": "Apu_Nahasapeemapetilon"
+    },
+    {
+        "name": "Barney Gumble",
+        "image": "Barney_Gumble"
+    },
+    {
+        "name": "Ned Flanders",
+        "image": "Ned_Flanders"
+    },
+    {
+        "name": "Montgomery Burns",
+        "image": "Montgomery_Burns"
+    }
+]

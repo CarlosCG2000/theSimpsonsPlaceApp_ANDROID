@@ -1931,16 +1931,16 @@ Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`
 
 # FICHERO FILTER EPISODES:
 SCREEN:
-//    1.	Primer LaunchedEffect(Unit)
+//    1. Primer LaunchedEffect(Unit)
 //    •	Se ejecuta al iniciarse el Composable.
 //    •	Como stateAllEpisodes.value.episodes está vacío, llama a viewModelAllEpisodes.getAllEpisodes() para obtener los episodios.
 //    •	Esto actualiza stateAllEpisodes, lo que desencadena el siguiente LaunchedEffect.
 
-//    2.	Segundo LaunchedEffect(stateAllEpisodes.value.episodes)
+//    2. Segundo LaunchedEffect(stateAllEpisodes.value.episodes)
 //    •	Se ejecuta cuando stateAllEpisodes.value.episodes cambia.
 //    •	Cuando la lista de episodios se llena, llama a viewModel.updateEpisodes(stateAllEpisodes.value.episodes), lo que posiblemente también esté actualizando el estado y provocando otro renderizado.
 
-//    3.	Tercer LaunchedEffect con filtros
+//    3. Tercer LaunchedEffect con filtros
 //    •	Cualquier cambio en filterTitle, filterMinDate, filterMaxDate, etc., dispara otro LaunchedEffect, con un delay(350) de debounce.
 //    •	Si stateAllEpisodes.value.episodes se actualiza varias veces en cascada, podría estar generando múltiples llamadas.
 

@@ -76,13 +76,24 @@ dependencies {
     implementation(libs.okhttp) // NUEVO
     implementation(libs.okhttp.logging.interceptor) // NUEVO
 
+    // Esta configuración de dependencia se utiliza para agregar bibliotecas que solo son necesarias para ejecutar pruebas unitarias locales
+    // Ejemplos comunes de bibliotecas que se agregan con testImplementation son JUnit (para escribir pruebas unitarias en Java/Kotlin) y Mockito (para crear objetos simulados).
     testImplementation(libs.junit)
+    // Nuevas dependencias de prueba
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // Esta configuración de dependencia se utiliza para agregar bibliotecas que son necesarias para ejecutar pruebas de instrumentación. Estas pruebas se ejecutan en un dispositivo Android real o en un emulador.
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(kotlin("test"))
 }
 
 

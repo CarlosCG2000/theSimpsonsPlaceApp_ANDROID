@@ -1,0 +1,44 @@
+[
+    {
+        "id": 6660,
+        "name": "Homer Simpson",
+        "normalized_name": "homer simpson",
+        "gender": "m"
+    },
+    {
+        "id": 71,
+        "name": "Marge Simpson",
+        "normalized_name": "marge simpson",
+        "gender": "f"
+    },
+    {
+        "id": 184,
+        "name": "Apu Nahasapeemapetilon",
+        "normalized_name": "apu nahasapeemapetilon",
+        "gender": "m"
+    },
+    {
+        "id": 85,
+        "name": "Barney Gumble",
+        "normalized_name": "barney gumble",
+        "gender": "m"
+    },
+    {
+        "id": 72,
+        "name": "Bart Simpson",
+        "normalized_name": "bart simpson",
+        "gender": "m"
+    },
+    {
+        "id": 186,
+        "name": "Carl Carlson",
+        "normalized_name": "carl carlson",
+        "gender": "m"
+    },
+    {
+        "id": 67,
+        "name": "Maggie Simpson",
+        "normalized_name": "maggie simpson",
+        "gender": ""
+    }
+]
