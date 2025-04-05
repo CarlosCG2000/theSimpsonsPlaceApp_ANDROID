@@ -92,7 +92,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 
-    screenshotTestImplementation(libs.androidx.compose.ui.tooling)
+    screenshotTestImplementation(libs.androidx.compose.ui.tooling) // Test de captura de pantalla
 
     // Esta configuración de dependencia se utiliza para agregar bibliotecas que son necesarias para ejecutar pruebas de instrumentación. Estas pruebas se ejecutan en un dispositivo Android real o en un emulador.
     androidTestImplementation(libs.androidx.junit)

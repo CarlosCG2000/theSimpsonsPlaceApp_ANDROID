@@ -100,6 +100,13 @@ fun MenuScreen(  /** 4 navegaciones */
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
-fun MenuScreenPreview() {
-    MenuScreen( {},{}, {}, {})
+private fun MenuScreenPreview() {
+
+    MenuScreen( {},
+                {},
+                {},
+                {})
+
 }
+
+

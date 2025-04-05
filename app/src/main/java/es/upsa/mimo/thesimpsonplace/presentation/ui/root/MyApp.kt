@@ -23,3 +23,4 @@ fun MyApp(darkModeViewModel: ProfileViewModel = hiltViewModel()) {
         NavegacionApp()
     }
 }
+
