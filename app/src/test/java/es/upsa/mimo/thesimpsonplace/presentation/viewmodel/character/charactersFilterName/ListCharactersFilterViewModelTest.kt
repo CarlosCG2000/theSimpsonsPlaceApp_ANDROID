@@ -52,7 +52,7 @@ class ListCharactersFilterViewModelTest {
             Character(id = 1, nombre = "Marge Simpson", genero = Gender.Female, imagen = "marge", esFavorito = false)
         )
 
-        coEvery { getFilterNameCharactersUseCase("homer") } returns filteredCharacters
+        coEvery { getFilterNameCharactersUseCase("homer") } returns filteredCharacters // ojo, returns no return
 
         // When
         viewModel.getFilterNameCharacters("homer")
