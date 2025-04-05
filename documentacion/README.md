@@ -1534,8 +1534,6 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 #### SEGUIMOS
 ...
 
-
-- AÑADIR DE LA PANTALLA DE `DETALLES EPISODIOS` A NAVEGAR A DEMÁS PANTALLAS (EN FILTRO QUE SE QUEDE LOS DATOS FILTRADO) ⚠️
 - REALIZAR EL `HILT` PARA EL `TESTING` CON LOS `DATOS DE TEST` ⚠️
 - HACER BIEN LA COMPROBACIÓN DE LOS `LOGGER` ⚠️
 - ERRORES SON LAS DEPENDENCIAS QUE NO ME FUNCIONA EN KPT Y EL IDIOMA DEL DATASTORE POR DEFECTO ❌
@@ -1931,8 +1929,54 @@ Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`
     2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
     3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').
 
-# EXPLICACIONES DUDAS IMPORTANTES --> CHAT GPT
+# FICHERO FILTER EPISODES:
+SCREEN:
+//    1.	Primer LaunchedEffect(Unit)
+//    •	Se ejecuta al iniciarse el Composable.
+//    •	Como stateAllEpisodes.value.episodes está vacío, llama a viewModelAllEpisodes.getAllEpisodes() para obtener los episodios.
+//    •	Esto actualiza stateAllEpisodes, lo que desencadena el siguiente LaunchedEffect.
 
+//    2.	Segundo LaunchedEffect(stateAllEpisodes.value.episodes)
+//    •	Se ejecuta cuando stateAllEpisodes.value.episodes cambia.
+//    •	Cuando la lista de episodios se llena, llama a viewModel.updateEpisodes(stateAllEpisodes.value.episodes), lo que posiblemente también esté actualizando el estado y provocando otro renderizado.
+
+//    3.	Tercer LaunchedEffect con filtros
+//    •	Cualquier cambio en filterTitle, filterMinDate, filterMaxDate, etc., dispara otro LaunchedEffect, con un delay(350) de debounce.
+//    •	Si stateAllEpisodes.value.episodes se actualiza varias veces en cascada, podría estar generando múltiples llamadas.
+
+# AÑADIR DE LA PANTALLA DE `DETALLES EPISODIOS` A NAVEGAR A OTRAS DEMÁS PANTALLAS (EN FILTRO QUE SE QUEDE LOS DATOS FILTRADO) ✅
+
+¿Qué es SavedStateHandle?
+Es un mecanismo que permite guardar y restaurar estado automáticamente en el ViewModel, incluso cuando el proceso se destruye y vuelve a crearse (por ejemplo, al rotar pantalla o volver atrás desde otra pantalla). Muy útil en Compose.
+
+Guardar en SavedStateHandle estos valores:
+• filterTitle
+• filterMinDate
+• filterMaxDate
+• filterSeason
+• filterEpisode
+• isView
+• isOrder
+
+Con esto, los filtros se persistirán automáticamente en el SavedStateHandle. Cuando vuelvas desde la pantalla de detalles, tu ViewModel se restaurará con los mismos filtros sin necesidad de reconstruirlos desde cero. Esto preserva la experiencia del usuario y mejora el rendimiento.
+
+🎯 Objetivo:
+
+Mantener el filtro aplicado al volver atrás desde la pantalla de detalles y que se aplique automáticamente al regresar, sin necesidad de que el usuario toque nada.
+⸻
+
+🧠 ¿Por qué no se mantiene el filtro ahora?
+Porque estás usando un var episodeFilter by remember { ... }, que solo guarda el estado mientras Composable esté en memoria.
+Cuando vas a la pantalla de detalles y vuelves, Compose puede recomponer desde cero y el estado inicial de episodeFilter vuelve a ser el valor por defecto: EpisodeFilter().
+
+
+Quiero la linea que te diga por donde vas en el listado. O ver como ahcer para que empiece por el principio del listado.
+Quiero un boton que borre y deje por defecto todo el listado.
+
+....
+
+
+# EXPLICACIONES DUDAS IMPORTANTES --> CHAT GPT
 
 #
 

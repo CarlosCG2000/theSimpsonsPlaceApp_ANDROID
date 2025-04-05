@@ -3,6 +3,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.ui.component.episode
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,9 +16,10 @@ fun ListEpisodes(modifier: Modifier,
                  allEpisodes: List<Episode>, // para sacar solo el indice de los episodios
                  onEpisodeSelected: (String) -> Unit,
                  episodesFavDbSet: Set<String>,
-                 episodesViewDbSet: Set<String>) {
+                 episodesViewDbSet: Set<String>,
+                 listState: LazyListState = LazyListState()) {
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier, state = listState) {
 
         items(episodes, key = { it.id }) {episode ->
             val indiceEpisodio = allEpisodes.indexOfFirst { it.id == episode.id }.takeIf { it != -1 } ?: -1
@@ -27,7 +29,9 @@ fun ListEpisodes(modifier: Modifier,
             val isFavorite = episode.id in episodesFavDbSet
             val isView = episode.id in episodesViewDbSet
 
-            EpisodeItem(Modifier.fillMaxWidth().padding(16.dp),
+            EpisodeItem(Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
                 indiceEpisodio,
                 episode,
                 onEpisodeSelected,
@@ -35,7 +39,6 @@ fun ListEpisodes(modifier: Modifier,
                 isView //.value
             )
         }
-
     }
-
 }
+

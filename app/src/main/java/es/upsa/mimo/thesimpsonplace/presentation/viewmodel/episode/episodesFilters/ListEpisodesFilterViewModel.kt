@@ -1,10 +1,10 @@
 package es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesFilters
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
+import es.upsa.mimo.thesimpsonplace.domain.models.EpisodeFilter
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByChapterUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByDateUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeasonUseCase
@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,56 +24,51 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
                                                         val getEpisodesBySeasonUseCase: GetEpisodesBySeasonUseCase,
                                                         val getEpisodesByViewUseCase: GetEpisodesByViewUseCase,
                                                         val getEpisodesOrderUseCase: GetEpisodesOrderUseCase,
-                                                        val getEpisodesByChapterUseCase: GetEpisodesByChapterUseCase): ViewModel() {
+                                                        val getEpisodesByChapterUseCase: GetEpisodesByChapterUseCase,
+                                                        /*private val savedStateHandle: SavedStateHandle*/): ViewModel() {
 
-    private val _stateEpisode: MutableStateFlow<ListEpisodesFilterStateUI> = MutableStateFlow(ListEpisodesFilterStateUI()) // Asincrono esta en un hilo secundario
-
+    private val _stateEpisode: MutableStateFlow<ListEpisodesFilterStateUI> = MutableStateFlow(ListEpisodesFilterStateUI())
     val stateEpisode: StateFlow<ListEpisodesFilterStateUI> = _stateEpisode.asStateFlow()
+    private var allEpisodes: List<Episode> = emptyList()
 
-    private var allEpisodes: List<Episode> = emptyList() // 🔹 Lista completa de episodios
+    private val _episodeFilter = MutableStateFlow(EpisodeFilter())
+    val episodeFilter = _episodeFilter.asStateFlow()
+//  private val _episodeFilter: StateFlow<EpisodeFilter> = savedStateHandle.getStateFlow("filter", EpisodeFilter())
+//  val episodeFilter = _episodeFilter
 
-    private val defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 17) }.timeInMillis
-
-    fun updateEpisodes(episodes: List<Episode>) {
-        Log.i("ListEpisodesFilterViewModel", "Recibidos ${episodes.size} episodios para filtrar")
-        allEpisodes = episodes // Almacena la lista completa
-
-        // if (_stateEpisode.value.episodes != allEpisodes) // Verificar si realmente cambia
-        _stateEpisode.update { it.copy(episodes = episodes, isLoading = false) }
-
-        Log.i("ListEpisodesFilterViewModel", "stateEpisode actualizado: ${_stateEpisode.value.episodes.size} episodios")
+    fun updateField(update: (EpisodeFilter) -> EpisodeFilter) {
+        _episodeFilter.value = update(_episodeFilter.value)
     }
 
-    fun getEpisodesFilter(title: String = "",
-                          minDate: Date = Date(defaultMinDate), maxDate: Date = Date(),
-                          season: Int = 0, episode: Int = 0,
-                          isView: Boolean = false, order: Boolean = false){
+    fun updateEpisodes(episodes: List<Episode>) {
+        allEpisodes = episodes
+        _stateEpisode.update { it.copy(episodes = episodes, isLoading = false) }
+    }
+
+    fun getEpisodesFilter(episode: EpisodeFilter){
 
         viewModelScope.launch {
             _stateEpisode.update { it.copy(isLoading = true) }
 
-            // Comenzamos con la lista completa (allEpisodes)
-            var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase(title, allEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByDateUseCase(minDate, maxDate, filteredEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesBySeasonUseCase(season, filteredEpisodes)
-            if (filteredEpisodes.isNotEmpty()) filteredEpisodes = getEpisodesByChapterUseCase(episode, filteredEpisodes)
-                                        /** solo quiero que se filtre cuando sea true el 'isView' */
-            if (filteredEpisodes.isNotEmpty() && isView) filteredEpisodes = getEpisodesByViewUseCase(true, filteredEpisodes)
+            var filteredEpisodes: List<Episode> = getEpisodesByTitleUseCase(episode.title.text, allEpisodes)
 
-/**        getEpisodesFilter() usa viewModelScope.launch, lo cual es correcto, pero cada filtro se aplica secuencialmente, lo que puede ser ineficiente. 🔧 Solución: Usa filterNotNull() y un pipeline funcional para filtrar de forma más limpia:
-           val filteredEpisodes = allEpisodes.value
-                .filter { it.titulo.contains(title, ignoreCase = true) }
-                .filter { it.fecha in minDate..maxDate }
-                .filterNotNull { if (season != 0) it.temporada == season else null }
-                .filterNotNull { if (episode != 0) it.episodio == episode else null }
-                .filterNotNull { if (isView) it.visto else null }
- */
+            if (filteredEpisodes.isNotEmpty())
+                filteredEpisodes = getEpisodesByDateUseCase(episode.minDate, episode.maxDate, filteredEpisodes)
+
+            if (filteredEpisodes.isNotEmpty())
+                filteredEpisodes = getEpisodesBySeasonUseCase(episode.season, filteredEpisodes)
+
+            if (filteredEpisodes.isNotEmpty())
+                filteredEpisodes = getEpisodesByChapterUseCase(episode.episode, filteredEpisodes)
+                                        /** solo quiero que se filtre cuando sea true el 'isView' */
+            if (filteredEpisodes.isNotEmpty() && episode.isViewEnabled)
+                filteredEpisodes = getEpisodesByViewUseCase(true, filteredEpisodes)
 
             _stateEpisode.update {
                 it.copy(episodes = filteredEpisodes) // Orden inverso, isLoading = false)
             }
 
-            getEpisodesOrder(order)
+            getEpisodesOrder(episode.isOrderDesc)
         }
     }
 

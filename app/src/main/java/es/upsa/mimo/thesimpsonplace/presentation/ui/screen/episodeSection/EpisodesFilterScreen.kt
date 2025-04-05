@@ -1,6 +1,5 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,11 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -38,7 +40,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,14 +49,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
+import es.upsa.mimo.thesimpsonplace.domain.models.EpisodeFilter
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
@@ -74,6 +76,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.String
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,92 +89,44 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                          navigationArrowBack:() -> Unit) {
 
     var stateAllEpisodes: State<ListEpisodesStateUI> = viewModelAllEpisodes.episodesState.collectAsState()
-    var state: State<ListEpisodesFilterStateUI> = viewModel.stateEpisode.collectAsState() // pasa a ser sincrono para manejarlo en la UI
+    var state: State<ListEpisodesFilterStateUI> = viewModel.stateEpisode.collectAsState()
     val stateFavOrView: State<ListEpisodesDbStateUI> = viewModelDB.stateEpisodesFavOrView.collectAsState()
 
-    Log.i("EpisodesFilterScreen", "state.episodes size: ${state.value.episodes.size}")
-
     // _____________________ FILTROS _____________________
-    var filterTitle by remember { mutableStateOf(TextFieldValue("")) } // Estado del campo usuario
-
-    var defaultMinDate: Long = Calendar.getInstance().apply {set(1989, Calendar.DECEMBER, 16) }.timeInMillis
-    val filterMinDate = rememberDatePickerState( initialSelectedDateMillis = defaultMinDate ) // ✅ Correcto: convertir a milisegundos
+    val episodeFilter by viewModel.episodeFilter.collectAsState()
     var showDialogMinDate by remember { mutableStateOf(false) }
-
-    var filterMaxDate = rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())// Estado del campo usuario
     var showDialogMaxDate by remember { mutableStateOf(false) }
-
-    var isViewEnabled by remember { mutableStateOf(false) }
-
-    var filterSeason by remember { mutableIntStateOf(0) }
     val uniqueSeasons = listOf(0) + stateAllEpisodes.value.episodes.map { it.temporada }.distinct()
-
-    var filterEpisode by remember { mutableIntStateOf(0) }
     val uniqueEpisodes =  listOf(0) + stateAllEpisodes.value.episodes.map { it.episodio }.distinct()
-
-    var isOrder by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
     // ___________________________________________________
 
-    // **🛠 Depuración: Ver qué está pasando con los episodios**
-    Log.i("EpisodesFilterScreen", "stateAllEpisodes.isLoading: ${stateAllEpisodes.value.isLoading}")
-    Log.i("EpisodesFilterScreen", "stateAllEpisodes.episodes size: ${stateAllEpisodes.value.episodes.size}")
-
-//    1.	Primer LaunchedEffect(Unit)
-//    •	Se ejecuta al iniciarse el Composable.
-//    •	Como stateAllEpisodes.value.episodes está vacío, llama a viewModelAllEpisodes.getAllEpisodes() para obtener los episodios.
-//    •	Esto actualiza stateAllEpisodes, lo que desencadena el siguiente LaunchedEffect.
     LaunchedEffect(Unit) {
         if (stateAllEpisodes.value.episodes.isEmpty() && !stateAllEpisodes.value.isLoading) {
-            viewModelAllEpisodes.getAllEpisodes() // cargue todos los episodios de primeras
-            Log.i("EpisodesFilterScreen", "Llamando a getAllEpisodes()")
+            viewModelAllEpisodes.getAllEpisodes()
         }
     }
 
-//    2.	Segundo LaunchedEffect(stateAllEpisodes.value.episodes)
-//    •	Se ejecuta cuando stateAllEpisodes.value.episodes cambia.
-//    •	Cuando la lista de episodios se llena, llama a viewModel.updateEpisodes(stateAllEpisodes.value.episodes), lo que posiblemente también esté actualizando el estado y provocando otro renderizado.
     LaunchedEffect(stateAllEpisodes.value.episodes) {
-        if (stateAllEpisodes.value.episodes.isNotEmpty()){ //&& state.value.episodes != stateAllEpisodes.value.episodes) {
-            Log.i("EpisodesFilterScreen", "Actualizando filtros con episodios cargados")
+        if (stateAllEpisodes.value.episodes.isNotEmpty()){
             viewModel.updateEpisodes(stateAllEpisodes.value.episodes)
         }
     }
 
-//    3.	Tercer LaunchedEffect con filtros
-//    •	Cualquier cambio en filterTitle, filterMinDate, filterMaxDate, etc., dispara otro LaunchedEffect, con un delay(350) de debounce.
-//    •	Si stateAllEpisodes.value.episodes se actualiza varias veces en cascada, podría estar generando múltiples llamadas.
-    LaunchedEffect(filterTitle.text, filterMinDate.selectedDateMillis, filterMaxDate.selectedDateMillis,
-        filterSeason, filterEpisode, isViewEnabled, isOrder) {
-        if (stateAllEpisodes.value.episodes.isNotEmpty()) { // Solo filtra si ya hay episodios cargados
+    LaunchedEffect(episodeFilter) {
+        if (stateAllEpisodes.value.episodes.isNotEmpty()) {
             delay(300) // Debounce
-            viewModel.getEpisodesFilter(
-                title = filterTitle.text,
-                minDate = filterMinDate.selectedDateMillis?.let { Date(it) }
-                    ?: Date(defaultMinDate),
-                maxDate = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                season = filterSeason,
-                episode = filterEpisode,
-                isView = isViewEnabled,
-                order = isOrder
-            )
-            Log.i("LaunchedEffect", "filterTitle: ${state.value.episodes}")
+            viewModel.getEpisodesFilter(episodeFilter)
+
+            // Scroll solo si hay elementos
+            if (state.value.episodes.isNotEmpty()) {
+                listState.scrollToItem(0) // vuelve arriba del todo en el listado
+            }
         }
     }
 
-    fun logicaFiltrado(title: String = filterTitle.text,
-                      minDate: Date = filterMinDate.selectedDateMillis?.let { Date(it) } ?: Date(defaultMinDate),
-                      maxDate: Date = filterMaxDate.selectedDateMillis?.let { Date(it) } ?: Date(),
-                      season: Int = filterSeason, episode: Int = filterEpisode,
-                      isView: Boolean = isViewEnabled, order: Boolean = isOrder
-    ){
-        viewModel.getEpisodesFilter(title = title,
-                                    minDate = minDate,
-                                    maxDate = maxDate,
-                                    season = season,
-                                    episode = episode,
-                                    isView = isView,
-                                    order = order)
-    }
+    val minDateState = rememberDatePickerState(initialSelectedDateMillis = episodeFilter.minDate.time) // si salgo de la pantalla lo recuerda pero no actualiza el filtro
+    val maxDateState = rememberDatePickerState(initialSelectedDateMillis = episodeFilter.maxDate.time)
 
     Scaffold(
         bottomBar = {
@@ -196,22 +151,24 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
         ){
             // @@@@@@@@@@@@ FILTROS @@@@@@@@@@@@
             // ______ TEXTFIELD ______
-            Box(modifier = Modifier.layoutId("idTextFieldFilter")
-                                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.secondary,
-                                        shape = MaterialTheme.shapes.small
-                                    )
-                                    .padding(6.dp))
+            Box(modifier = Modifier
+                .layoutId("idTextFieldFilter")
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .background(
+                    MaterialTheme.colorScheme.secondary,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(6.dp))
             {
-                MySearchTextField(nameFilter = filterTitle,
-                                    valueChange = { newValue -> filterTitle = newValue })
+                MySearchTextField(nameFilter = episodeFilter.title,
+                                    valueChange = { newValue -> viewModel.updateField { it.copy(title = newValue) } })
             }
             // ______ 2 DatePicker y 1 Switch ______
             Row (
-                modifier = Modifier.layoutId("idColumnDate")
-                                   .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                modifier = Modifier
+                    .layoutId("idColumnDate")
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
 
                 // DatePickerDialog solo se muestra cuando showDialogMinDate es true
@@ -219,10 +176,13 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     showDialogDate = showDialogMinDate,
                     onDismissRequest = { showDialogMinDate = false },
                     onAdmitRequest = { showDialogMinDate = true },
-                    filterDate = filterMinDate,
+                    filterDate = minDateState,
                     onClick = {
+                        // Actualizar el filtro con la nueva fecha seleccionada
+                        minDateState.selectedDateMillis?.let { date ->
+                            viewModel.updateField { it.copy(minDate = Date(date)) }
+                        }
                         showDialogMinDate = false
-                        logicaFiltrado()
                     },
                     title = stringResource(R.string.fecha_inicial)
                 )
@@ -232,10 +192,13 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     showDialogDate = showDialogMaxDate,
                     onDismissRequest = { showDialogMaxDate = false },
                     onAdmitRequest = { showDialogMaxDate = true },
-                    filterDate = filterMaxDate,
+                    filterDate = maxDateState,
                     onClick = {
+                        // Actualizar el filtro con la nueva fecha seleccionada
+                        maxDateState.selectedDateMillis?.let {date ->
+                            viewModel.updateField { it.copy(maxDate = Date(date)) }
+                        }
                         showDialogMaxDate = false
-                        logicaFiltrado()
                     },
                     title = stringResource(R.string.fechan_fin)
                 )
@@ -245,9 +208,9 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     Text(stringResource(R.string.visto))
 
                     Switch(
-                        checked = isViewEnabled,
+                        checked = episodeFilter.isViewEnabled,
                         onCheckedChange = {
-                            isViewEnabled = !isViewEnabled // logicaFiltrado()
+                            viewModel.updateField { it.copy(isViewEnabled = !episodeFilter.isViewEnabled ) }
                         },
                         colors = SwitchDefaults.colors(
                                 checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
@@ -256,6 +219,7 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                     )
                 }
             }
+
             // ______ 2 DropdownMenu y 1 IconButton ______
             Row(
                 modifier = Modifier
@@ -266,43 +230,56 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
 
                 MyDropdownMenuComponent(
                     label = stringResource(R.string.temporada),
-                    selectedItem = filterSeason,
+                    selectedItem = episodeFilter.season,
                     items = uniqueSeasons,
                     onItemSelected = { filterSeasonItem ->
-                        filterSeason = filterSeasonItem // logicaFiltrado(season = filterSeasonItem)
+                        viewModel.updateField { it.copy( season = filterSeasonItem ) }
                     }
                 )
 
                 MyDropdownMenuComponent(
                     label = stringResource(R.string.capitulo),
-                    selectedItem = filterEpisode,
+                    selectedItem = episodeFilter.episode,
                     items = uniqueEpisodes,
                     onItemSelected = { filterEpisodeItem ->
-                        filterEpisode = filterEpisodeItem // logicaFiltrado(episode = filterEpisodeItem)
+                        viewModel.updateField { it.copy( episode = filterEpisodeItem) }
                     }
                 )
 
                 IconButton(onClick = {
-                    isOrder = !isOrder
-                    viewModel.getEpisodesOrder(isOrder)
+                    viewModel.updateField { it.copy( isOrderDesc = !episodeFilter.isOrderDesc ) }
                 }, modifier = Modifier
                     .clip(RoundedCornerShape(50))
                     .background(MaterialTheme.colorScheme.secondary) )
                 {
                     Icon(
                         tint = MaterialTheme.colorScheme.onSecondary, // Color correcto del icono
-                        imageVector = if (isOrder) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                        imageVector = if (episodeFilter.isOrderDesc) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
                         contentDescription = stringResource(R.string.ordenar)
+                    )
+                }
+
+                IconButton(onClick = {
+                    viewModel.updateField { EpisodeFilter() }
+                }, modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(MaterialTheme.colorScheme.secondary) )
+                {
+                    Icon(
+                        tint = MaterialTheme.colorScheme.onSecondary, // Color correcto del icono
+                        imageVector = Icons.Default.DeleteSweep,
+                        contentDescription = stringResource(R.string.reiniciar)
                     )
                 }
             }
 
             // ______ Box principal ______
             Box(
-                modifier = Modifier.layoutId("idListEpisodes")
-                                    .padding(bottom = 10.dp)
+                modifier = Modifier
+                    .layoutId("idListEpisodes")
+                    .padding(bottom = 10.dp)
             ) {
-                if(stateAllEpisodes.value.isLoading){ // state.value.isLoading ||
+                if(stateAllEpisodes.value.isLoading || state.value.isLoading){
                     CircularProgressIndicator( color = MaterialTheme.colorScheme.onPrimary )
                 }
                 else {
@@ -322,7 +299,26 @@ fun EpisodesFilterScreen(viewModelAllEpisodes: ListEpisodesViewModel = hiltViewM
                             allEpisodes = stateAllEpisodes.value.episodes,
                             onEpisodeSelected = onEpisodeSelected,
                             episodesFavDbSet = stateFavOrView.value.episodesFavSet,
-                            episodesViewDbSet = stateFavOrView.value.episodesViewSet
+                            episodesViewDbSet = stateFavOrView.value.episodesViewSet,
+                            listState = if (episodeFilter.isViewEnabled) LazyListState() else listState
+                        )
+
+                        // Mostrar posición actual en el listado
+                        Text(
+                            text = "Viendo ${listState.firstVisibleItemIndex + 1} de ${state.value.episodes.size}",
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                                                .padding(10.dp) // separarlo del borde
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.primary.copy(
+                                                        alpha = 0.8f
+                                                    ),
+                                                    shape = RoundedCornerShape(12.dp)
+                                                )
+                                .padding(horizontal = 10.dp, vertical = 8.dp),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 13.sp
+                            ),
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
