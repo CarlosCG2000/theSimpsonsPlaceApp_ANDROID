@@ -1,5 +1,4 @@
 
-
 # MI APLICACIÓN
 
 ## __________ ESQUEMA MI APP __________
