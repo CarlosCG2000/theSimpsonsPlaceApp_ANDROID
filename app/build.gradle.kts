@@ -1,3 +1,7 @@
+import com.android.build.gradle.internal.dsl.SigningConfig
+import io.grpc.internal.SharedResourceHolder.release
+import org.gradle.kotlin.dsl.release
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -23,6 +27,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // MIN 1:05:00 -> CLASE --> MIN 1:10:00
+//    signingConfigs {
+//        debug {
+//            storeFile = file(null) // "debug.keystore"
+//            storePassword = "debug"
+//            keyAlias = "debug"
+//            keyPassword = "passwordDebug"
+//        }
+//        release{
+//            storeFile = file(null) // "release.keystore"
+//            storePassword = "release"
+//            keyAlias = "release"
+//            keyPassword = "passwordRelease"
+//        }
+//    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,7 +50,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // signingConfigs = signingConfigs.release
+            // debuggable = true
         }
+
+//        debug {
+//            isMinifyEnabled = false
+//            signingConfigs = signingConfigs.debug
+//        }
+
     }
 
     compileOptions {
