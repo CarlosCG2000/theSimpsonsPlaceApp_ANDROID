@@ -9,7 +9,7 @@
 
 ### Carpeta `kotlin+java`
 
-### `es.upsa.mimo.thesimpsonplace`
+### `es.upsa.mimo.thesimpsonplace (main)`
 
 - `MainActivity.kt`
 Este es el punto de entrada de tu aplicación en Jetpack Compose (a nivel de Android, porque es la Activity principal que se lanza cuando se inicia la aplicación).
@@ -154,7 +154,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 
     + Carpeta `di`
         - `DatabaseModule.kt`
-        - `NetworkModule.kt`
+        - ❌ `NetworkModule.kt` (borrado y pasado para usar en `es.upsa.mimo.thesimpsonplace (remote)` o `es.upsa.mimo.thesimpsonplace (mock)`, gracias a `Flavors` definido en `Gradle Scripts`)
         - `DataModule.kt`
         - `DomainModule.kt`
 
@@ -560,6 +560,18 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
             • Separar estado y lógica → StateUI solo almacena datos, ViewModel los gestiona.
             • Ejecutar llamadas a la API o base de datos dentro de viewModelScope.launch para evitar bloqueos.
 
+### `es.upsa.mimo.thesimpsonplace (remote)`
+
++ Carpeta `data`
+    + Carpeta `di`
+        - `NetworkModule.kt`
+
+### `es.upsa.mimo.thesimpsonplace (mock)`
+
++ Carpeta `data`
+    + Carpeta `di`
+        - `MockModule.kt`
+
 ### `es.upsa.mimo.thesimpsonplace (androidTest)`
     (vacío: serían los test de integración y de UI)
 
@@ -632,13 +644,13 @@ Requisitos `OBLIGATORIOS` de la aplicación:
 7. Utilización `DrawerLayout/ButtomNavigationView` para crear una estructura de navegación de app  ✅
 8. Crear un mínimo de `3 CustomView` propia ✅
 
-9. En caso de utilizarse `diálogos`, se tendrá que utilizar `DialogFragments` ❓
+9. En caso de utilizarse `diálogos`, se tendrá que utilizar `DialogFragments` ✅
 
 10. Disponer de una `pantalla de Settings` que permita elegir y cambiar algún `parámetro funcional` de la app ✅
 
 11. Tener al menos una acción en la `Toolbar` además de la de `Settings` ✅
 
-12. Uso de `variantes con gradle`. Se requerirá al menos tener dos variantes diferentes, ya sea empleando `Flavors` (free, paid, staging, production, etc...) o mediante `Build Types` (debug, beta, release...). En ambos casos se requerirá que las dos variantes contengan parte del código completamente aislado uno de otro. Pueden ser dos features completamente diferentes o dos entornos de backend que obtengan los datos de manera distinta, en el caso de los `Flavors`, o en el caso de `Build Types` diferentes herramientas que puedan ayudar al desarrollador en diferentes escenarios, como podría ser la posibilidad de cambiar la `URL del servidor` a la que apunta la aplicación, añadir una `capa de logging` o funcionalidad adicional que ayude a `detectar errores` en debug. En cualquier caso, esto son solo ejemplos para los que se pueden usar los flavors; pero cualquier uso creativo de las variantes será bienvenido. ❌
+12. Uso de `variantes con gradle`. Se requerirá al menos tener dos variantes diferentes, ya sea empleando `Flavors` (free, paid, staging, production, etc...) o mediante `Build Types` (debug, beta, release...). En ambos casos se requerirá que las dos variantes contengan parte del código completamente aislado uno de otro. Pueden ser dos features completamente diferentes o dos entornos de backend que obtengan los datos de manera distinta, en el caso de los `Flavors`, o en el caso de `Build Types` diferentes herramientas que puedan ayudar al desarrollador en diferentes escenarios, como podría ser la posibilidad de cambiar la `URL del servidor` a la que apunta la aplicación, añadir una `capa de logging` o funcionalidad adicional que ayude a `detectar errores` en debug. En cualquier caso, esto son solo ejemplos para los que se pueden usar los flavors; pero cualquier uso creativo de las variantes será bienvenido. ✅
 
 13. Los `textos, dimensiones, colores y estilos` deben residir en su `fichero de recursos` correspondiente. Usar al menos un estilo en los `layouts XML`. ✅
 
