@@ -2769,3 +2769,4 @@ src/
 ├── remote/
 │   └── java/es/upsa/mimo/thesimpsonplace/di/`NetworkModule.kt`
 
+# ...
