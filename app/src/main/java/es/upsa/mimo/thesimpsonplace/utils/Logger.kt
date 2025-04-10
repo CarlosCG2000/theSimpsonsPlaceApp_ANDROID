@@ -1,6 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.utils
 
 import android.util.Log
+import es.upsa.mimo.thesimpsonplace.BuildConfig
 
 class LoggerClass : Logger // para poder llamarla en funciones y utlizarla
 
@@ -11,32 +12,38 @@ interface Logger {
 
     // Verbose: para detalles muy extensos (diagnostico).
     fun logVerbose( message:String ){
-        Log.v(tag, message)
+        if (BuildConfig.ENABLE_LOGGING)
+            Log.v(tag, message)
     }
 
     // Debug: información util para depuracin.
     fun logDebug( message:String ){
-        Log.d(tag, message)
+        if (BuildConfig.ENABLE_LOGGING)
+            Log.d(tag, message)
     }
 
     // Info: informaciónn general sobre el flujo de la app.
     fun logInfo( message:String ){
-        Log.i(tag, message)
+        if (BuildConfig.ENABLE_LOGGING)
+            Log.i(tag, message)
     }
 
     // Warning: advertencias sobre posibles problemas.
     fun logWarning( message:String ){
-        Log.w(tag, message)
+        if (BuildConfig.ENABLE_LOGGING)
+            Log.w(tag, message)
     }
 
     // Error: errores que requieren atención.
     fun logError( message:String ){
-        Log.e(tag, message)
+        if (BuildConfig.ENABLE_LOGGING)
+            Log.e(tag, message)
     }
 
     // Assert: errores graves que no deberian ocurrir.
     fun logAssert( message:String ){
-        Log.wtf(tag, message)
+        if (BuildConfig.ENABLE_LOGGING)
+            Log.wtf(tag, message)
     }
 }
 

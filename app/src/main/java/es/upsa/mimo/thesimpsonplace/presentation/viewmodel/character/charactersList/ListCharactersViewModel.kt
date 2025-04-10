@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: GetAllCharactersUseCase): ViewModel() {
+class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: GetAllCharactersUseCase): ViewModel(), Logger {
 
     private val _stateCharacter: MutableStateFlow<ListCharactersStateUI> = MutableStateFlow(ListCharactersStateUI()) // Asincrono esta en un hilo secundario
     val stateCharacter: StateFlow<ListCharactersStateUI> = _stateCharacter.asStateFlow()
@@ -25,7 +26,7 @@ class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: G
             _stateCharacter.emit(ListCharactersStateUI(isLoading = true)) // ✅ Emite un nuevo estado desde el inicio,  Menos errores de actualización de StateFlow y Código más limpio y fácil de mantener.
 
             val charactersList = getAllCharactersUseCase() // Obtiene los personajes
-
+            logInfo( "Cargando con existo los personajes" )
             // delay(3000) // prueba del spinnner del 'isLoading' en el Screen
 
             // it es 'state.value' que es el valor actual de los contactos y lo actualizamos a 'contactsList'

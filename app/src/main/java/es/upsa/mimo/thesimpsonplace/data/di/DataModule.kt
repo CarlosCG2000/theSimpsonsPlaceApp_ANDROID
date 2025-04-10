@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import es.upsa.mimo.thesimpsonplace.BuildConfig
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.CharacterDaoImpl
@@ -38,9 +39,8 @@ object DataModule {
     // ¿PORQUE @Provides? La implemención de dicho Dao no tiene' @Inject constructor' (no es automatizada), debido a que quiero proveerlo (con @Provides) de forma más manual al elegir yo si el dao de implementacioón sea para json de test o producción cambiando el parámetro recibido
     @Singleton // ✅ Solo debe haber una instancia de CharacterDao en toda la app
     fun provideCharacterDao(@ApplicationContext context: Context): CharacterDao {
-        val test = false // Cambia a `true` o 'false' para usar d elos json de test a producción
 
-        return if (test) {
+        return if (BuildConfig.JSON_TEST) { // Si el buildConfig es 'true' entonces se usa el de test, con un json más reducido
             CharacterDaoImpl(context, "personajes_test.json", "imagenes_test.json")
         } else {
             CharacterDaoImpl(context, "personajes_data.json", "imagenes_data.json")
@@ -52,9 +52,8 @@ object DataModule {
     @Provides
     @Singleton
     fun provideEpisodeDao(@ApplicationContext context: Context): EpisodeDao {
-        val test = false
 
-        return if(test) {
+        return if(BuildConfig.JSON_TEST) { // Si el buildConfig es 'true' entonces se usa el de test, con un json más reducido
             EpisodeDaoImpl(context, "episodios_test.json")
         }else {
             EpisodeDaoImpl(context, "episodios_data.json")

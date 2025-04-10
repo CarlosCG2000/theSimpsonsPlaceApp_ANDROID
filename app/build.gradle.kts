@@ -1,6 +1,3 @@
-import com.android.build.gradle.internal.dsl.SigningConfig
-import io.grpc.internal.SharedResourceHolder.release
-import org.gradle.kotlin.dsl.release
 
 plugins {
     alias(libs.plugins.android.application)
@@ -43,23 +40,61 @@ android {
 //        }
 //    }
 
+//    flavorDimensions += "source"
+//    productFlavors {
+//        mock {
+//            dimension = "source"
+//            applicationIdSuffix = ".mock"
+//            buildConfigField("String", "DATA_SOURCE", "\"mock\"")
+//        }
+//        remote {
+//            dimension = "source"
+//            applicationIdSuffix = ".remote"
+//            buildConfigField("String", "DATA_SOURCE", "\"remote\"")
+//        }
+//    }
+
     buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            // signingConfigs = signingConfigs.release
-            // debuggable = true
+        debug {
+            // Solo en desarrollo: activar logs, analytics, tracking, debuggers, etc.
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+            buildConfigField("Boolean", "JSON_TEST", "false")
+//           isMinifyEnabled = false
+//           signingConfigs = signingConfigs.debug
         }
 
-//        debug {
-//            isMinifyEnabled = false
-//            signingConfigs = signingConfigs.debug
-//        }
+        create("beta") {
+            // Para beta testing
+            initWith(getByName("debug")) // o "release" si quieres
+            buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+            buildConfigField("Boolean", "JSON_TEST", "true")
+            isDebuggable = true
+        }
 
+        release {
+            // Para producción
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
+
+//    flavorDimensions += "source"
+//    productFlavors {
+//        mock {
+//            dimension = "source"
+//            applicationIdSuffix = ".mock"
+//            buildConfigField("String", "DATA_SOURCE", "\"mock\"")
+//        }
+//        remote {
+//            dimension = "source"
+//            buildConfigField("String", "DATA_SOURCE", "\"remote\"")
+//        }
+//    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -72,6 +107,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     experimentalProperties["android.experimental.enableScreenshotTest"] = true // Test de captura de pantalla
