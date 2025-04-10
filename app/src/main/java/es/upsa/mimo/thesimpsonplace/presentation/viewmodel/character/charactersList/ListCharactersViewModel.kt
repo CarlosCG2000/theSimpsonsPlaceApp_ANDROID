@@ -26,12 +26,12 @@ class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: G
             _stateCharacter.emit(ListCharactersStateUI(isLoading = true)) // ✅ Emite un nuevo estado desde el inicio,  Menos errores de actualización de StateFlow y Código más limpio y fácil de mantener.
 
             val charactersList = getAllCharactersUseCase() // Obtiene los personajes
-            logInfo( "Cargando con existo los personajes" )
             // delay(3000) // prueba del spinnner del 'isLoading' en el Screen
 
             // it es 'state.value' que es el valor actual de los contactos y lo actualizamos a 'contactsList'
             // _stateCharacter.update { it.copy(characters = charactersList, isLoading = false) }
             _stateCharacter.emit(ListCharactersStateUI(characters = charactersList, isLoading = false)) // ✅ Menos errores de actualización de StateFlow y Código más limpio y fácil de mantener.
+            logInfo( "Cargando con existo los personajes ${stateCharacter.value.characters.size}" )
         }
     }
 

@@ -12,7 +12,7 @@ interface Logger {
 
     // Verbose: para detalles muy extensos (diagnostico).
     fun logVerbose( message:String ){
-        if (BuildConfig.ENABLE_LOGGING)
+        if (BuildConfig.ENABLE_LOGGING) // para evitar que se imprima en producción solo en debug
             Log.v(tag, message)
     }
 

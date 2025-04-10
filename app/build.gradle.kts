@@ -50,6 +50,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+            buildConfigField("Boolean", "JSON_TEST", "false")
             signingConfig = signingConfigs.getByName("debug")
         }
     }
