@@ -27,7 +27,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // MIN 1:05:00 -> CLASE --> MIN 1:10:00
+    // MIN 1:05:00 -> CLASE Saúl Díaz
 //    signingConfigs {
 //        debug {
 //            storeFile = file(null) // "debug.keystore"

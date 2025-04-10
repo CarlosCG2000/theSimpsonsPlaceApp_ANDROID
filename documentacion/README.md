@@ -623,36 +623,36 @@ Requisitos `OBLIGATORIOS` de la aplicación:
 
 3. Aplicación desarrollada en `Kotlin` ✅
 
-4. Uso de `ViewModel` ❌
+4. Uso de `ViewModel` ✅
 
-5. Uso de `Flow` ❓
+5. Uso de `Flow` ✅
 
-6. Uso de `Coroutines` ❓
+6. Uso de `Coroutines` ✅
 
-7. Utilización `DrawerLayout/ButtomNavigationView` para crear una estructura de navegación de app  ❌
-8. Crear un mínimo de `3 CustomView` propia ❓
+7. Utilización `DrawerLayout/ButtomNavigationView` para crear una estructura de navegación de app  ✅
+8. Crear un mínimo de `3 CustomView` propia ✅
 
 9. En caso de utilizarse `diálogos`, se tendrá que utilizar `DialogFragments` ❓
 
-10. Disponer de una `pantalla de Settings` que permita elegir y cambiar algún `parámetro funcional` de la app❓
+10. Disponer de una `pantalla de Settings` que permita elegir y cambiar algún `parámetro funcional` de la app ✅
 
-11. Tener al menos una acción en la `Toolbar` además de la de `Settings` ❓
+11. Tener al menos una acción en la `Toolbar` además de la de `Settings` ✅
 
-12. Uso de `variantes con gradle`. Se requerirá al menos tener dos variantes diferentes, ya sea empleando `Flavors` (free, paid, staging, production, etc...) o mediante `Build Types` (debug, beta, release...). En ambos casos se requerirá que las dos variantes contengan parte del código completamente aislado uno de otro. Pueden ser dos features completamente diferentes o dos entornos de backend que obtengan los datos de manera distinta, en el caso de los `Flavors`, o en el caso de `Build Types` diferentes herramientas que puedan ayudar al desarrollador en diferentes escenarios, como podría ser la posibilidad de cambiar la `URL del servidor` a la que apunta la aplicación, añadir una `capa de logging` o funcionalidad adicional que ayude a `detectar errores` en debug. En cualquier caso, esto son solo ejemplos para los que se pueden usar los flavors; pero cualquier uso creativo de las variantes será bienvenido.
+12. Uso de `variantes con gradle`. Se requerirá al menos tener dos variantes diferentes, ya sea empleando `Flavors` (free, paid, staging, production, etc...) o mediante `Build Types` (debug, beta, release...). En ambos casos se requerirá que las dos variantes contengan parte del código completamente aislado uno de otro. Pueden ser dos features completamente diferentes o dos entornos de backend que obtengan los datos de manera distinta, en el caso de los `Flavors`, o en el caso de `Build Types` diferentes herramientas que puedan ayudar al desarrollador en diferentes escenarios, como podría ser la posibilidad de cambiar la `URL del servidor` a la que apunta la aplicación, añadir una `capa de logging` o funcionalidad adicional que ayude a `detectar errores` en debug. En cualquier caso, esto son solo ejemplos para los que se pueden usar los flavors; pero cualquier uso creativo de las variantes será bienvenido. ❌
 
-13. Los `textos, dimensiones, colores y estilos` deben residir en su `fichero de recursos` correspondiente. Usar al menos un estilo en los `layouts XML`. ❓
+13. Los `textos, dimensiones, colores y estilos` deben residir en su `fichero de recursos` correspondiente. Usar al menos un estilo en los `layouts XML`. ✅
 
 14. Uso de permisos con `Android 6.0` ✅
 
 15. Creación de `una paleta de colores propia` de la aplicación, de modo que visualmente se pueda identificar la app a un estilo visual reconocible. ✅
 
-16. Uso de un `modo de persistencia local` además de las `Preferences DataStore` (también obligatorio). Entre las opciones de persistencia local, se permitirán tanto almacenamiento en base de datos exclusivamente (`Room`) como frameworks que aporten esa solución (`como Firebase por ejemplo`) ❓
+16. Uso de un `modo de persistencia local` además de las `Preferences DataStore` (también obligatorio). Entre las opciones de persistencia local, se permitirán tanto almacenamiento en base de datos exclusivamente (`Room`) como frameworks que aporten esa solución (`como Firebase por ejemplo`) ✅
 
-17. Uso de `ConstraintLayout`, `ViewPager` y `SwipeRefreshLayout`. ❓
+17. Uso de `ConstraintLayout`, `ViewPager` y `SwipeRefreshLayout`. ✅
 
-18. Realización de `peticiones web`: ya sea servicios `REST` con `Volley` o `Retrofit` o con `APIs` que se encarguen de `encapsular peticiones` como podría ser con `Amazon Web Services` por ejemplo. ❓
+18. Realización de `peticiones web`: ya sea servicios `REST` con `Volley` o `Retrofit` o con `APIs` que se encarguen de `encapsular peticiones` como podría ser con `Amazon Web Services` por ejemplo. ✅
 
-19. Subir la aplicación a `Google Play` (aunque sea en fase alpha o beta e invitar a los profesores) ❓
+19. Subir la aplicación a `Google Play` (aunque sea en fase alpha o beta e invitar a los profesores) ❌
 
 ## INICIO PROYECTO
 Creo la aplicación `TheSimpsonPlace` con una vista `Empty Activity` de `Jetpack Compose`.
