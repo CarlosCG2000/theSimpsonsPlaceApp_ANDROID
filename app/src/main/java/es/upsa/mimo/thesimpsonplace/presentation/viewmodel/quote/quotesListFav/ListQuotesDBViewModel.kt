@@ -8,6 +8,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.DeleteQuoteDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetAllQuoteDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuoteDbByCitaUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.InsertQuoteDbUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +22,7 @@ class ListQuotesDBViewModel @Inject constructor(
             private val getQuoteDbByCitaUseCase: GetQuoteDbByCitaUseCase,
             private val insertQuoteDbUseCase: InsertQuoteDbUseCase,
             private val deleteQuoteDbUseCase: DeleteQuoteDbUseCase,
-    ) : ViewModel() {
+    ) : ViewModel(), Logger {
 
     private val _stateQuotesFav= MutableStateFlow<ListQuotesDbStateUI>(ListQuotesDbStateUI())
     val stateQuotesFav: StateFlow<ListQuotesDbStateUI> = _stateQuotesFav.asStateFlow()
@@ -48,6 +49,7 @@ class ListQuotesDBViewModel @Inject constructor(
                 }
 
             }
+            logInfo("Cargando con éxito las frases ${stateQuotesFav.value.quotes.size} ${stateQuotesFav.value.quotes.firstOrNull()?.cita}")
         }
     }
 
@@ -60,6 +62,7 @@ class ListQuotesDBViewModel @Inject constructor(
             } else {
                 deleteQuoteDbUseCase(quote)
             }
+            logInfo("Insertando o eliminando la frase ${quote.cita} ${quote.esFavorito}")
         }
     }
 

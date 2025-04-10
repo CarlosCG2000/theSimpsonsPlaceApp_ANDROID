@@ -8,6 +8,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.DeleteCharacterDb
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetCharacterDbByIdUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDbUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,7 @@ class ListCharactersDBViewModel @Inject constructor(
     private val getCharacterByIdUseCase: GetCharacterDbByIdUseCase,
     private val insertCharacterUseCase: InsertCharacterDbUseCase,
     private val deleteCharacterUseCase: DeleteCharacterDbUseCase
-) : ViewModel() {
+) : ViewModel(), Logger {
 
     private val _stateCharacterFav = MutableStateFlow<ListCharactersDbStateUI>(ListCharactersDbStateUI())
     val stateCharacterFav: StateFlow<ListCharactersDbStateUI> = _stateCharacterFav.asStateFlow()
@@ -48,12 +49,14 @@ class ListCharactersDBViewModel @Inject constructor(
                 }
 
             }
+            logInfo( "Cargando el número de personajes favoritos ${_stateCharacterFav.value.charactersSet.size}" )
         }
     }
 
     fun toggleFavorite(character: Character) {
         viewModelScope.launch {
             val exists = getCharacterByIdUseCase(character.id) != null
+            logInfo( "El personajes cambia de estado ya que antes era $exists" )
             if (exists) deleteCharacterUseCase(character) else insertCharacterUseCase(character)
         }
     }

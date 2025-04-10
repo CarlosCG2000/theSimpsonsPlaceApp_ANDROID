@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetFilterNameCharactersUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListCharactersFilterViewModel @Inject constructor(val getFilterNameCharactersUseCase: GetFilterNameCharactersUseCase): ViewModel() {
+class ListCharactersFilterViewModel @Inject constructor(val getFilterNameCharactersUseCase: GetFilterNameCharactersUseCase): ViewModel(), Logger {
     private val _stateCharacterFilter: MutableStateFlow<ListCharactersFilterStateUI> = MutableStateFlow(ListCharactersFilterStateUI()) // Asincrono esta en un hilo secundario
     val stateCharacterFilter: StateFlow<ListCharactersFilterStateUI> = _stateCharacterFilter.asStateFlow()
 
@@ -29,6 +30,8 @@ class ListCharactersFilterViewModel @Inject constructor(val getFilterNameCharact
             _stateCharacterFilter.update {
                 it.copy(characters = charactersFilter, isLoading = false)
             }
+
+            logInfo( "Cargando el número de personajes ${_stateCharacterFilter.value.characters.size} por nombre $name" )
         }
     }
 }

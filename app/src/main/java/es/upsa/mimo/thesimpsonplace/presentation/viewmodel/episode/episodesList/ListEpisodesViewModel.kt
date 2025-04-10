@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAllEpisodesUseCase ): ViewModel() {
+class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAllEpisodesUseCase ): ViewModel(), Logger {
     private val _episodesState: MutableStateFlow<ListEpisodesStateUI> = MutableStateFlow(ListEpisodesStateUI()) // en hilo secundario
     val episodesState: StateFlow<ListEpisodesStateUI> = _episodesState.asStateFlow()
 
@@ -28,6 +29,7 @@ class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAl
                 it.copy(episodes = getAllEpisodes, isLoading = false)
             }
         }
+        logInfo( "Cargando con existo los episodios ${_episodesState.value.episodes.size}" )
     }
 
 //    //  Inyección de dependecias manual

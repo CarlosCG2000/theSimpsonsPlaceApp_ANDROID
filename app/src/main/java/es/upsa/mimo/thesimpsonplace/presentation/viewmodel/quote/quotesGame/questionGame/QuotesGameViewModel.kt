@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.usescases.quote.GetQuestionsUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuestionsUseCase ): ViewModel() {
+class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuestionsUseCase ): ViewModel(), Logger {
     private val _stateQuestions: MutableStateFlow<QuotesGameUI> = MutableStateFlow(QuotesGameUI()) // Asincrono esta en un hilo secundario
     val stateQuestions: StateFlow<QuotesGameUI> = _stateQuestions.asStateFlow()
 
@@ -33,6 +34,8 @@ class QuotesGameViewModel @Inject constructor( val getQuestionsUseCase: GetQuest
             } finally {
                 _stateQuestions.update { it.copy(isLoading = false) }
             }
+
+            logInfo( "Cargando con existo las preguntas ${stateQuestions.value.questions.size}" )
         }
     }
 }

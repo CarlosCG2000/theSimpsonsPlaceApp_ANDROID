@@ -11,6 +11,7 @@ import es.upsa.mimo.thesimpsonplace.data.daos.remote.CharacterDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.EpisodeDao
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.CharacterDaoImpl
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.impl.EpisodeDaoImpl
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import javax.inject.Singleton
 
 /**
@@ -32,14 +33,16 @@ import javax.inject.Singleton
 // AppModule maneja repositorios, casos de uso y lógica de negocio.
 @Module // Para proporcionar las dependencias
 @InstallIn(SingletonComponent::class)
-object DataModule {
+object DataModule: Logger {
 
 //   Ahora Hilt puede inyectarlos automáticamente al detectar @Inject constructor() en sus clases.
     @Provides // Esto hace que Hilt nunca use @Inject constructor de CharacterDaoJson, porque ya le estás diciendo exactamente cómo crear la instancia. Aquí Hilt sabe que cuando alguien necesite CharaterDao, debe proporcionar una instancia de CharaterDaoImpl. Al tener la eleccion de json de test o produccion, lo implementamos manualmente pasandole el @Provides y luego la eplciaicon de dentro
     // ¿PORQUE @Provides? La implemención de dicho Dao no tiene' @Inject constructor' (no es automatizada), debido a que quiero proveerlo (con @Provides) de forma más manual al elegir yo si el dao de implementacioón sea para json de test o producción cambiando el parámetro recibido
     @Singleton // ✅ Solo debe haber una instancia de CharacterDao en toda la app
     fun provideCharacterDao(@ApplicationContext context: Context): CharacterDao {
+        logInfo( "Proveyendo CharacterDao en BuildConfig.JSON_TEST: ${BuildConfig.JSON_TEST}") // Para saber que se esta ejecutando el 'provideCharacterDao' y no el 'CharacterDaoJson'
 
+        // Si el buildConfig es 'true' entonces se usa el de test, con un json más reducido
         return if (BuildConfig.JSON_TEST) { // Si el buildConfig es 'true' entonces se usa el de test, con un json más reducido
             CharacterDaoImpl(context, "personajes_test.json", "imagenes_test.json")
         } else {
@@ -52,10 +55,11 @@ object DataModule {
     @Provides
     @Singleton
     fun provideEpisodeDao(@ApplicationContext context: Context): EpisodeDao {
+        logInfo( "Proveyendo EpisodeDao en BuildConfig.JSON_TEST: ${BuildConfig.JSON_TEST}") // Para saber que se esta ejecutando el 'provideCharacterDao' y no el 'CharacterDaoJson'
 
         return if(BuildConfig.JSON_TEST) { // Si el buildConfig es 'true' entonces se usa el de test, con un json más reducido
             EpisodeDaoImpl(context, "episodios_test.json")
-        }else {
+        } else {
             EpisodeDaoImpl(context, "episodios_data.json")
         }
     }

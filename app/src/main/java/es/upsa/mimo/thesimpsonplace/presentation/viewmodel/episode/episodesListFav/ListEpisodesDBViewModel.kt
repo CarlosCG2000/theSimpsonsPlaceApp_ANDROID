@@ -9,6 +9,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetAllEpisodesDbUse
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeDbByIdUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.InsertEpisodeDbUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.UpdateEpisodeDbStatusUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +26,7 @@ class ListEpisodesDBViewModel @Inject constructor(
 //    private val isEpisodeDbFavoriteUseCase: IsEpisodeDbFavoriteUseCase,   // NO SE NECECITA
     private val insertEpisodeDbUseCase: InsertEpisodeDbUseCase,
     private val updateEpisodeDbStatusUseCase: UpdateEpisodeDbStatusUseCase
-) : ViewModel() {
+) : ViewModel(), Logger {
 
     private val _stateEpisodesFavOrView = MutableStateFlow<ListEpisodesDbStateUI>(ListEpisodesDbStateUI())
     val stateEpisodesFavOrView: StateFlow<ListEpisodesDbStateUI> = _stateEpisodesFavOrView.asStateFlow()
@@ -57,6 +58,7 @@ class ListEpisodesDBViewModel @Inject constructor(
                             isLoading = false
                         )
                 }
+                logDebug("Cargando episodios favoritos y vistos ${_stateEpisodesFavOrView.value.episodes.size}")
             }
         }
     }
@@ -83,6 +85,7 @@ class ListEpisodesDBViewModel @Inject constructor(
                     episodesViewSet = updatedEpisodes.filter { it.esVisto }.map { it.id }.toSet()
                 )
             }
+            logDebug("Episodio ${episode.id} actualizado: Favorito: $fav, Visto: $view")
         }
     }
 

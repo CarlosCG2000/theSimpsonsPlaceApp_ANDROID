@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.QuoteDao
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,13 +15,14 @@ import javax.inject.Singleton
 // Esta es la instancia de RetroFit
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule { // Object ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
+object NetworkModule: Logger { // Object ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
     private const val BASE_URL = "https://thesimpsonsquoteapi.glitch.me/" // Llamamos a la raiz del servidor (ApiRest)
 
     // Creamos un objeto de tipo Retrofit
     @Provides
     @Singleton // Solo necesitamos una instancia de Retrofit
     fun provideRetrofit(): Retrofit {
+        logInfo("Creando la instancia de Retrofit $BASE_URL") // Para ver en el LogCat que se crea la instancia de Retrofit
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(createOkHttpClient()) // Cuando ejecutemos las peticiones veremos en el LogCat el resultado

@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MockModule {
+object MockModule: Logger { // Object ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
 
     // Esta clase simula la API y devuelve las citas desde un JSON de test.
     @Provides
@@ -26,6 +26,7 @@ object MockModule {
                 numElementos: Int,
                 textPersonaje: String
             ): List<QuoteDTO> {
+                logInfo("MockModule: ${citas.size} citas cargadas desde el JSON de test") // Para ver en el LogCat que se crea la instancia de Retrofit
                 val filtradas = if (textPersonaje.isEmpty()) {
                     citas
                 } else {

@@ -9,6 +9,7 @@ import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.domain.models.Quote
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUserPreferencesUseCase,
                                            val updateUserUseCase: UpdateUserUseCase
-                                            ): ViewModel() {
+                                            ): ViewModel(), Logger {
 
     private val _userState: MutableStateFlow<ProfileStateUI> = MutableStateFlow(ProfileStateUI()) // Asincrono esta en un hilo secundario
     val userState = _userState.asStateFlow()
@@ -30,6 +31,7 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
                     it.copy(user = user)
                 }
             }
+            logDebug( "Cargando preferencias de usuario ${userState.value.user.username} ${userState.value.user.language}")
         }
     }
 
@@ -40,6 +42,7 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
             _userState.update {
                 it.copy(user = user) // ✅ Actualiza el estado en la UI
             }
+            logDebug( "Actualizando preferencias de usuario ${userState.value.user.username} ${userState.value.user.language}")
         }
     }
 
@@ -59,12 +62,15 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
 //            }
 
         }
+
+        logDebug( "Iniciando sesión con el usuario $user")
     }
 
      fun onLoggedIn() {
          _userState.update {
              it.copy(loggedIn = false)
          }
+            logDebug( "Cerrando sesión del usuario ${userState.value.user.username}")
      }
 
     fun calculateTopCharactersAndSeasons(
@@ -94,6 +100,8 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
                 .map { it.key to it.value } // 🔹 Obtener el nombre de la temporada y el número de episodios favoritos
 
             _userState.update { it.copy(topCharacters = topCharacters, topSeasons = topSeasons) }
+
+            logDebug( "Calculando los personajes y temporadas favoritos ${userState.value.user.username} ${userState.value.user.language}")
         }
     }
 

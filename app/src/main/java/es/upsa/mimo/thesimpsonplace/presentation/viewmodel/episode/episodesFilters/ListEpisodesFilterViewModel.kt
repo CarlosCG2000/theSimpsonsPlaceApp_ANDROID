@@ -11,6 +11,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesBySeason
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByTitleUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesByViewUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodesOrderUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +26,7 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
                                                         val getEpisodesByViewUseCase: GetEpisodesByViewUseCase,
                                                         val getEpisodesOrderUseCase: GetEpisodesOrderUseCase,
                                                         val getEpisodesByChapterUseCase: GetEpisodesByChapterUseCase,
-                                                        /*private val savedStateHandle: SavedStateHandle*/): ViewModel() {
+                                                        /*private val savedStateHandle: SavedStateHandle*/): ViewModel(), Logger {
 
     private val _stateEpisode: MutableStateFlow<ListEpisodesFilterStateUI> = MutableStateFlow(ListEpisodesFilterStateUI())
     val stateEpisode: StateFlow<ListEpisodesFilterStateUI> = _stateEpisode.asStateFlow()
@@ -69,6 +70,7 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
             }
 
             getEpisodesOrder(episode.isOrderDesc)
+            logInfo( "Cargando el número de episodios ${filteredEpisodes.size} por nombre ${episode.title.text} y otros filtros..." )
         }
     }
 

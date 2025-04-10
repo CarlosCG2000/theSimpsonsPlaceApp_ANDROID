@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.models.Episode
 import es.upsa.mimo.thesimpsonplace.domain.usescases.episode.GetEpisodeByIdUseCase
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: GetEpisodeByIdUseCase ) : ViewModel() {
+class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: GetEpisodeByIdUseCase ) : ViewModel(), Logger {
     private val _episodeState: MutableStateFlow<DetailsEpisodeStateUI> = MutableStateFlow(DetailsEpisodeStateUI()) // en hilo secundario
     val episodeState: StateFlow<DetailsEpisodeStateUI> = _episodeState.asStateFlow()
 
@@ -22,6 +23,7 @@ class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: Ge
             _episodeState.update { it.copy(isLoading = true) }
 
             val getEpisode: Episode? = getEpisodeByIdUseCase(id)
+            logInfo( "Obteniendo episodios en detalle ${getEpisode?.episodio}" )
 
             _episodeState.update {
                 it.copy(episode = getEpisode, isLoading = false)
