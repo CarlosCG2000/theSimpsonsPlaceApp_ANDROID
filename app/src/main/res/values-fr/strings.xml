@@ -108,4 +108,7 @@
     <string name="cerrar_historial">Fermer l\'historique</string>
     <string name="borrar_texto">Écrire du texte</string>
     <string name="citas_favoritas">%1$s citations préférées</string>
+    <string name="no_existen_citas">Il n\'y a pas de rendez-vous</string>
+    <string name="no_existen_citas_favoritas">Il n\'y a pas de citations préférées</string>
+    <string name="desc_no_existen_citas">Il n\'y a aucune citation de ce personnage. Changer le nom du personnage dans le moteur de recherche.</string>
 </resources>

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
+import es.upsa.mimo.thesimpsonplace.data.entities.character.Gender
 import es.upsa.mimo.thesimpsonplace.domain.models.Character
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.game.HistoryGameStatistics
@@ -182,6 +183,7 @@ fun TextoPrincipal(text: String) {
 //______ LISTADOS HORIZONTALES TOP 'Characters' y 'Seasons' ________________________
 @Composable
 fun TopCharactersAndSeasons(top3Characters: List<Pair<Character, Int>>, top3Seasons: List<Pair<Int, Int>>) {
+
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -198,8 +200,15 @@ fun TopCharactersAndSeasons(top3Characters: List<Pair<Character, Int>>, top3Seas
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(top3Characters) { character ->
-                CharacterCard(character)
+            if (top3Characters.isEmpty()) {
+                // items (1) {
+                item {
+                    CharacterCard(Character(0, "Anónimo", Gender.Undefined, "not_specified", false) to 0)
+                }
+            } else {
+                items(top3Characters) { character ->
+                    CharacterCard(character)
+                }
             }
         }
 
@@ -218,8 +227,15 @@ fun TopCharactersAndSeasons(top3Characters: List<Pair<Character, Int>>, top3Seas
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(top3Seasons) { season ->
-                SeasonCard(season)
+            if (top3Seasons.isEmpty()) {
+               //items(1) {
+                item {
+                   SeasonCard( 0 to 0)
+               }
+            } else {
+                items(top3Seasons) { season ->
+                    SeasonCard(season)
+                }
             }
         }
     }

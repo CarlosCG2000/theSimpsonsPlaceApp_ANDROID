@@ -108,4 +108,7 @@
     <string name="cerrar_historial">Close History</string>
     <string name="borrar_texto">Delete text</string>
     <string name="citas_favoritas">%1$s favorite quotes</string>
+    <string name="no_existen_citas">There are no appointments</string>
+    <string name="no_existen_citas_favoritas">There are no favorite quotes</string>
+    <string name="desc_no_existen_citas">There are no quotes for that character. Change the character\'s name in the search engine.</string>
 </resources>

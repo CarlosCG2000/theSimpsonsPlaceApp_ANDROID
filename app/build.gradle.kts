@@ -13,6 +13,7 @@ plugins {
 android {
     namespace = "es.upsa.mimo.thesimpsonplace"
     compileSdk = 35
+    flavorDimensions += "source"
 
     defaultConfig {
         applicationId = "es.upsa.mimo.thesimpsonplace"
@@ -23,36 +24,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    // MIN 1:05:00 -> CLASE Saúl Díaz
-//    signingConfigs {
-//        debug {
-//            storeFile = file(null) // "debug.keystore"
-//            storePassword = "debug"
-//            keyAlias = "debug"
-//            keyPassword = "passwordDebug"
-//        }
-//        release{
-//            storeFile = file(null) // "release.keystore"
-//            storePassword = "release"
-//            keyAlias = "release"
-//            keyPassword = "passwordRelease"
-//        }
-//    }
-
-//    flavorDimensions += "source"
-//    productFlavors {
-//        mock {
-//            dimension = "source"
-//            applicationIdSuffix = ".mock"
-//            buildConfigField("String", "DATA_SOURCE", "\"mock\"")
-//        }
-//        remote {
-//            dimension = "source"
-//            applicationIdSuffix = ".remote"
-//            buildConfigField("String", "DATA_SOURCE", "\"remote\"")
-//        }
-//    }
 
     buildTypes {
         debug {
@@ -83,18 +54,17 @@ android {
         }
     }
 
-//    flavorDimensions += "source"
-//    productFlavors {
-//        mock {
-//            dimension = "source"
-//            applicationIdSuffix = ".mock"
-//            buildConfigField("String", "DATA_SOURCE", "\"mock\"")
-//        }
-//        remote {
-//            dimension = "source"
-//            buildConfigField("String", "DATA_SOURCE", "\"remote\"")
-//        }
-//    }
+    productFlavors {
+        maybeCreate("mock").apply {
+            dimension = "source"
+            applicationIdSuffix = ".mock"
+            buildConfigField("String", "DATA_SOURCE", "\"mock\"")
+        }
+        maybeCreate("remote").apply {
+            dimension = "source"
+            buildConfigField("String", "DATA_SOURCE", "\"remote\"")
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

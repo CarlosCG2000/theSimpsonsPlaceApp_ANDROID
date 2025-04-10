@@ -1,6 +1,7 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
@@ -59,6 +61,14 @@ fun QuotesFavScreen(
         ) {
             if (stateFav.value.isLoading) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+            } else if (stateFav.value.quotes.isEmpty()) {
+                NoContentComponent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.primary),
+                    titleText = stringResource(R.string.no_existen_citas),
+                    infoText = stringResource(R.string.no_existen_citas_favoritas)
+                )
             } else {
                 ListQuotes(
                     modifier = Modifier.fillMaxSize(),

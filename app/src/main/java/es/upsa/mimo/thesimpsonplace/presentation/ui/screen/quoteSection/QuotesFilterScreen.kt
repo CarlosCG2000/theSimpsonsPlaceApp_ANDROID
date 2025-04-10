@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.MySearchTextField
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomBarQuoteComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.quote.BottomNavQuotesItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
@@ -93,13 +95,14 @@ fun QuotesFilterScreen(
         ) {
 
             Box(
-                modifier = Modifier.layoutId("idTextfield")
-                                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                                    .background(
-                                        color = MaterialTheme.colorScheme.secondary,
-                                        shape = MaterialTheme.shapes.small
-                                    )
-                                    .padding(6.dp)
+                modifier = Modifier
+                    .layoutId("idTextfield")
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.secondary,
+                        shape = MaterialTheme.shapes.small
+                    )
+                    .padding(6.dp)
             ) {
                 MySearchTextField(nameFilter = filterName,
                                   valueChange = { newValue -> filterName = newValue })
@@ -109,10 +112,11 @@ fun QuotesFilterScreen(
                 options = options,
                 selectedOption = selectedItem,
                 onOptionSelected = { selectedItem = it },
-                modifier = Modifier.layoutId("idSegmentedPicker")
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 10.dp)
-                                    .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(12.dp))
+                modifier = Modifier
+                    .layoutId("idSegmentedPicker")
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(12.dp))
             )
 
             // Contenido centrado en el resto de la pantalla
@@ -123,6 +127,12 @@ fun QuotesFilterScreen(
                 ) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 }
+            } else if (state.value.quotes.isEmpty()) {
+                NoContentComponent(
+                    modifier = Modifier.layoutId("idListado"),
+                    titleText = stringResource(R.string.no_existen_citas),
+                    infoText = stringResource(R.string.desc_no_existen_citas)
+                )
             } else {
                 ListQuotes(
                     modifier = Modifier.layoutId("idListado"),
