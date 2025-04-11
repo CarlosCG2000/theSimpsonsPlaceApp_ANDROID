@@ -192,7 +192,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
             - `CharacterDTO.kt`
             - `CharacterEntity.kt`
             - `imageDTO.kt`
-            - `Gender`
+            - `Gender.kt`
 
         + Carpeta `episode`
             - `EpisodesDTO.kt`
