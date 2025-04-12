@@ -11,14 +11,14 @@
 
 ### `es.upsa.mimo.thesimpsonplace (main)`
 
-- `MainActivity.kt`
+- `MainActivity.kt` ✅
 Este es el punto de entrada de tu aplicación en Jetpack Compose (a nivel de Android, porque es la Activity principal que se lanza cuando se inicia la aplicación).
 📌 Puntos clave:
 • @AndroidEntryPoint permite la inyección de dependencias con Hilt en esta actividad.
 • enableEdgeToEdge() configura la UI para usar toda la pantalla.
 • setContent { MyApp() } inicia la interfaz de usuario con Compose, renderizando MyApp().
 
-- `TheSimpsonPlaceApp.kt`
+- `TheSimpsonPlaceApp.kt` ✅
 Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 📌 Puntos clave:
 • @HiltAndroidApp habilita Hilt para la inyección de dependencias en toda la app.
@@ -26,7 +26,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 • migrationVersion1toVersion2 define una migración de Room, agregando las tablas episodes y quotes.
 • initDatabase() inicializa la BD usando Room.databaseBuilder() y registra la migración.
 
-+ Carpeta `utils`
++ Carpeta `utils` ✅
     - `DateExtensions.kt`
     • Extiende String con toDate(), convirtiendo un texto en formato "yyyy-MM-dd" a Date.
 	• Extiende Date con toFormattedString(), devolviendo una fecha en "dd/MM/yyyy".
@@ -238,7 +238,8 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
         - `CharacterDtoMapper.kt`
         - `EpisodeDtoMapper.kt`
         - `QuoteDtoMapper.kt`
-        Estos archivos (CharacterDtoMapper, EpisodeDtoMapper, QuoteDtoMapper) contienen funciones de extensión para convertir entre diferentes modelos de datos:
+
+        * Estos archivos (CharacterDtoMapper, EpisodeDtoMapper, QuoteDtoMapper) contienen funciones de extensión para convertir entre diferentes modelos de datos:
         • DTO → Modelo de dominio (datos de la API/JSON a la app).
         • ROOM → Modelo de dominio (datos almacenados localmente a la app).
 
@@ -388,7 +389,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
         * Estoy aplicando el principio de separación de responsabilidades (SRP) dentro de la capa de dominio al introducir casos de uso (Use Cases). Estos encapsulan reglas de negocio y evitan que la UI acceda directamente a los repositorios.
 
         *  Ejemplo con Character con GetAllCharactersDbUseCase y GetAllCharactersDbUseCaseImpl:
-        Define un contrato que dice que el caso de uso debe devolver un Flow<List<Character>>. La UI solo usa esta interfaz, sin saber qué repositorio usa internamente.
+        Define un contrato que dice que el caso de uso debe devolver un Flow<List<Character>. La UI solo usa esta interfaz, sin saber qué repositorio usa internamente.
         La implementación (Impl) simplemente delega la llamada al repositorio. Usa inyección de dependencias (@Inject constructor) para recibir el CharacterRepository.
 
         * Beneficios del enfoque
@@ -604,13 +605,13 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 + Carpeta `screen.characterSection`
     - `CharactersListScreenshotPreview.kt`
 
-### Carpeta `assets`
+### Carpeta `assets` ✅
 - Ficheros `personajes_data.json` y `personajes_test.json`: jsons de personajes (prod y test)
 - Ficheros `imagenes_data.json` y `imagenes_test.json`: jsons de imagenes (prod y test)
 - Ficheros `episodios_data.json` y `episodios_test.json`: jsons de episodios (prod y test)
 - Fichero `citas_test.json`: json de citas (test). En producción la fuente es una ApiRest (https://thesimpsonsquoteapi.glitch.me/)
 
-### Carpeta `res`
+### Carpeta `res` ✅
 + Carpeta `drawable`
     - Imágenes webp de personajes de los Simpsons.
 
