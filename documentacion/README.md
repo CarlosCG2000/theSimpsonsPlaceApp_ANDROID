@@ -2765,4 +2765,37 @@ src/
 ├── remote/
 │   └── java/es/upsa/mimo/thesimpsonplace/di/`NetworkModule.kt`
 
+
+# ...
+Readme
+-	documentacion (/Users/carlosCG/Desktop/4_Android/miApp) (Mio)
+-	TheMovieDB (/Users/carlosCG/Desktop/App_Android/TheMovieDB) (Fran)
+-	proyectos (/Users/carlosCG/Desktop/4_Android/Clases/Parte 1 - Roberto (Introducción al desarrollo)/proyectos) (Roberto Berjon)
+-	proyectos (/Users/carlosCG/Desktop/4_Android/Clases/Parte 2 - Antonio Leiva (Profundidad al desarrollo)/proyectos) (Antonio Leiva)
+
+Apps realizadas vistas
+     (Mio)
+-	miApp (TheSimpsonPlace)
+
+(Roberto Berjon)
+-	01_primeraApp
+-	02_layouts
+-	03_ContadorApp
+-	04_ListadoContactos
+
+(Antonio Leiva)
+-	Framework-Samples-Compose-main
+-	framework-samples-main
+-	3_Testing-expert-preview-screenshot
+-	flow-workshop-master
+-	app_compose
+
+(Aris)
+-	0_Curso-3-app-en-1
+-	1_App_Paginacion
+-	2_ArquitecturaMVVM
+
+(Fran)
+-	TheMovieDB
+
 # ...

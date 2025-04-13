@@ -101,7 +101,7 @@
     <string name="the_correct_answer_was">"La respuesta correcta fue "</string>
     <string name="character_image">Imagen del personaje</string>
     <string name="reiniciar">Reiniciar</string>
-    <string name="total_games_statistics">Estadísticas totales dle juego</string>
+    <string name="total_games_statistics">Estadísticas totales del juego</string>
     <string name="finish">RESULTADO</string>
     <string name="jugar_de_nuevo">¿Jugar de nuevo?</string>
     <string name="reset_history_statistics">Restablecer estadísticas del historial</string>

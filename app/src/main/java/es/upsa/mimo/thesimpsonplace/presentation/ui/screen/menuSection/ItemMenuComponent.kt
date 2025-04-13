@@ -2,6 +2,7 @@ package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.menuSection
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -122,11 +124,20 @@ fun NavDrawerItemComponent(contentDescription: String, numFavorites: Int = 0,
                     modifier = Modifier.width(100.dp))
                 Spacer(modifier = Modifier.width(20.dp)) // 🔹 Espacio pequeño entre texto y badge
                 Badge(
-                    modifier = Modifier.size(24.dp),
-                    containerColor = MaterialTheme.colorScheme.onPrimary, // 🔹 Fondo del badge
-                    contentColor = Color.Black // 🔹 Color del texto
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = Color.Black
                 ) {
-                    Text(numFavorites.toString(), fontSize = 14.sp, fontWeight = SemiBold) // 🔹 Texto más grande
+                    Row(
+                        Modifier.padding(5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp) // Espaciado entre icono y texto
+                    ) {
+                        Text(
+                            text = numFavorites.toString(),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         },

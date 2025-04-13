@@ -2,14 +2,12 @@ package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuo
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,7 +21,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -123,7 +120,8 @@ fun QuotesQuestionScreen(
                     state.value.questions.size
                 ),
                 fontSize = 20.sp,
-                fontWeight = Bold
+                fontWeight = Bold,
+                color = MaterialTheme.colorScheme.onSecondary
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -131,7 +129,8 @@ fun QuotesQuestionScreen(
             Text(
                 text = "\"${currentQuestion.cita}\"",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSecondary
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -148,15 +147,15 @@ fun QuotesQuestionScreen(
                                 modifier = Modifier.padding(4.dp)
                                                    .width(200.dp), // Opcional: define un ancho fijo para uniformidad
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (selectedAnswer == answer)
-                                        MaterialTheme.colorScheme.onPrimary
-                                    else
-                                        MaterialTheme.colorScheme.secondary
+                                    containerColor =
+                                        if (selectedAnswer == answer) MaterialTheme.colorScheme.onPrimary
+                                        else MaterialTheme.colorScheme.secondary,
                                 )
                             ) {
                                 Text(text = answer,
                                     textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSecondary)
+                                    color =  if (selectedAnswer == answer) Color.Black
+                                            else Color.White)
                             }
                         }
                     }
@@ -167,7 +166,8 @@ fun QuotesQuestionScreen(
 
             Button(modifier = Modifier.padding(4.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor =  Color(0xFFAB82EE) // MaterialTheme.colorScheme.onPrimary
+                        containerColor =  Color(0xFFAB82EE), // MaterialTheme.colorScheme.onPrimary
+                        contentColor = Color.Black
                     ),
                     onClick = {
                         if (selectedAnswer == currentQuestion.personajeCorrecto) {
