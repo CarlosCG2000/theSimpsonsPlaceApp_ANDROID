@@ -11,14 +11,14 @@
 
 ### `es.upsa.mimo.thesimpsonplace (main)`
 
-- `MainActivity.kt` ✅
+- `MainActivity.kt`
 Este es el punto de entrada de tu aplicación en Jetpack Compose (a nivel de Android, porque es la Activity principal que se lanza cuando se inicia la aplicación).
 📌 Puntos clave:
 • @AndroidEntryPoint permite la inyección de dependencias con Hilt en esta actividad.
 • enableEdgeToEdge() configura la UI para usar toda la pantalla.
 • setContent { MyApp() } inicia la interfaz de usuario con Compose, renderizando MyApp().
 
-- `TheSimpsonPlaceApp.kt` ✅
+- `TheSimpsonPlaceApp.kt`
 Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 📌 Puntos clave:
 • @HiltAndroidApp habilita Hilt para la inyección de dependencias en toda la app.
@@ -26,7 +26,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 • migrationVersion1toVersion2 define una migración de Room, agregando las tablas episodes y quotes.
 • initDatabase() inicializa la BD usando Room.databaseBuilder() y registra la migración.
 
-+ Carpeta `utils` ✅
++ Carpeta `utils`
     - `DateExtensions.kt`
     • Extiende String con toDate(), convirtiendo un texto en formato "yyyy-MM-dd" a Date.
 	• Extiende Date con toFormattedString(), devolviendo una fecha en "dd/MM/yyyy".
@@ -605,13 +605,13 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 + Carpeta `screen.characterSection`
     - `CharactersListScreenshotPreview.kt`
 
-### Carpeta `assets` ✅
+### Carpeta `assets`
 - Ficheros `personajes_data.json` y `personajes_test.json`: jsons de personajes (prod y test)
 - Ficheros `imagenes_data.json` y `imagenes_test.json`: jsons de imagenes (prod y test)
 - Ficheros `episodios_data.json` y `episodios_test.json`: jsons de episodios (prod y test)
 - Fichero `citas_test.json`: json de citas (test). En producción la fuente es una ApiRest (https://thesimpsonsquoteapi.glitch.me/)
 
-### Carpeta `res` ✅
+### Carpeta `res`
 + Carpeta `drawable`
     - Imágenes webp de personajes de los Simpsons.
 
@@ -2149,7 +2149,7 @@ Ahora, los episodios se cargarán de manera paginada en vez de traer todo el JSO
 
 - EMPEZAR VIDEO DE: `https://www.youtube.com/watch?v=lX7CeooKCcQ&t=13959s`
 
-# EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA ✅
+# EXPLICACIÓN DE INYECCIÓN DE DEPENDENCIAS (`HILT`) --> MIA
 
 -  Cuando la implementación de mi dao, repositorio, casos de usos... no incluye `@Inject constructor()`, por ejemplo `CharacterDaoJson.kt`.
 ```kotlin
@@ -2252,14 +2252,14 @@ Regla general: Usa `@Singleton` en aquellas clases que deban tener una única in
 2.	Usa `@Binds` cuando quieres enlazar una implementación (`CharaterRepositoryImpl`) con su interfaz (`CharaterRepository`).
 3.	Pon `@Singleton` en `DAOs` y `Repositorios`, pero NO en casos de uso ni `ViewModels`.
 
-# EXPLICACIÓN LLAMADA A API (`RETROFIT`) --> MIA ✅
+# EXPLICACIÓN LLAMADA A API (`RETROFIT`) --> MIA
 - El `QuoteDto` se caracteriza por tener los atributos como `@SerializedName` y no como `@SerialName`.
 - El `QuoteDao.kt` es la interfaz, hay que añadir el `método de la operación` (@Get) y sus posibles `querys`.
 - No se necesita `QuoteDaoApi.kt` por que la implementación con la APi se hace atraves del fichero `NetworkModule.kt`.
 - El `NetworkModule.kt` define `los providers` de `Retrofit` y de mi `Api` en concreto como si fiese el `QuoteDaoApi.kt`.
 - En el `AppModule.kt` borramos el provider para el `QuoteDaoApi.kt` (que ya hemos borrado su implementacón por `NetworkModule.kt`).
 
-# Diferencia entre usar `LiveData` y `StateFlow`. ¿Cuando usar cada cual? --> CHAT GPT ✅
+# Diferencia entre usar `LiveData` y `StateFlow`. ¿Cuando usar cada cual? --> CHAT GPT
 📌 ¿Cuándo usar LiveData y cuándo usar StateFlow?
 
 ✅ Usar LiveData cuando:
@@ -2375,7 +2375,7 @@ fun Login(viewModel: LoginViewModel) {
 
 Tu caso es Jetpack Compose, así que es mejor cambiar todo a StateFlow. 🚀
 
-# ¿`Funciones suspend` en el `View Model` o antes (casos de uso, repositorio, dao...)? --> CHAT GPT ✅
+# ¿`Funciones suspend` en el `View Model` o antes (casos de uso, repositorio, dao...)? --> CHAT GPT
 En general, no se recomienda tener funciones suspend dentro del ViewModel, a menos que sean necesarias. La mejor práctica en la arquitectura MVVM es delegar la lógica suspendida a los casos de uso (UseCases) o repositorios, y llamar a esas funciones suspendidas desde viewModelScope.launch.
 
 ⸻
@@ -2501,7 +2501,7 @@ class GetAllCharactersUseCase @Inject constructor(private val repository: Charac
 
 Si en algún momento necesitas un suspend fun, agrégalo en el UseCase o el Repository, no en el ViewModel.
 
-# Añadido `DataStore Preferences` ✅
+# Añadido `DataStore Preferences`
 La base de datos (BD) en el data source generalmente se refiere a la capa donde almacenas y recuperas datos persistentes, como Room Database o DataStore en este caso.
 
 En tu implementación, estás usando `DataStore Preferences`, que es ideal para almacenar pequeñas configuraciones como `estadísticas de juego y preferencias de usuario`. La estructura típica sería:
@@ -2511,7 +2511,7 @@ En tu implementación, estás usando `DataStore Preferences`, que es ideal para 
 
 NO ME FUNCIONA PARA EL LENGUAJE DE FORMA AUTOMATICA ME TENGO QUE SALIR DEL ACTIVITY Y VOLVER A ENTRAR PARA QUE SE APLIQUE EL LENGUAJE ❌
 
-# Añadido `Room` ✅
+# Añadido `Room`
 - Entities: creamos las entidades (tablas) para la BD (las columnas para la BD) --> `CharacterDb.kt`, `EpisodeDb.kt`, `QuoteDb.kt`.
 - Implementacion directa de los Daos (la propia interfaz es la iomplementación) --> `CharacterDatabaseDaoRoom.kt`, `EpisodeDatabaseDaoRoom.kt`, `QuoteDatabaseDaoRoom.kt`
 - Mapeo de las entidades de la aplicacion (domain) a las de la base de datos (las entidades (tablas)) y viceversa --> `CharacterMapper.kt`, `EpisodeMapper.kt`, `QuoteMapper.kt`
@@ -2538,22 +2538,7 @@ Por lo tanto, necesitamos un `TypeConverter`, por ejemplo para en `List<String>`
     2. Crea la migración Migration(1,2) para añadir las nuevas tablas. Variable 'MIGRATION_1_2', en este fichero.
     3. Registra la migración en Room.databaseBuilder.  Propiedad 'addMigrations' en este fichero (función 'initDatabase').
 
-# FICHERO FILTER EPISODES:
-SCREEN:
-//    1. Primer LaunchedEffect(Unit)
-//    •	Se ejecuta al iniciarse el Composable.
-//    •	Como stateAllEpisodes.value.episodes está vacío, llama a viewModelAllEpisodes.getAllEpisodes() para obtener los episodios.
-//    •	Esto actualiza stateAllEpisodes, lo que desencadena el siguiente LaunchedEffect.
-
-//    2. Segundo LaunchedEffect(stateAllEpisodes.value.episodes)
-//    •	Se ejecuta cuando stateAllEpisodes.value.episodes cambia.
-//    •	Cuando la lista de episodios se llena, llama a viewModel.updateEpisodes(stateAllEpisodes.value.episodes), lo que posiblemente también esté actualizando el estado y provocando otro renderizado.
-
-//    3. Tercer LaunchedEffect con filtros
-//    •	Cualquier cambio en filterTitle, filterMinDate, filterMaxDate, etc., dispara otro LaunchedEffect, con un delay(350) de debounce.
-//    •	Si stateAllEpisodes.value.episodes se actualiza varias veces en cascada, podría estar generando múltiples llamadas.
-
-# AÑADIR DE LA PANTALLA DE `DETALLES EPISODIOS` A NAVEGAR A OTRAS DEMÁS PANTALLAS (EN FILTRO QUE SE QUEDE LOS DATOS FILTRADO) ✅
+# AÑADIR DE LA PANTALLA DE `DETALLES EPISODIOS` A NAVEGAR A OTRAS DEMÁS PANTALLAS (EN FILTRO QUE SE QUEDE LOS DATOS FILTRADO)
 
 ¿Qué es SavedStateHandle?
 Es un mecanismo que permite guardar y restaurar estado automáticamente en el ViewModel, incluso cuando el proceso se destruye y vuelve a crearse (por ejemplo, al rotar pantalla o volver atrás desde otra pantalla). Muy útil en Compose.
@@ -2585,9 +2570,9 @@ Quiero un boton que borre y deje por defecto todo el listado.
 ....
 
 
-# EXPLICACIONES DUDAS IMPORTANTES --> CHAT GPT
 
-# Explicación `Build Types` y `Flavors` --> CHAT GPT ✅
+
+# Explicación `Build Types` y `Flavors` --> CHAT GPT
 Vamos a desglosar Build Types y Product Flavors en Android Gradle para que entiendas bien qué son, cómo funcionan, y cuándo usarlos. Ambos permiten generar variantes de tu aplicación desde el mismo código base, pero con comportamientos distintos. Te dejo una explicación clara y directa.
 
 🔷 ¿Qué son los Build Types?
@@ -2766,36 +2751,32 @@ src/
 │   └── java/es/upsa/mimo/thesimpsonplace/di/`NetworkModule.kt`
 
 
-# ...
-Readme
--	documentacion (/Users/carlosCG/Desktop/4_Android/miApp) (Mio)
--	TheMovieDB (/Users/carlosCG/Desktop/App_Android/TheMovieDB) (Fran)
--	proyectos (/Users/carlosCG/Desktop/4_Android/Clases/Parte 1 - Roberto (Introducción al desarrollo)/proyectos) (Roberto Berjon)
--	proyectos (/Users/carlosCG/Desktop/4_Android/Clases/Parte 2 - Antonio Leiva (Profundidad al desarrollo)/proyectos) (Antonio Leiva)
+# Documentación general proyectos
++ Readme's
+*	documentacion (/Users/carlosCG/Desktop/4_Android/miApp) (Mio)
+*	TheMovieDB (/Users/carlosCG/Desktop/App_Android/TheMovieDB) (Fran)
+*	proyectos (/Users/carlosCG/Desktop/4_Android/Clases/Parte 1 - Roberto (Introducción al desarrollo)/proyectos) (Roberto Berjon)
+*	proyectos (/Users/carlosCG/Desktop/4_Android/Clases/Parte 2 - Antonio Leiva (Profundidad al desarrollo)/proyectos) (Antonio Leiva)
 
-Apps realizadas vistas
-     (Mio)
--	miApp (TheSimpsonPlace)
-
-(Roberto Berjon)
--	01_primeraApp
--	02_layouts
--	03_ContadorApp
--	04_ListadoContactos
-
-(Antonio Leiva)
--	Framework-Samples-Compose-main
--	framework-samples-main
--	3_Testing-expert-preview-screenshot
--	flow-workshop-master
--	app_compose
-
-(Aris)
--	0_Curso-3-app-en-1
--	1_App_Paginacion
--	2_ArquitecturaMVVM
-
-(Fran)
--	TheMovieDB
++ Apps realizadas vistas
+    * (Mio)
+        - miApp (TheSimpsonPlace)
+    * (Roberto Berjon)
+        - 01_primeraApp
+        - 02_layouts
+        - 03_ContadorApp
+        - 04_ListadoContactos
+    * (Antonio Leiva)
+        - Framework-Samples-Compose-main
+        - framework-samples-main
+        - 3_Testing-expert-preview-screenshot
+        - flow-workshop-master
+        - app_compose
+    * (Aris)
+        - 0_Curso-3-app-en-1
+        - 1_App_Paginacion
+        - 2_ArquitecturaMVVM
+    * (Fran)
+        - TheMovieDB
 
 # ...
