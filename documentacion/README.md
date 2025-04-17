@@ -187,7 +187,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
         ✔ @Binds se usa en lugar de @Provides cuando ya existe una implementación de una interfaz. Separa el acceso a datos del dominio, mejorando la escalabilidad y mantenibilidad.
         ✔ @Singleton se usa en los repositorios (repository) para mantener una única instancia de CharacterRepositoryImpl, etc.
 
-    + Carpeta `entities`
+    + Carpeta `entities` ✅
         + Carpeta `character`
             - `CharacterDTO.kt`
             - `CharacterEntity.kt`
@@ -234,7 +234,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
         3.	Uso de enums (Gender) → Facilita la gestión de valores en lugar de usar String directamente.
         4.	companion object en CharacterEntity → Mantiene constantes como el nombre de la tabla centralizado.
 
-    + Carpeta `mappers`
+    + Carpeta `mappers` ✅
         - `CharacterDtoMapper.kt`
         - `EpisodeDtoMapper.kt`
         - `QuoteDtoMapper.kt`
@@ -245,7 +245,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
 
 + Carpeta `domain`
 
-    + Carpeta `mappers`
+    + Carpeta `mappers` ✅
         - `CharacterMapper.kt`
         - `EpisodeMapper.kt`
         - `QuestionMapper.kt`
@@ -258,7 +258,7 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
             • getRandomOptions() genera respuestas incorrectas aleatorias.
             • ... demás funciones de mapeo.
 
-    + Carpeta `models`
+    + Carpeta `models` ✅
         - `Character.kt`
         - `Episode.kt`
         - `EpisodeFilter.kt`
