@@ -115,7 +115,7 @@ fun QuotesFilterScreen(
                 modifier = Modifier
                     .layoutId("idSegmentedPicker")
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
+                    //.padding(horizontal = 8.dp)
                     .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(12.dp))
             )
 
@@ -196,7 +196,7 @@ fun SegmentedPicker(
                                     else Color.Black // Texto oscuro si está seleccionado
                 ),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.padding(4.dp)
+                //modifier = Modifier.padding(4.dp)
             ) {
                 val text = if (option == 1) stringResource(R.string.item, option)
                                             else stringResource(R.string.items, option)

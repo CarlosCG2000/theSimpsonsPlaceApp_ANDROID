@@ -96,8 +96,8 @@
     <string name="quote_of">Cita %1$s of %2$s</string>
     <string name="check_answer">Comprobar respuesta</string>
     <string name="next">Siguiente</string>
-    <string name="wrong">¡Error!</string>
-    <string name="correct">¡Correcto!</string>
+    <string name="wrong">❌ ¡Error!</string>
+    <string name="correct">" ✅ ¡Correcto!"</string>
     <string name="the_correct_answer_was">"La respuesta correcta fue "</string>
     <string name="character_image">Imagen del personaje</string>
     <string name="reiniciar">Reiniciar</string>

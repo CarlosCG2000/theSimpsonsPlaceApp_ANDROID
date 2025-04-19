@@ -19,7 +19,7 @@ class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: G
 
     // Hay que llamar a los casos de uso
     // Debería ejecutarse dentro de 'viewModelScope.launch' para evitar bloqueos y manejar la asincronía correctamente:
-    fun getAllCharacters(){
+    fun getAllCharacters() {
         viewModelScope.launch {
             // _stateCharacter.value.isLoading = true ❌ Esto NO actualiza el StateFlow correctamente, porque isLoading es una propiedad mutable dentro de ListCharactersStateUI, pero no estamos emitiendo un nuevo objeto.
             // _stateCharacter.update { it.copy(isLoading = true) } // Activa el spinner

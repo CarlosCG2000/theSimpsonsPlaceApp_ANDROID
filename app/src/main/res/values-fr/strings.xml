@@ -96,8 +96,8 @@
     <string name="check_answer">Vérifier la réponse</string>
     <string name="no_questions_available">Aucune question disponible.</string>
     <string name="next">Suivant</string>
-    <string name="wrong">Erreur!</string>
-    <string name="correct">Correct!</string>
+    <string name="wrong">❌ Erreur!</string>
+    <string name="correct">" ✅ Correct!"</string>
     <string name="the_correct_answer_was">"La bonne réponse était "</string>
     <string name="character_image">Image du personnage</string>
     <string name="reiniciar">Redémarrer</string>
