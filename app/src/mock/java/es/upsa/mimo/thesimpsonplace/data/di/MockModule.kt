@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import es.upsa.mimo.thesimpsonplace.data.daos.remote.QuoteDao
 import es.upsa.mimo.thesimpsonplace.data.entities.quote.QuoteDTO
+import es.upsa.mimo.thesimpsonplace.utils.Logger
 import javax.inject.Singleton
 
 @Module
