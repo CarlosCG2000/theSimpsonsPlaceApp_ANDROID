@@ -113,4 +113,6 @@
     <string name="no_existen_citas">No existen citas</string>
     <string name="no_existen_citas_favoritas">No existen citas favoritas</string>
     <string name="desc_no_existen_citas">No existen citas de ese personaje. Cambia el nombre del personaje en el buscador.</string>
+    <string name="aceptar_jugar">Jugar de nuevo</string>
+    <string name="ir_al_menu">Ir al menu</string>
 </resources>

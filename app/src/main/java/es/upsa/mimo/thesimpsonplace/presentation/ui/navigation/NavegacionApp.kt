@@ -228,7 +228,8 @@ fun NavegacionApp() {
 
             QuotesResultScreen(
                 respuestasAciertos = aciertos,
-                navigateToQuotes = { navController.navigate(Screen.GameQuotes.route) }
+                navigateToQuotes = { navController.navigate(Screen.GameQuotes.route) },
+                navigationToMenu = { navController.navigate(Screen.Menu.route) }
             )
         }
 

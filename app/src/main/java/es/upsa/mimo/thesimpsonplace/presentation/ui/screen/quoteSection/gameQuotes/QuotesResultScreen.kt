@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,11 +47,14 @@ import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.resu
 fun QuotesResultScreen(
     viewModel: ResultGameViewModel = hiltViewModel(),
     respuestasAciertos: Int,
-    navigateToQuotes: () -> Unit
+    navigateToQuotes: () -> Unit,
+    navigationToMenu:() -> Unit // Navegacion al menu principal
 ) {
 
     val gameStats = viewModel.gameStats.collectAsState()
     var showSheet by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(Unit) {
         viewModel.updateStats(respuestasAciertos, 5)
@@ -104,7 +111,7 @@ fun QuotesResultScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
-                        onClick = { navigateToQuotes() },
+                        onClick = { showDialog = true },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary // Color amarillo
                         ),
@@ -114,6 +121,47 @@ fun QuotesResultScreen(
                             text = stringResource(R.string.jugar_de_nuevo),
                             color = Color.Black,
                             fontWeight = Bold
+                        )
+                    }
+
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            title = { Text(text = stringResource(R.string.ready_to_start_the_quiz_game),
+                                fontWeight = SemiBold,
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                textAlign = TextAlign.Center) },
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(16.dp),
+                            // confirmButton = { Button() {} },
+                            // dismissButton = { Button() {} },
+                            confirmButton = {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 16.dp),
+                                    horizontalArrangement = Arrangement.SpaceEvenly // Distribuye los botones equitativamente
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            showDialog = false
+                                            navigateToQuotes()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
+                                    ) {
+                                        Text(stringResource(R.string.aceptar_jugar), color = Color.Black)
+                                    }
+                                    Button(
+                                        onClick = {
+                                            showDialog = false
+                                            navigationToMenu()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                                    ) {
+                                        Text(stringResource(R.string.ir_al_menu), color = Color.Black)
+                                    }
+                                }
+                            }
                         )
                     }
                 }
@@ -178,5 +226,5 @@ fun BottomSheetContent(closeSheet: () -> Unit, reset: () -> Unit, aciertos:Int, 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Modo Claro")
 @Composable
 fun QuotesResultScreenPreview() {
-    QuotesResultScreen(respuestasAciertos = 3, navigateToQuotes = {})
+    QuotesResultScreen(respuestasAciertos = 3, navigateToQuotes = {}, navigationToMenu = {})
 }
