@@ -1,10 +1,10 @@
 package es.upsa.mimo.thesimpsonplace.presentation.ui.screen.episodeSection
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,6 +21,7 @@ import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.BottomNavItem
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
+import es.upsa.mimo.thesimpsonplace.presentation.ui.component.NoContentComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.TopBarComponent
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.episode.ListEpisodes
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.episode.episodesList.ListEpisodesStateUI
@@ -69,6 +70,14 @@ fun EpisodesFavScreen(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
+        } else if (stateFavOrView.value.episodesFav.isEmpty()) {
+            NoContentComponent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primary),
+                titleText = stringResource(R.string.no_existen_episo_fav),
+                infoText = stringResource(R.string.no_existen_episo_fav_detalles)
+            )
         } else {
             ListEpisodes(modifier = ModifierContainer(paddingValues),
                         episodes = stateFavOrView.value.episodesFav,

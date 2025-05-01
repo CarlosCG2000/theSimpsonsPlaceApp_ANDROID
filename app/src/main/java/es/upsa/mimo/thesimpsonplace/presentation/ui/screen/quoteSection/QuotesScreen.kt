@@ -86,11 +86,12 @@ fun QuotesScreen(
             Button(
                 onClick = { generateNewQuotes = !generateNewQuotes },
                 colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.secondary),
-                modifier = Modifier.layoutId("idBoton")
-                                    .clip(RoundedCornerShape(12.dp)) // Bordes redondeados
+                modifier = Modifier
+                    .layoutId("idBoton")
+                    .clip(RoundedCornerShape(12.dp)) // Bordes redondeados
             ) {
                 Text(
-                    text = "Nuevas Citas",
+                    text = stringResource(R.string.nuevas_citas),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSecondary,

@@ -113,4 +113,7 @@
     <string name="desc_no_existen_citas">Il n\'y a aucune citation de ce personnage. Changer le nom du personnage dans le moteur de recherche.</string>
     <string name="aceptar_jugar">Jouer à nouveau</string>
     <string name="ir_al_menu">Aller au menu</string>
+    <string name="nuevas_citas">Nouvelles citations</string>
+    <string name="no_existen_episo_fav">Il n\'y a pas d\'épisodes</string>
+    <string name="no_existen_episo_fav_detalles">Il n\'y a pas d\'épisodes préférés</string>
 </resources>
