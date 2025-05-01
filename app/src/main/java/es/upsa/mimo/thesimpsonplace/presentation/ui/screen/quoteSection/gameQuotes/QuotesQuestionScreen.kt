@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -40,7 +42,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import es.upsa.mimo.thesimpsonplace.R
 import es.upsa.mimo.thesimpsonplace.presentation.ui.component.ModifierContainer
 import es.upsa.mimo.thesimpsonplace.presentation.viewmodel.quote.quotesGame.questionGame.QuotesGameUI
@@ -234,14 +238,40 @@ fun QuotesQuestionScreen(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Image(
-                            painter = rememberAsyncImagePainter(currentQuestion.imagen.toString()),
-                            contentDescription = stringResource(R.string.character_image),
-                            modifier = Modifier
-                                .width(100.dp)
-                                .height(180.dp),
-                            contentScale = ContentScale.Crop
+//                        Image(
+//                            painter = rememberAsyncImagePainter(currentQuestion.imagen.toString()),
+//                            contentDescription = stringResource(R.string.character_image),
+//                            modifier = Modifier
+//                                .width(100.dp)
+//                                .height(180.dp),
+//                            contentScale = ContentScale.Crop
+//                        )
+
+                        val painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(currentQuestion.imagen.toString())
+                                .crossfade(true)
+                                .build()
                         )
+
+                        val painterState = painter.state
+
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(150.dp)
+                        ) {
+                            if (painterState is AsyncImagePainter.State.Loading) {
+                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                            }
+
+                            Image(
+                                painter = painter,
+                                contentDescription = stringResource(R.string.imagen_personaje),
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.matchParentSize()
+                            )
+                        }
                     }
                 },
                 containerColor = MaterialTheme.colorScheme.secondary
