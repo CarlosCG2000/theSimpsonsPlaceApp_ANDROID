@@ -28,7 +28,7 @@ import es.upsa.mimo.thesimpsonplace.R
 import java.util.Locale
 
 @Composable
-fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int, size: Dp, paddingText: Dp = 0.dp) {
+fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int, size: Dp, paddingText: Dp = 0.dp, title:String) {
     val successPercentage = ((correctAnswers.toFloat() / totalQuestions) * 100).let {
         String.format(Locale.US, "%.2f", it).toFloat()
     }
@@ -44,7 +44,7 @@ fun HistoryGameStatistics(totalQuestions: Int, correctAnswers: Int, size: Dp, pa
     ) {
         // 🔹 Título
         Text(
-            text = stringResource(R.string.history_game_statistics),
+            text = title,
             fontSize = 20.sp,
             fontWeight = Bold,
             color = MaterialTheme.colorScheme.onSecondary,

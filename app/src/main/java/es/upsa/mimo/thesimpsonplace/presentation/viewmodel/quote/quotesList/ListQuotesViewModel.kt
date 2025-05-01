@@ -25,6 +25,7 @@ class ListQuotesViewModel @Inject constructor( val getQuotesUseCase: GetQuotesUs
             try {
                 val quotes = getQuotesUseCase(numElementos, textPersonaje) // Se recibe un Result<List<Quote>>, es decir quotes = Result<List<Quote>>
                 // getOrNull() obtiene la lista solo si el resultado fue un éxito, orEmpty() asegura que, si el resultado es null, devuelva una lista vacía en lugar de fallar.
+                logInfo( "Total de citas generadas para numElementos $numElementos y texto $textPersonaje: "+ quotes.getOrNull()?.size.toString())
                 _stateQuotes.update { it.copy(quotes = quotes.getOrNull().orEmpty()) }
             } catch (e: Exception) {
                 logError( "Error al obtener frases: $e")

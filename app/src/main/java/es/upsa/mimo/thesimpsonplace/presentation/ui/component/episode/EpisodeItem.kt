@@ -59,7 +59,7 @@ fun EpisodeItem(modifier: Modifier,
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Text(text = stringResource(R.string.temporada)+"${ episode.temporada }", fontSize = 20.sp)
+                Text(text = stringResource(R.string.temporada)+" ${ episode.temporada }", fontSize = 20.sp)
 
                 Spacer(modifier = Modifier.width(16.dp))
 

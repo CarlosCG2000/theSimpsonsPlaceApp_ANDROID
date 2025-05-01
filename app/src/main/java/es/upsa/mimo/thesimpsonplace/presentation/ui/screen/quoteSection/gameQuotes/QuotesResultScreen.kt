@@ -105,7 +105,8 @@ fun QuotesResultScreen(
                         totalQuestions = 5,
                         correctAnswers = respuestasAciertos,
                         size = 250.dp,
-                        paddingText = 10.dp
+                        paddingText = 10.dp,
+                        title = stringResource(R.string.estadisticas_de_la_partida)// stringResource(R.string.history_game_statistics)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -209,7 +210,8 @@ fun BottomSheetContent(closeSheet: () -> Unit, reset: () -> Unit, aciertos:Int, 
                 totalQuestions = preguntas,
                 correctAnswers = aciertos,
                 size = 200.dp,
-                paddingText = 10.dp
+                paddingText = 10.dp,
+                title = stringResource(R.string.history_game_statistics)
             )
 
             Button(

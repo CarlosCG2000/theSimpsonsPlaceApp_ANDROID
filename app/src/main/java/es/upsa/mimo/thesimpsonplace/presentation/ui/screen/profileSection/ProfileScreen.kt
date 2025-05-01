@@ -153,7 +153,8 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(),
 
                     HistoryGameStatistics(totalQuestions = gameStats.value.result.second,
                                         correctAnswers = gameStats.value.result.first,
-                                        size = 125.dp)
+                                        size = 125.dp,
+                                        title = stringResource(R.string.history_game_statistics))
 
                     Spacer(modifier = Modifier.height(20.dp))
                 }

@@ -116,4 +116,5 @@
     <string name="nuevas_citas">Nuevas Citas</string>
     <string name="no_existen_episo_fav">No existen episodios</string>
     <string name="no_existen_episo_fav_detalles">No existen episodios favoritos</string>
+    <string name="estadisticas_de_la_partida">Estadisticas de la partida</string>
 </resources>
