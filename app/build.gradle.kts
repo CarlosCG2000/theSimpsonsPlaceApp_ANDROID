@@ -19,8 +19,8 @@ android {
         applicationId = "es.upsa.mimo.thesimpsonplace"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3 // modificar el número de versión para cada release en producción en la play store
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
