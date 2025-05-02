@@ -34,14 +34,14 @@ class ListCharactersFilterViewModelTest {
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
-        Dispatchers.setMain(testDispatcher)
+        MockKAnnotations.init(this) // Inicializa las anotaciones de MockK
+        Dispatchers.setMain(testDispatcher) // Establece el dispatcher principal para las pruebas
         viewModel = ListCharactersFilterViewModel(getFilterNameCharactersUseCase)
     }
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain()
+        Dispatchers.resetMain() // Restablece el dispatcher principal después de las pruebas
     }
 
     @Test
@@ -52,7 +52,7 @@ class ListCharactersFilterViewModelTest {
             Character(id = 1, nombre = "Marge Simpson", genero = Gender.Female, imagen = "marge", esFavorito = false)
         )
 
-        coEvery { getFilterNameCharactersUseCase("homer") } returns filteredCharacters // ojo, returns no return
+        coEvery { getFilterNameCharactersUseCase("homer") } returns filteredCharacters // ojo, returns no return, le dice al mock qué devolver cuando se haga esa llamada.
 
         // When
         viewModel.getFilterNameCharacters("homer")

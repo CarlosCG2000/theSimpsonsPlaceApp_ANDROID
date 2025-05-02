@@ -14,15 +14,16 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MockModule: Logger { // Object ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
+object MockModule: Logger { // Object: ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
 
     // Esta clase simula la API y devuelve las citas desde un JSON de test.
     @Provides
     @Singleton
     fun provideQuoteDao(@ApplicationContext context: Context): QuoteDao {
-        val json = context.assets.open("citas_test.json").bufferedReader().use { it.readText() }
-        val citas = Gson().fromJson(json, Array<QuoteDTO>::class.java).toList()
+        val json = context.assets.open("citas_test.json").bufferedReader().use { it.readText() } // Se lee el contenido del archivo citas_test.json al iniciar la app.
+        val citas = Gson().fromJson(json, Array<QuoteDTO>::class.java).toList() // El contenido se parsea con Gson a una lista de QuoteDTO.
         return object : QuoteDao {
+            // getQuotes() filtra y devuelve citas aleatorias, replicando el comportamiento esperado de la API pero sin necesidad de conexión a Internet.
             override suspend fun getQuotes(
                 numElementos: Int,
                 textPersonaje: String

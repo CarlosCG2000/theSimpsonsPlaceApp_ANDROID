@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 // Esta es la instancia de RetroFit
+// @Module y @InstallIn para que las dependencias estén disponibles a nivel global
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule: Logger { // Object ¡IMPORTANTE! Necesitamos una unica estancia para todas las conexiones
@@ -25,14 +26,14 @@ object NetworkModule: Logger { // Object ¡IMPORTANTE! Necesitamos una unica est
         logInfo("Creando la instancia de Retrofit $BASE_URL") // Para ver en el LogCat que se crea la instancia de Retrofit
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(createOkHttpClient()) // Cuando ejecutemos las peticiones veremos en el LogCat el resultado
+            .client(createOkHttpClient()) // OkHttpClient: interceptor de logging para ver los detalles de las peticiones HTTP en el Logcat
             .addConverterFactory(GsonConverterFactory.create()) // Usa Gson para convertir de json a nuestros objetos 'QuoteEntity'
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideQuoteDao(retrofit: Retrofit): QuoteDao {
+    fun provideQuoteDao(retrofit: Retrofit): QuoteDao { // inyección del QuoteDao: interfaz que define los métodos para acceder a la API
         return retrofit.create( QuoteDao::class.java) // Retrofit ya implementa la interfaz automáticamente - No añado 'QuoteDaoApi'
     }
 
