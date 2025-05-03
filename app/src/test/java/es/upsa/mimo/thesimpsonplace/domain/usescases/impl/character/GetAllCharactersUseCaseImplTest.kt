@@ -68,6 +68,7 @@ class GetAllCharactersUseCaseImplTest {
 //          Character(id = 3, nombre = "Lisa Simpson", genero = Gender.Female, imagen = "lisa", esFavorito = false)
 //      )
         val myList = charactersFake
+
         coEvery { repository.getAllCharacters() } returns myList // Simulas una lista con 3 personajes
 
         // When
