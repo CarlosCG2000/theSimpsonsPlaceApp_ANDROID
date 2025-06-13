@@ -28,23 +28,32 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.user.GetUserPreferencesUseC
 import es.upsa.mimo.thesimpsonplace.domain.usescases.user.UpdateUserUseCase
 import javax.inject.Singleton
 
+
+
+/**
+DomainModule.kt (Casos de Uso y Repositorios)
+
+Este módulo proporciona los repositorios y casos de uso mediante @Binds.
+
+✔ @Binds se usa en lugar de @Provides cuando ya existe una implementación de una interfaz. Separa el acceso a datos del dominio, mejorando la escalabilidad y mantenibilidad.
+✔ @Singleton se usa en los repositorios (repository) para mantener una única instancia de CharacterRepositoryImpl, etc.
+ */
 // Un @Module no puede contener métodos abstractos (@Binds) y métodos concretos (@Provides) al mismo tiempo. Por ello se crea una nueva clase.
 // Si se usan @Provides no necesitas @Binds porque ya lo estás proporcionando manualmente.
-// ✔️ Si solo usas '@Inject constructor' en una clase, 'Hilt' solo sabe cómo construirla, pero no cómo enlazarla a su interfaz.
-// ✔️ Si quieres que 'Hilt' la proporcione cuando alguien pida la interfaz, necesitas '@Binds' o '@Provides' (se podria crear en el 'AppModule' ya que no tendria porque ser abstracto)
+// Si solo usas '@Inject constructor' en una clase, 'Hilt' solo sabe cómo construirla, pero no cómo enlazarla a su interfaz.
+// Si quieres que 'Hilt' la proporcione cuando alguien pida la interfaz, necesitas '@Binds' o '@Provides' (se podria crear en el 'DataModule' ya que no tendria porque ser abstracto)
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DomainModule {
 
 //    @Binds no necesita que le pases dependencias manualmente. Solo recibe la implementación (impl) y Hilt resuelve el resto.
-//    CharaterRepositoryImpl ya tiene '@Inject constructor'(dao: CharacterDao, databaseDao: CharacterDatabaseDao), así que Hilt le pasará esos parámetros automáticamente.
+//    'CharaterRepositoryImpl' ya tiene '@Inject constructor'(dao: CharacterDao, databaseDao: CharacterDatabaseDao), así que Hilt le pasará esos parámetros automáticamente.
 //    @Binds solo permite un parámetro, pero aquí tienes dos (dao y databaseDao).
     @Binds
-    @Singleton // ✅ Queremos que haya una única instancia de CharaterRepositoryImpl
+    @Singleton // Queremos que haya una única instancia de CharaterRepositoryImpl
     abstract fun bindCharacterRepository(impl: CharaterRepositoryImpl): CharaterRepository
-    // Solos casos de uso que se no implementen de forma automatica con '@Inject constructor()' deberan ser '@Provides' y esos ya contienen '@Binds' y se definiran de forma manual por lo que no necesitar incluirse aqui.
-    // Pero si son casos de uso con '@Inject constructor()', solo se necesitan conectar con su inferfaz (Binds) ya que de forma automatizada tienen un valor de Dao (el que tenga '@Inject constructor()')
-
+    // Solos casos de uso que se NO implementen de forma automatica con '@Inject constructor()' deberan ser '@Provides' y esos ya contienen '@Binds' y se definiran de forma manual por lo que no necesitar incluirse aqui.
+    // Pero si son casos de uso SI implementen '@Inject constructor()', solo se necesitan conectar con su inferfaz (Binds) ya que de forma automatizada tienen un valor de Dao (el que tenga '@Inject constructor()')
     @Binds
     abstract fun bindGetAllCharactersUseCase( useCaseImpl: GetAllCharactersUseCaseImpl ): GetAllCharactersUseCase
     @Binds
@@ -139,11 +148,3 @@ abstract class DomainModule {
     @Binds
     abstract fun bindUpdateUserUseCase(impl: UpdateUserUseCaseImpl): UpdateUserUseCase
 }
-/**
-DomainModule.kt (Casos de Uso y Repositorios)
-
-Este módulo proporciona los repositorios y casos de uso mediante @Binds.
-
-✔ @Binds se usa en lugar de @Provides cuando ya existe una implementación de una interfaz. Separa el acceso a datos del dominio, mejorando la escalabilidad y mantenibilidad.
-✔ @Singleton se usa en los repositorios (repository) para mantener una única instancia de CharacterRepositoryImpl, etc.
-*/

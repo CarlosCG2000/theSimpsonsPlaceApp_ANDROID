@@ -24,46 +24,35 @@ import androidx.navigation.navArgument
 import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuotes.QuotesQuestionScreen
 import es.upsa.mimo.thesimpsonplace.presentation.ui.screen.quoteSection.gameQuotes.QuotesResultScreen
 
-// ✅ 1. Crear un sealed class para las rutas: en lugar de escribir las rutas como strings, se pueden definir en una sealed class (con parámetros si es necesario):
+// Screen es una clase sellada (sealed class), lo que significa que solo puede tener subclases dentro del mismo archivo.
+// Cada pantalla (Menu, Profile...) es un objeto que hereda de Screen y tiene una ruta (route: String).
+// En lugar de escribir las rutas como strings, se pueden definir en una sealed class (con parámetros si se necesitan)
 // • Evita errores tipográficos en las rutas.
 // • Permite una navegación más clara y estructurada.
-sealed class Screen(val route: String) { // Screen es una clase sellada (sealed class), lo que significa que solo puede tener subclases dentro del mismo archivo.
-//    Cada pantalla (Menu, Profile...) es un objeto que hereda de Screen y tiene una ruta (route: String).
-//    📌 ¿Cuándo usar sealed class Screen?
-//    ✅ Cuando necesitas una ruta de tipo String para NavController.
-//    ✅ Si deseas usar argumentos dinámicos en la navegación, por ejemplo:
+sealed class Screen(val route: String) {
+    data object Menu : Screen("menu")
 
-    object Menu : Screen("menu")
+    data object Profile : Screen("profileScreen")
+    data object ProfileEdit : Screen("profileEditScreen")
 
-    object Profile : Screen("profileScreen")
-    object ProfileEdit : Screen("profileEditScreen")
+    data object AllCharacters : Screen("navigateToAllCharacter")
+    data object FilterCharacters : Screen("navigateToFilterCharacter")
+    data object FavoriteCharacters : Screen("navigateToFavoriteCharacter")
 
-    object AllCharacters : Screen("navigateToAllCharacter")
-    object FilterCharacters : Screen("navigateToFilterCharacter")
-    object FavoriteCharacters : Screen("navigateToFavoriteCharacter")
-
-    object AllEpisodes : Screen("navigateToAllEpisodes")
-    object FilterEpisodes : Screen("navigateToFilterEpisode")
-    object FavoriteEpisodes : Screen("navigateToFavoriteEpisode")
-    object EpisodeDetailStatic: Screen("episodeDetail/{id}")
+    data object AllEpisodes : Screen("navigateToAllEpisodes")
+    data object FilterEpisodes : Screen("navigateToFilterEpisode")
+    data object FavoriteEpisodes : Screen("navigateToFavoriteEpisode")
+    data object EpisodeDetailStatic: Screen("episodeDetail/{id}")
     data class EpisodeDetail(val id: String) : Screen("episodeDetail/$id") // Pasando parámetros en la ruta
 
-    object MainQuotes: Screen("navigateToAllQuote")
-    object FilterQuotes : Screen("navigateToFilterQuotes")
-    object FavoriteQuotes : Screen("navigateToFavoriteQuotes")
-    object GameQuotes : Screen("navigateToGameQuotes")
-    object QuestionQuotes : Screen("navigateToQuestionQuotes")
+    data object MainQuotes: Screen("navigateToAllQuote")
+    data object FilterQuotes : Screen("navigateToFilterQuotes")
+    data object FavoriteQuotes : Screen("navigateToFavoriteQuotes")
+    data object GameQuotes : Screen("navigateToGameQuotes")
+    data object QuestionQuotes : Screen("navigateToQuestionQuotes")
     data class ResultQuotes(val respuestasAciertos: Int): Screen("navigateToResultQuotes/$respuestasAciertos")
-    object ResultQuotesStatic: Screen("navigateToResultQuotes/{respuestasAciertos}")
+    data object ResultQuotesStatic: Screen("navigateToResultQuotes/{respuestasAciertos}")
 }
-
-// ✅ 2. Otra opción a 'sealed class Screen(val route: String) { ... }'
-//	Es simplemente un objeto vacío, pero anotado con @Serializable.
-//	No tiene un route: String, lo que indica que probablemente se usa en un sistema de navegación basado en serialización de clases en lugar de String.
-//	Puede usarse con Jetpack Navigation para serializar y guardar estados de pantalla.
-/** @Serializable
- object MenuScreen
- */
 
 @Composable
 fun NavegacionApp() {
@@ -152,30 +141,19 @@ fun NavegacionApp() {
             )
         }
 
-        // ✅ 2. Antes pasaba el id del episodio a la 'EpisodeDetailScreen' con Serializable y toRoute(), lo cual es una estrategia válida, pero puede simplificarse usando la navegación de 'Jetpack Compose' de forma nativa.  Usando 'NavArgument' para pasar parámetros.
+        // Antes pasaba el id del episodio a la 'EpisodeDetailScreen' con Serializable y toRoute(), lo cual es una estrategia válida, pero puede simplificarse usando la navegación de 'Jetpack Compose' de forma nativa.  Usando 'NavArgument' para pasar parámetros.
         // route = Contiene un parámetro dinámico dentro de la ruta "{id}", que será reemplazado por un valor real en tiempo de ejecución.
         // arguments = Espera un argumento llamado "id", que debe ser de tipo Int.
         composable( route = Screen.EpisodeDetailStatic.route,
                     arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { navBackStackEntry -> // Es el objeto que contiene la información sobre la pantalla a la que se ha navegado. Permite acceder a los argumentos de la ruta.
+        ) { navBackStackEntry ->                                              // Es el objeto que contiene la información sobre la pantalla a la que se ha navegado. Permite acceder a los argumentos de la ruta.
             val id = navBackStackEntry.arguments?.getString("id") ?: "0" // Recupera el argumento "id" pasado en la navegación.
 
             EpisodeDetailScreen(
                 id = id, // Llama a la pantalla EpisodeDetailScreen, pasándole el id obtenido de la navegación.
-                // navigationArrowBack = { navigateTo( navController = navController, screen = Screen.AllEpisodes ) }
-                navigationArrowBack = { navController.popBackStack() } // volver a la pantalla anterior en la pila de navegación. Elimina la pantalla actual de la pila de navegación y vuelve a la anterior. Si la pantalla actual fue la primera de la pila, no hace nada (no crashea).
+                navigationArrowBack = { navController.popBackStack() } // Volver a la pantalla anterior en la pila de navegación. Elimina la pantalla actual de la pila de navegación y vuelve a la anterior. Si la pantalla actual fue la primera de la pila, no hace nada (no crashea).
             )
         }
-
-        /**
-        composable<EpisodeDetailScreenDestination>{  navBackStackEntry /* destino */ ->
-            val episodeDetailScreenDestination: EpisodeDetailScreenDestination = navBackStackEntry.toRoute() // Obtenemos el objeto
-
-            val id: Int = episodeDetailScreenDestination.id
-
-            EpisodeDetailScreen(id = id)
-        }
-        */
 
         //________________________ QUOTE AND GAME (SCREENS 4-2) ________________________
         composable(Screen.MainQuotes.route) {
@@ -240,11 +218,3 @@ fun NavegacionApp() {
 fun navigateTo(navController: NavHostController, screen: Screen) {
     navController.navigate(screen.route)
 }
-
-/**
-@Composable
-private fun episodeSelectId(navController: NavHostController): (Int) -> Unit = { id ->
-    val navigateToDetailEpisode = EpisodeDetailScreenDestination(id = id)
-    navController.navigate(navigateToDetailEpisode) // Navegamos a la pantalla de detalles
-}
-*/

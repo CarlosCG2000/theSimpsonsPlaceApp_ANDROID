@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- OJO AÑADIR EL  android:name=".presentation.viewmodel.character.ListCharacterApplication" -->
+    <!-- android:name=".TheSimpsonPlaceApp": para el nombre de la clase principal de tu aplicación 'TheSimpsonPlaceApp.kt' -->
     <application
         android:name=".TheSimpsonPlaceApp"
         android:allowBackup="true"
@@ -20,7 +20,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.TheSimpsonPlace">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

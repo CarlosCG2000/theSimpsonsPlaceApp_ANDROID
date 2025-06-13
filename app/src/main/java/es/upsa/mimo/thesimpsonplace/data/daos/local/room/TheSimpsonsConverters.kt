@@ -9,14 +9,14 @@ import java.util.Date
 class TheSimpsonsConverters {
     private val gson = Gson()
 
-    // 🔥 Convertir `Date` a `Long` y viceversa
+    // Convertir `Date` a `Long` y viceversa
     @TypeConverter
     fun fromDate(date: Date): Long = date.time
 
     @TypeConverter
-    fun toDate(timestamp: Long): Date = timestamp.let { Date(it) }
+    fun toDate(timestamp: Long): Date = Date(timestamp)
 
-    // 🔥 Convertir `List<String>` a `String` (JSON) y viceversa
+    // Convertir `List<String>` a `String` (JSON) y viceversa
     @TypeConverter
     fun fromStringList(list: List<String>): String = gson.toJson(list)
 
@@ -26,7 +26,7 @@ class TheSimpsonsConverters {
         return gson.fromJson(data, listType) ?: emptyList()
     }
 
-    // 🔥 Convertir `URL` a `String` y viceversa
+    // Convertir `URL` a `String` y viceversa
     @TypeConverter
     fun fromUrl(url: URL): String = url.toString()
 

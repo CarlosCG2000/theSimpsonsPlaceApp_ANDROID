@@ -10,45 +10,41 @@ import kotlinx.serialization.json.Json
 import javax.inject.Named
 
 // Implementación de 'CharacterDtoDao' (acciones) en testing (y preview) o producción
-// @Inject constructor(...) -> Permite que Hilt maneje la creación de la clase.
-//@Singleton
-class CharacterDaoImpl /* ❌ @Inject constructor (Usando @Provides) */(@ApplicationContext private val context: Context, // Evita la necesidad de pasar manualmente el contexto.
+class CharacterDaoImpl /** @Inject constructor (uso final con @Provides) */ (@ApplicationContext private val context: Context, // evita la necesidad de pasar manualmente el contexto
+                                                                      /** jsons -> dependiendo del json va a ser para producción o para testing */
                                                                       @Named("dataJson") private val dataJson: String,
                                                                       @Named("imageJson") private val imagJson: String
                                            ): CharacterDao {
 
-    // json -> dependiendo del json va a ser para producción o para testing
     override suspend fun getAllCharacters(): List<CharacterDTO> {
-        // Configurar el deserializador de JSON
-        val jsonFormat = Json { ignoreUnknownKeys = true }
+
+        val jsonFormat = Json { ignoreUnknownKeys = true } // Configurar el deserializador de JSON
 
         try {
-            // Abrir el archivo JSON desde los assets
-            val jsonPersonajes = context.assets.open(dataJson).bufferedReader().use { it.readText() }
-            val charactersDto = jsonFormat.decodeFromString<List<CharacterDTO>>(jsonPersonajes)
+            // Abrir loa archivo JSONs desde los assets y leerlos
+            val jsonPersonajes = context.assets.open(dataJson)
+                                                .bufferedReader()
+                                                .use { it.readText() }
 
-            // Leer y parsear JSON de imágenes
-            val jsonImagenes = context.assets.open(imagJson).bufferedReader().use { it.readText() }
+            val jsonImagenes = context.assets.open(imagJson)
+                                                .bufferedReader()
+                                                .use { it.readText() }
+            // Parsear JSONs
+            val charactersDto = jsonFormat.decodeFromString<List<CharacterDTO>>(jsonPersonajes)
             val imagenesDto = jsonFormat.decodeFromString<List<ImageDTO>>(jsonImagenes)
 
             // Crear un mapa {nombre en minúsculas -> imagen}
-            val imagesMap = imagenesDto.associateBy(
-                { it.name?.lowercase() }, // Clave: nombre en minúsculas
+            val imagesMap = imagenesDto.associateBy (
+                { it.name?.lowercase() },       // Clave: nombre en minúsculas
                 { it.image ?: "not_specified" } // Valor: URL de la imagen o "not_specified"
             )
 
             Log.i("getAllCharacters", "$charactersDto")
 
-            // Combinar personajes con imágenes
+            // Combinar personajes con imágenes (combinación de Jsons)
             return charactersDto.map { dto ->
-                val imagen = imagesMap[dto.nombre?.lowercase()] ?: "not_specified" // Buscar imagen
-
-                CharacterDTO(
-                    id = dto.id,
-                    nombre = dto.nombre,
-                    genero = dto.genero,
-                    imagen = imagen ?: "not_specified"
-                )
+                val imagen = imagesMap[dto.nombre?.lowercase()] ?: "not_specified"
+                CharacterDTO( id = dto.id, nombre = dto.nombre, genero = dto.genero,  imagen = imagen )
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -56,8 +52,8 @@ class CharacterDaoImpl /* ❌ @Inject constructor (Usando @Provides) */(@Applica
         }
     }
 
-    override suspend fun getCharactersByName(name: String): List<CharacterDTO> {
-        return getAllCharacters().filter { it.nombre?.contains(name, ignoreCase = true) == true }
-    }
+    override suspend fun getCharactersByName(name: String): List<CharacterDTO> =
+         getAllCharacters().filter { it.nombre?.
+                                        contains(name, ignoreCase = true) == true }
 }
 

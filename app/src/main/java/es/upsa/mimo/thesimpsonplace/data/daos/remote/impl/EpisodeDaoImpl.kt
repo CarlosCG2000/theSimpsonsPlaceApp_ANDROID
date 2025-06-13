@@ -9,47 +9,43 @@ import es.upsa.mimo.thesimpsonplace.utils.toDate
 import kotlinx.serialization.json.Json
 import java.util.Date
 
-class EpisodeDaoImpl(val context: Context,
-                     val dataJson: String /** el json puede ser de produccíon o de testing */): EpisodeDao {
+class EpisodeDaoImpl( val context: Context,
+                      /** el json puede ser de producción o de testing */
+                      val dataJson: String ): EpisodeDao {
 
     override suspend fun getAllEpisodes(): List<EpisodeDTO> {
-
         val jsonFormat = Json { ignoreUnknownKeys = true }
 
         try {
-            val json = context.assets.open(dataJson).bufferedReader().use { it.readText() }
+            val json = context.assets.open(dataJson)
+                                        .bufferedReader()
+                                        .use { it.readText() }
             val episodios: List<EpisodeDTO> = jsonFormat.decodeFromString<EpisodesDTO>(json).episodios ?: emptyList()
             return episodios
         } catch (e: Exception) {
             e.printStackTrace()
-            return emptyList() // Si hay error, devuelve una lista vacía
+            return emptyList()
         }
-
     }
 
-    override suspend fun getEpisodeById(id: String): EpisodeDTO? {
-        return getAllEpisodes().firstOrNull { it.id == id }
-    }
+    // Funciones de filtrado de episodios
+    override suspend fun getEpisodeById(id: String): EpisodeDTO? =
+         getAllEpisodes().firstOrNull { it.id == id }
 
-    override suspend fun getEpisodesByTitle(title: String): List<EpisodeDTO> {
-        return getAllEpisodes().filter { it.titulo?.contains(title, ignoreCase = true) == true }
-    }
+    override suspend fun getEpisodesByTitle(title: String): List<EpisodeDTO> =
+         getAllEpisodes().filter { it.titulo?.contains(title, ignoreCase = true) == true }
 
-    override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<EpisodeDTO> {
-        return getAllEpisodes().filter { episode ->
+    override suspend fun getEpisodesByDate(minDate: Date?, maxDate: Date?): List<EpisodeDTO> =
+         getAllEpisodes().filter { episode ->
             val date = episode.lanzamiento?.toDate() ?: return@filter false
-
             (minDate == null || date >= minDate) && (maxDate == null || date <= maxDate)
         }
-    }
 
-    override suspend fun getEpisodesBySeason(season: Int): List<EpisodeDTO> {
-        return if (season == 0) getAllEpisodes()
+    override suspend fun getEpisodesBySeason(season: Int): List<EpisodeDTO> =
+        if (season == 0) getAllEpisodes()
         else getAllEpisodes().filter { it.temporada == season }
-    }
 
-    override suspend fun getEpisodesByChapter(chapter: Int): List<EpisodeDTO> {
-        return if (chapter == 0) getAllEpisodes()
-              else getAllEpisodes().filter { it.episodio == chapter }
-    }
+    override suspend fun getEpisodesByChapter(chapter: Int): List<EpisodeDTO> =
+        if (chapter == 0) getAllEpisodes()
+        else getAllEpisodes().filter { it.episodio == chapter }
 }

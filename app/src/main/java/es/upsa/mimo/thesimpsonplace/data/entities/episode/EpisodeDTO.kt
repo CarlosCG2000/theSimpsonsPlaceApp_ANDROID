@@ -3,7 +3,6 @@ package es.upsa.mimo.thesimpsonplace.data.entities.episode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// Representa el episodio tal y como se recibe del JSON.
 @Serializable
 data class EpisodeDTO(
     @SerialName("disneyplus_id") val id: String?,

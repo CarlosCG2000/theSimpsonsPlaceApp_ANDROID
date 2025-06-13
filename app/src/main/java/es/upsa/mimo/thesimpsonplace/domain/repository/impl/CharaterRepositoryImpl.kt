@@ -12,33 +12,24 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-// 	@Inject constructor(...): Hilt puede inyectarlo directamente sin necesidad de un @Provides en el AppModule.
-class CharaterRepositoryImpl @Inject constructor(val dao: CharacterDao,
+// 	@Inject constructor(...): Hilt puede inyectarlo directamente sin necesidad de un '@Provides' en el AppModule.
+class CharaterRepositoryImpl @Inject constructor(private val dao: CharacterDao,
                                                  private val databaseDao: CharacterDatabaseDao): CharaterRepository {
 
     override suspend fun getAllCharacters(): List<Character> =
-        withContext(Dispatchers.IO) { // 'withContext' cambia el contexto de ejecución de la corrutina sin crear una nueva
-            // 1️⃣ Obtenemos los personajes (List<CharacterDTO>) del JSON/API  y los casteamos al modelo List<Character> para la lógica de la aplicación
-            dao.getAllCharacters().map { it.toCharacter() }
-            /**
-            2️⃣ Obtener los personajes favoritos de la BD y convertirlos en un Map para acceso rápido
-             val favoriteCharactersMap = databaseDao.getAllCharactersDb().associateBy { it.id }
-
-            3️⃣ Fusionar datos del JSON con la BD (si el personaje está en la BD, tomar `esFavorito` de ahí)
-            allCharacters.map { character ->
-                val characterDb = favoriteCharactersMap(character.id]) // Buscar personaje en la BD
-                character.copy(
-                    esFavorito = characterDb?.esFavorito == true // Si está en la BD, usar su estado real
-                )
-            }
-            */
-        }
+                    // 'withContext' cambia el contexto de ejecución de la corrutina sin crear una nueva
+                    withContext(Dispatchers.IO) {
+                        dao.getAllCharacters().map { it.toCharacter() }
+                    }
 
     override suspend fun getCharactersByName(name: String): List<Character> =
-        withContext(Dispatchers.IO) {
-            dao.getCharactersByName(name = name).map { it.toCharacter() }
-        }
+                    withContext(Dispatchers.IO) {
+                        dao.getCharactersByName(name = name).map { it.toCharacter() }
+                    }
 
+/**
+ *  Las llamadas a la base de datos ya se están ejecutando en el hilo de E/S de forma implícita gracias a Room y las funciones suspend. No necesitas añadir withContext(Dispatchers.IO) a esas funciones del     repositorio a menos que tuvieras otra lógica pesada que no fuera de base de datos directamente en el repositorio
+ */
     override fun getAllCharactersDb(): Flow<List<Character>> =
         databaseDao.getAllCharactersDb().map { list ->
             list.map { it.toCharacter() }

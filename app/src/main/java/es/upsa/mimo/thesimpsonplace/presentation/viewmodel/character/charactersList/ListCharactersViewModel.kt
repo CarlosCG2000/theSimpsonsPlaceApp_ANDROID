@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersUseCase
 import es.upsa.mimo.thesimpsonplace.utils.Logger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,26 +18,27 @@ class ListCharactersViewModel @Inject constructor(val getAllCharactersUseCase: G
     private val _stateCharacter: MutableStateFlow<ListCharactersStateUI> = MutableStateFlow(ListCharactersStateUI()) // Asincrono esta en un hilo secundario
     val stateCharacter: StateFlow<ListCharactersStateUI> = _stateCharacter.asStateFlow()
 
-    // Hay que llamar a los casos de uso
     // Debería ejecutarse dentro de 'viewModelScope.launch' para evitar bloqueos y manejar la asincronía correctamente:
     fun getAllCharacters() {
         viewModelScope.launch {
-            // _stateCharacter.value.isLoading = true ❌ Esto NO actualiza el StateFlow correctamente, porque isLoading es una propiedad mutable dentro de ListCharactersStateUI, pero no estamos emitiendo un nuevo objeto.
-            // _stateCharacter.update { it.copy(isLoading = true) } // Activa el spinner
-            _stateCharacter.emit(ListCharactersStateUI(isLoading = true)) // ✅ Emite un nuevo estado desde el inicio,  Menos errores de actualización de StateFlow y Código más limpio y fácil de mantener.
+            // Esto NO actualiza el StateFlow correctamente, porque isLoading es una propiedad mutable dentro de ListCharactersStateUI, pero no estamos emitiendo un nuevo objeto.
+            // _stateCharacter.value.isLoading = true
+
+            // Emite un nuevo estado desde el inicio, menos errores de actualización de StateFlow y código más limpio y fácil de mantener.
+            _stateCharacter.emit(ListCharactersStateUI(isLoading = true))
 
             val charactersList = getAllCharactersUseCase() // Obtiene los personajes
             // delay(3000) // prueba del spinnner del 'isLoading' en el Screen
 
-            // it es 'state.value' que es el valor actual de los contactos y lo actualizamos a 'contactsList'
-            // _stateCharacter.update { it.copy(characters = charactersList, isLoading = false) }
-            _stateCharacter.emit(ListCharactersStateUI(characters = charactersList, isLoading = false)) // ✅ Menos errores de actualización de StateFlow y Código más limpio y fácil de mantener.
+            _stateCharacter.emit(ListCharactersStateUI(characters = charactersList,
+                                                        isLoading = false))
+
             logInfo( "Cargando con existo los personajes ${stateCharacter.value.characters.size}" )
         }
     }
 
     /**
-    //  Inyección de dependecias manual
+    // ___________ Inyección de dependecias manual ___________
     companion object {
         fun factory(): Factory = object : Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {

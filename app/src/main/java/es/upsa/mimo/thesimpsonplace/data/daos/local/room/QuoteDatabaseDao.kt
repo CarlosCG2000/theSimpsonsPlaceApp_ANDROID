@@ -10,15 +10,26 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuoteDatabaseDao {
-    @Query("SELECT * FROM quotes ORDER BY personaje ASC") // ORDER BY id ASC
+    // Obtener todos las citas de la BD
+    @Query("""  SELECT * 
+                FROM ${QuoteEntity.TABLE_NAME} 
+                ORDER BY personaje ASC
+            """)
     fun getAllQuotesDb(): Flow<List<QuoteEntity>>
 
-    @Query("SELECT * FROM quotes WHERE cita = :cita LIMIT 1")
+    // Obtener una cita por su ID (cta en si) de la BD
+    @Query("""  SELECT * 
+                FROM ${QuoteEntity.TABLE_NAME}  
+                WHERE cita = :cita 
+                LIMIT 1
+           """)
     suspend fun getQuoteDbByCita(cita: String): QuoteEntity?
 
+    // Insertar una cita en la BD
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuoteDb(quote: QuoteEntity)
 
+    // Eliminar una cita de la BD
     @Delete
     suspend fun deleteQuoteDb(quote: QuoteEntity)
 }

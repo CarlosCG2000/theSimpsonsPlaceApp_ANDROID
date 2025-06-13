@@ -52,14 +52,9 @@ class ProfileViewModel @Inject constructor(val getUserPreferencesUseCase: GetUse
             if (user.isNotEmpty() && user.length > 3) {
                 it.copy(loggedIn = true, error = null)
             } else {
+                logWarning("Mínino 3 caracteres para el usuario")
                 it.copy(error = "Mínino 3 caracteres para el usuario")
             }
-
-//            when {
-//                !user.contains('@') -> it.copy(error = "User must be a valid name")
-//                pass.length < 5 -> it.copy(error = "Password must be at least 5 characters")
-//                else -> it.copy(loggedIn = true)
-//            }
 
         }
 

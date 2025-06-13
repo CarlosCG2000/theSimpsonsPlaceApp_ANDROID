@@ -30,17 +30,17 @@ class DetailsEpisodeViewModel @Inject constructor( val getEpisodeByIdUseCase: Ge
             }
         }
     }
+/**
+    //  Inyección de dependecias manual
+    companion object {
+        fun factory(): Factory = object : Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
 
-//    //  Inyección de dependecias manual
-//    companion object {
-//        fun factory(): Factory = object : Factory {
-//            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-//
-//                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
-//
-//                return DetailsEpisodeViewModel (application.getEpisodeById) as T
-//            }
-//        }
-//    }
+                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
 
+                return DetailsEpisodeViewModel (application.getEpisodeById) as T
+            }
+        }
+    }
+*/
 }

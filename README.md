@@ -505,7 +505,6 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
                 - `ListCharactersDBViewModel.kt`
                 - `ListCharactersDbStateUI.kt`
 
-
         + Carpeta `episode`
 
             + Carpeta `episodesList`
@@ -548,12 +547,12 @@ Este es el Application de la app, donde configuras Hilt y la base de datos Room.
                     - `ResultGameViewModel.kt`
                     - `ResultGameUI.kt`
 
-        * Esta parte de la arquitectura se encarga de manejar la lógica de presentación para la pantalla de lista de personajes, episodios, citas, juego de citas y perfil de usuario.
-        Define el estado de la UI.
-        🛠 Resumen y buenas prácticas
-            • Usar StateFlow y update {} en lugar de modificar valores directamente.
-            • Separar estado y lógica → StateUI solo almacena datos, ViewModel los gestiona.
-            • Ejecutar llamadas a la API o base de datos dentro de viewModelScope.launch para evitar bloqueos.
+       * Esta parte de la arquitectura se encarga de manejar la lógica de presentación para la pantalla de lista de personajes, episodios, citas, juego de citas y perfil de usuario.
+    Define el estado de la UI.
+    🛠 Resumen y buenas prácticas
+     • Usar StateFlow y update {} en lugar de modificar valores directamente.
+     • Separar estado y lógica → StateUI solo almacena datos, ViewModel los gestiona.
+     • Ejecutar llamadas a la API o base de datos dentro de viewModelScope.launch para evitar bloqueos.
 
 ### `es.upsa.mimo.thesimpsonplace (remote)`
 

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 
 import javax.inject.Inject
 
-class UserDaoImpl @Inject constructor(@UserDataStore private val dataStore: DataStore<Preferences> ): UserDao {
+class UserDaoImpl @Inject constructor( @UserDataStore private val dataStore: DataStore<Preferences> ): UserDao {
 
     private object PreferencesKeys {
         val USERNAME = stringPreferencesKey("username")
@@ -31,11 +31,11 @@ class UserDaoImpl @Inject constructor(@UserDataStore private val dataStore: Data
         UserPreference(username, darkMode, language)
     }
 
-    override suspend fun updateUser(userPreference: UserPreference) {
+    override suspend fun updateUser(user: UserPreference) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.USERNAME] = userPreference.username
-            preferences[PreferencesKeys.DARK_MODE] = userPreference.darkMode
-            preferences[PreferencesKeys.LANGUAGE] = userPreference.language.code
+            preferences[PreferencesKeys.USERNAME] = user.username
+            preferences[PreferencesKeys.DARK_MODE] = user.darkMode
+            preferences[PreferencesKeys.LANGUAGE] = user.language.code
         }
     }
 

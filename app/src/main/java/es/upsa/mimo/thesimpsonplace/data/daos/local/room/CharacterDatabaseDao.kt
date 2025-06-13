@@ -8,18 +8,29 @@ import androidx.room.Query
 import es.upsa.mimo.thesimpsonplace.data.entities.character.CharacterEntity
 import kotlinx.coroutines.flow.Flow
 
-// Las operaciones para la Base de datos de la entidad de Character
+// Operaciones para la BD de la entidad de Character
 @Dao
 interface CharacterDatabaseDao {
-    @Query("SELECT * FROM characters ORDER BY nombre ASC") // ORDER BY id ASC
+    // Obtener todos los personajes de la BD
+    @Query("""    SELECT *                            
+                  FROM ${CharacterEntity.TABLE_NAME} 
+                  ORDER BY nombre ASC    
+           """ )
     fun getAllCharactersDb(): Flow<List<CharacterEntity>>
 
-    @Query("SELECT * FROM characters WHERE id = :id LIMIT 1")
+    // Obtener un personaje por su ID de la BD
+    @Query("""    SELECT *                            
+                  FROM ${CharacterEntity.TABLE_NAME}  
+                  WHERE id = :id                      
+                  LIMIT 1                              
+           """)
     suspend fun getCharacterDbById(id: Int): CharacterEntity?
 
+    // Insertar un personaje en la BD
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterDb(character: CharacterEntity)
 
+    // Eliminar un personaje de la BD
     @Delete
     suspend fun deleteCharacterDb(character: CharacterEntity)
 }

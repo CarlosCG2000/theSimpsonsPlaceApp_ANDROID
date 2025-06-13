@@ -32,16 +32,17 @@ class ListEpisodesViewModel @Inject constructor(val getAllEpisodesUseCase: GetAl
         logInfo( "Cargando con existo los episodios ${_episodesState.value.episodes.size}" )
     }
 
-//    //  Inyección de dependecias manual
-//    companion object {
-//        fun factory(): Factory = object : Factory {
-//            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-//
-//                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
-//
-//                return ListEpisodesViewModel (application.getAllEpisodes) as T
-//            }
-//        }
-//    }
+/**
+    //  Inyección de dependecias manual
+    companion object {
+        fun factory(): Factory = object : Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
 
+                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as TheSimpsonPlaceApp
+
+                return ListEpisodesViewModel (application.getAllEpisodes) as T
+            }
+        }
+    }
+*/
 }

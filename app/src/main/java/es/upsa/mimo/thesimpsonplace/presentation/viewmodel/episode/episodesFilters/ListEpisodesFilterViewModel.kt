@@ -74,7 +74,7 @@ class ListEpisodesFilterViewModel @Inject constructor(  val getEpisodesByTitleUs
         }
     }
 
-    fun getEpisodesOrder(isAscendent: Boolean) {
+    private fun getEpisodesOrder(isAscendent: Boolean) {
         viewModelScope.launch {
             _stateEpisode.update { it.copy(isLoading = true) }
             val episodesOrder: List<Episode> = getEpisodesOrderUseCase(!isAscendent, _stateEpisode.value.episodes)

@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// TODO: MIRAR EN SWIFT EL ARRAY EXTENSIONS EN 'DATA' EN 'ENTITY'
-
 fun String.toDate(): Date? {
     return try {
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

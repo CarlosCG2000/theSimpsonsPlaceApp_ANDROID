@@ -9,6 +9,7 @@ import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetAllCharactersD
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.GetCharacterDbByIdUseCase
 import es.upsa.mimo.thesimpsonplace.domain.usescases.character.InsertCharacterDbUseCase
 import es.upsa.mimo.thesimpsonplace.utils.Logger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +34,7 @@ class ListCharactersDBViewModel @Inject constructor(
         viewModelScope.launch { loadFavorites()  }
     }
 
-    // 🔹 Cargar personajes y marcar favoritos
+    // Cargar personajes y marcar favoritos
     private fun loadFavorites() {
         _stateCharacterFav.update { it.copy(isLoading = true) }
 
